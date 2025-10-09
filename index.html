@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Escape Kit Checklist</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- jsPDF for PDF export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-M2mG2m9qZ3rZ0Qm6k5P6cQ4iJxYyrrbqS4s9rXiGD9jSgE5l0QbZx1E8N1vKf3Gz7u3mI6s3Fq+T6X2e3x4r4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div>
+      <h1 class="app-title">Escape Kit Checklist - 緊急脱出キットのチェックリスト</h1>
+    </div>
+    <div class="header-controls">
+      <select id="scenarioSelect" class="form-select text-sm">
+        <option value="urban">都市型</option>
+        <option value="wilderness">野外型</option>
+        <option value="maritime">海洋型</option>
+        <option value="embassy">大使館型</option>
+      </select>
+      <input id="globalSearch" type="search" placeholder="検索..." class="form-input text-sm flex-1 md:flex-initial" />
+      <button id="exportBtn" class="btn btn-primary">エクスポート</button>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="main-grid">
+    <!-- Left nav -->
+    <nav class="panel-card sidebar-left scrollbar-thin">
+      <div class="mb-4">
+        <label for="presetSelect" class="form-label">プリセット</label>
+        <select id="presetSelect" class="form-select">
+          <option value="embassy">大使館脱出型</option>
+          <option value="sere">SERE航空兵型</option>
+          <option value="urban">都市個人型</option>
+          <option value="disaster">災害避難型</option>
+        </select>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label">フィルター</label>
+        <div class="filter-item mb-2">
+          <input id="filterDual" type="checkbox" class="form-checkbox" /> <label for="filterDual" class="text-sm">軍民両用のみ</label>
+        </div>
+        <div class="filter-item">
+          <input id="filterHazard" type="checkbox" class="form-checkbox" /> <label for="filterHazard" class="text-sm">危険物のみ</label>
+        </div>
+      </div>
+
+      <div class="mb-2">
+        <button id="newChecklist" class="btn btn-primary btn-full">新規チェックリスト</button>
+      </div>
+      <div>
+        <button id="addItemBtn" class="btn btn-secondary btn-full">＋ アイテム追加</button>
+      </div>
+
+      <hr class="my-3" />
+      <div>
+        <h3 class="text-sm font-medium mb-2">保存済みチェックリスト</h3>
+        <ul id="savedList" class="space-y-2 text-sm text-gray-700"></ul>
+        <div id="savedListEmpty" class="empty-state hidden">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <p>保存済みチェックリストはありません</p>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Center -->
+    <section class="panel-card content-main">
+      <div class="section-header">
+        <h2 class="text-md font-medium">チェックリスト — <span id="currentChecklistName">大使館脱出型</span></h2>
+        <div class="section-controls">
+          <button id="toggleView" class="btn btn-secondary btn-flex">表示切替</button>
+          <button id="saveBtn" class="btn btn-primary btn-flex">保存</button>
+        </div>
+      </div>
+      <div id="itemCountDisplay" class="text-xs text-gray-500 mb-2"></div>
+
+      <div id="itemTable" class="space-y-2"></div>
+    </section>
+
+    <!-- Right detail -->
+    <aside class="panel-card sidebar-right">
+      <h3 class="font-semibold mb-2">アイテム詳細</h3>
+      <div id="itemDetail" class="text-sm text-gray-700">アイテムを選択すると詳細が表示されます。</div>
+
+      <hr class="my-3" />
+      <div>
+        <h4 class="font-medium">合計</h4>
+        <p class="text-sm text-gray-600 mt-1">重量: <span id="totalWeight">0</span> g</p>
+        <p class="text-sm text-gray-600">体積: <span id="totalVolume">0</span> cm³</p>
+      </div>
+
+      <div class="mt-4">
+        <h4 class="font-medium">エクスポート / アクション</h4>
+        <div class="mt-2 flex flex-col gap-2">
+          <button id="exportJson" class="btn btn-secondary btn-full">JSON出力</button>
+          <button id="exportCsv" class="btn btn-secondary btn-full">CSV出力</button>
+          <button id="exportPdf" class="btn btn-secondary btn-full">PDF出力</button>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Modals -->
+  <div id="modalBackdrop" class="modal-backdrop">
+    <div class="modal-content">
+      <h3 id="modalTitle" class="text-lg font-semibold mb-4">アイテム編集</h3>
+      <form id="itemForm" class="space-y-3 text-sm">
+        <div>
+          <label for="f_name" class="form-label">名称</label>
+          <input id="f_name" class="form-input" required />
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div>
+            <label for="f_category" class="form-label">カテゴリー</label>
+            <select id="f_category" class="form-select">
+              <option>サバイバル</option>
+              <option>信号発信</option>
+              <option>工具</option>
+              <option>都市型回避</option>
+              <option>医療</option>
+              <option>その他</option>
+            </select>
+          </div>
+          <div>
+            <label for="f_weight" class="form-label">重量 (g)</label>
+            <input id="f_weight" type="number" min="0" class="form-input" />
+          </div>
+        </div>
+        <div>
+          <label for="f_volume" class="form-label">体積 (cm³)</label>
+          <input id="f_volume" type="number" min="0" class="form-input" />
+        </div>
+        <div>
+          <label for="f_purpose" class="form-label">用途（簡潔に）</label>
+          <input id="f_purpose" class="form-input" />
+        </div>
+        <div class="flex items-center gap-4">
+          <label class="flex items-center gap-2 cursor-pointer"><input id="f_dual" type="checkbox" class="form-checkbox" /> <span class="text-xs">軍民両用</span></label>
+          <label class="flex items-center gap-2 cursor-pointer"><input id="f_hazard" type="checkbox" class="form-checkbox" /> <span class="text-xs">危険物</span></label>
+        </div>
+        <div>
+          <label for="f_legality" class="form-label">法的注意事項（JSON形式）</label>
+          <textarea id="f_legality" rows="2" class="form-input" placeholder='{"US":"許可","JP":"許可"}'></textarea>
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-end gap-2 pt-2">
+          <button type="button" id="modalCancel" class="btn btn-secondary">キャンセル</button>
+          <button id="modalSave" class="btn btn-primary">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <footer>
+    <div class="footer">🔗 GitHubリポジトリはこちら（ <a href="https://github.com/ipusiron/escape-kit-checklist" target="_blank">ipusiron/escape-kit-checklist</a> ）</div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
