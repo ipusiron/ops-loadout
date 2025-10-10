@@ -3,13 +3,24 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Escape Kit Checklist</title>
+  <title>Ops Loadout</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>" />
 
   <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- jsPDF for PDF export -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-M2mG2m9qZ3rZ0Qm6k5P6cQ4iJxYyrrbqS4s9rXiGD9jSgE5l0QbZx1E8N1vKf3Gz7u3mI6s3Fq+T6X2e3x4r4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
+          integrity="sha512-qZvrmS2ekKPF2mSznTQsxqPgnpkI4DNTlrdUmTzrDgektczlKNRRhy5X5AAOnx5S09ydFYWWNSfcEqDTTHgtNA=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer"></script>
+  <!-- html2canvas for HTML to PDF conversion -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+          integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer"></script>
 
   <!-- Custom styles -->
   <link rel="stylesheet" href="style.css" />
@@ -19,55 +30,113 @@
   <!-- Header -->
   <header class="app-header">
     <div>
-      <h1 class="app-title">Escape Kit Checklist - 緊急脱出キットのチェックリスト</h1>
-    </div>
-    <div class="header-controls">
-      <select id="scenarioSelect" class="form-select text-sm">
-        <option value="urban">都市型</option>
-        <option value="wilderness">野外型</option>
-        <option value="maritime">海洋型</option>
-        <option value="embassy">大使館型</option>
-      </select>
-      <input id="globalSearch" type="search" placeholder="検索..." class="form-input text-sm flex-1 md:flex-initial" />
-      <button id="exportBtn" class="btn btn-primary">エクスポート</button>
+      <h1 class="app-title">Ops Loadout</h1>
+      <p class="app-subtitle">装備構成を計画・編集・エクスポートする任務対応型チェックリストツール</p>
     </div>
   </header>
 
-  <!-- Main -->
-  <main class="main-grid">
-    <!-- Left nav -->
-    <nav class="panel-card sidebar-left scrollbar-thin">
-      <div class="mb-4">
-        <label for="presetSelect" class="form-label">プリセット</label>
-        <select id="presetSelect" class="form-select">
-          <option value="embassy">大使館脱出型</option>
-          <option value="sere">SERE航空兵型</option>
-          <option value="urban">都市個人型</option>
-          <option value="disaster">災害避難型</option>
-        </select>
-      </div>
-
-      <div class="mb-4">
-        <label class="form-label">フィルター</label>
-        <div class="filter-item mb-2">
-          <input id="filterDual" type="checkbox" class="form-checkbox" /> <label for="filterDual" class="text-sm">軍民両用のみ</label>
-        </div>
-        <div class="filter-item">
-          <input id="filterHazard" type="checkbox" class="form-checkbox" /> <label for="filterHazard" class="text-sm">危険物のみ</label>
+  <!-- Controls Section -->
+  <section class="controls-section">
+    <div class="controls-container">
+      <div class="controls-row">
+        <div class="control-group">
+          <label class="control-label">カテゴリー</label>
+          <div class="category-buttons">
+            <button class="category-filter-btn active" data-category="all">All</button>
+            <button class="category-filter-btn" data-category="evasion">脱出</button>
+            <button class="category-filter-btn" data-category="edc">日常</button>
+            <button class="category-filter-btn" data-category="rescue">救助</button>
+            <button class="category-filter-btn" data-category="security">警備</button>
+            <button class="category-filter-btn" data-category="disaster">災害</button>
+            <button class="category-filter-btn" data-category="hacker">IT</button>
+          </div>
         </div>
       </div>
 
-      <div class="mb-2">
-        <button id="newChecklist" class="btn btn-primary btn-full">新規チェックリスト</button>
-      </div>
-      <div>
-        <button id="addItemBtn" class="btn btn-secondary btn-full">＋ アイテム追加</button>
+      <div class="controls-row">
+        <div class="control-group">
+          <label for="presetSelect" class="control-label">プリセット</label>
+          <div class="flex gap-2 items-center">
+            <select id="presetSelect" class="form-select text-sm flex-1"></select>
+            <button id="renamePresetBtn" class="btn btn-secondary btn-sm hidden" title="選択中のカスタムプリセットの名前を変更">✏️</button>
+            <button id="deletePresetBtn" class="btn btn-secondary btn-sm hidden" title="選択中のカスタムプリセットを削除">🗑️</button>
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="globalSearch" class="control-label">検索</label>
+          <input id="globalSearch" type="search" placeholder="アイテムを検索..." class="form-input text-sm" />
+        </div>
       </div>
 
-      <hr class="my-3" />
-      <div>
-        <h3 class="text-sm font-medium mb-2">保存済みチェックリスト</h3>
-        <ul id="savedList" class="space-y-2 text-sm text-gray-700"></ul>
+      <div class="controls-row">
+        <div class="control-group-inline">
+          <label class="checkbox-label">
+            <input id="filterDual" type="checkbox" class="form-checkbox" />
+            <span>軍民両用のみ</span>
+          </label>
+          <label class="checkbox-label">
+            <input id="filterHazard" type="checkbox" class="form-checkbox" />
+            <span>危険物のみ</span>
+          </label>
+        </div>
+        <div class="control-group-inline">
+          <button id="newChecklist" class="btn btn-secondary text-sm">新規</button>
+          <button id="addItemBtn" class="btn btn-secondary text-sm">＋ 追加</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <section class="checklist-section">
+      <div class="checklist-header">
+        <h2 class="checklist-title">チェックリスト — <span id="currentChecklistName">大使館脱出型</span></h2>
+        <div class="flex items-center gap-3">
+          <label class="checkbox-label text-sm">
+            <input id="saveAsPreset" type="checkbox" class="form-checkbox" />
+            <span>⭐ プリセット化</span>
+          </label>
+          <button id="saveBtn" class="btn btn-primary">保存</button>
+        </div>
+      </div>
+      <div id="itemCountDisplay" class="item-count"></div>
+      <div id="itemTable" class="item-table"></div>
+      <div id="itemDetail" class="item-detail-accordion hidden"></div>
+    </section>
+
+    <!-- Footer Bar -->
+    <div class="footer-bar">
+      <div class="footer-bar-left">
+        <span class="footer-info">合計重量: <strong id="totalWeight">0</strong> g</span>
+        <span class="footer-info">体積: <strong id="totalVolume">0</strong> cm³</span>
+      </div>
+      <div class="footer-bar-right">
+        <button id="exportJson" class="btn btn-secondary btn-sm">JSON</button>
+        <button id="exportCsv" class="btn btn-secondary btn-sm">CSV</button>
+        <button id="exportPdf" class="btn btn-secondary btn-sm">PDF</button>
+      </div>
+    </div>
+
+    <!-- Saved Checklists Section -->
+    <section class="saved-checklists-section">
+      <h3 class="saved-checklists-title">保存済みチェックリスト</h3>
+      <ul id="savedListInline" class="saved-list-inline"></ul>
+      <div id="savedListInlineEmpty" class="empty-state-inline hidden">
+        <p class="text-sm text-gray-500">保存済みチェックリストはありません</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Saved Checklists Modal -->
+  <div id="savedChecklistModal" class="modal-backdrop">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="text-lg font-semibold">保存済みチェックリスト</h3>
+        <button id="closeSavedModal" class="btn-close">×</button>
+      </div>
+      <div class="modal-body">
+        <ul id="savedList" class="saved-list"></ul>
         <div id="savedListEmpty" class="empty-state hidden">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -75,44 +144,57 @@
           <p>保存済みチェックリストはありません</p>
         </div>
       </div>
-    </nav>
+    </div>
+  </div>
 
-    <!-- Center -->
-    <section class="panel-card content-main">
-      <div class="section-header">
-        <h2 class="text-md font-medium">チェックリスト — <span id="currentChecklistName">大使館脱出型</span></h2>
-        <div class="section-controls">
-          <button id="toggleView" class="btn btn-secondary btn-flex">表示切替</button>
-          <button id="saveBtn" class="btn btn-primary btn-flex">保存</button>
+  <!-- Save Options Modal (Overwrite or Save As New) -->
+  <div id="saveOptionsModal" class="modal-backdrop">
+    <div class="modal-content max-w-md">
+      <div class="text-center">
+        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 mb-4">
+          <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">保存方法を選択</h3>
+        <p class="text-sm text-gray-600 mb-6">
+          <span class="font-medium" id="saveOptionsChecklistName"></span> はすでに保存されています。<br/>
+          上書き保存しますか？それとも別名で保存しますか？
+        </p>
+        <div class="space-y-3">
+          <button id="saveOverwriteBtn" class="btn btn-primary w-full">
+            上書き保存
+          </button>
+          <button id="saveAsNewBtn" class="btn btn-secondary w-full">
+            別名で保存（新規作成）
+          </button>
+          <button id="saveCancelBtn" class="btn btn-secondary w-full">
+            キャンセル
+          </button>
         </div>
       </div>
-      <div id="itemCountDisplay" class="text-xs text-gray-500 mb-2"></div>
+    </div>
+  </div>
 
-      <div id="itemTable" class="space-y-2"></div>
-    </section>
-
-    <!-- Right detail -->
-    <aside class="panel-card sidebar-right">
-      <h3 class="font-semibold mb-2">アイテム詳細</h3>
-      <div id="itemDetail" class="text-sm text-gray-700">アイテムを選択すると詳細が表示されます。</div>
-
-      <hr class="my-3" />
-      <div>
-        <h4 class="font-medium">合計</h4>
-        <p class="text-sm text-gray-600 mt-1">重量: <span id="totalWeight">0</span> g</p>
-        <p class="text-sm text-gray-600">体積: <span id="totalVolume">0</span> cm³</p>
-      </div>
-
-      <div class="mt-4">
-        <h4 class="font-medium">エクスポート / アクション</h4>
-        <div class="mt-2 flex flex-col gap-2">
-          <button id="exportJson" class="btn btn-secondary btn-full">JSON出力</button>
-          <button id="exportCsv" class="btn btn-secondary btn-full">CSV出力</button>
-          <button id="exportPdf" class="btn btn-secondary btn-full">PDF出力</button>
+  <!-- Save Confirmation Modal -->
+  <div id="saveConfirmModal" class="modal-backdrop">
+    <div class="modal-content max-w-md">
+      <div class="text-center">
+        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+          <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
         </div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">保存完了</h3>
+        <div class="text-sm text-gray-600 space-y-1 mb-6">
+          <p><span class="font-medium">チェックリスト名:</span> <span id="savedChecklistName"></span></p>
+          <p><span class="font-medium">保存日時:</span> <span id="savedDateTime"></span></p>
+          <p class="text-xs text-gray-500 mt-2">ローカルストレージに保存されました</p>
+        </div>
+        <button id="saveConfirmOk" class="btn btn-primary w-full">OK</button>
       </div>
-    </aside>
-  </main>
+    </div>
+  </div>
 
   <!-- Modals -->
   <div id="modalBackdrop" class="modal-backdrop">
@@ -130,8 +212,12 @@
               <option>サバイバル</option>
               <option>信号発信</option>
               <option>工具</option>
+              <option>ナビゲーション</option>
               <option>都市型回避</option>
               <option>医療</option>
+              <option>通信</option>
+              <option>書類</option>
+              <option>デジタル機器</option>
               <option>その他</option>
             </select>
           </div>
@@ -140,9 +226,30 @@
             <input id="f_weight" type="number" min="0" class="form-input" />
           </div>
         </div>
-        <div>
-          <label for="f_volume" class="form-label">体積 (cm³)</label>
-          <input id="f_volume" type="number" min="0" class="form-input" />
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div>
+            <label for="f_volume" class="form-label">体積 (cm³)</label>
+            <input id="f_volume" type="number" min="0" class="form-input" />
+          </div>
+          <div>
+            <label for="f_quantity" class="form-label">数量</label>
+            <input id="f_quantity" type="number" min="1" value="1" class="form-input" />
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div>
+            <label for="f_recommended_quantity" class="form-label">推奨数</label>
+            <input id="f_recommended_quantity" type="number" min="1" value="1" class="form-input" />
+          </div>
+          <div>
+            <label for="f_repack_frequency" class="form-label">入替頻度</label>
+            <select id="f_repack_frequency" class="form-select">
+              <option value="never">なし</option>
+              <option value="daily">毎日</option>
+              <option value="weekly">毎週</option>
+              <option value="monthly">毎月</option>
+            </select>
+          </div>
         </div>
         <div>
           <label for="f_purpose" class="form-label">用途（簡潔に）</label>
@@ -164,8 +271,10 @@
       </form>
     </div>
   </div>
-  <footer>
-    <div class="footer">🔗 GitHubリポジトリはこちら（ <a href="https://github.com/ipusiron/escape-kit-checklist" target="_blank">ipusiron/escape-kit-checklist</a> ）</div>
+  <footer class="app-footer">
+    <div class="app-footer-content">
+      <p class="app-footer-text">🔗 GitHubリポジトリはこちら（ <a href="https://github.com/ipusiron/ops-loadout" target="_blank" class="app-footer-link">ipusiron/ops-loadout</a> ）</p>
+    </div>
   </footer>
 
   <script src="app.js"></script>

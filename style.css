@@ -1,4 +1,39 @@
-/* Scrollbar styling */
+/**
+ * style.css — OpsLoadout カスタムスタイル
+ *
+ * このファイルは、Tailwind CSSで提供されない
+ * カスタムコンポーネントとユーティリティを定義します。
+ *
+ * アーキテクチャ:
+ * - Tailwind CSS (CDN) をベースとして使用
+ * - カスタムコンポーネントで不足部分を補完
+ * - レスポンシブデザイン（モバイルファースト）
+ * - アクセシビリティ対応（focus-visible、ARIA）
+ *
+ * セクション構成:
+ * 1. Global Styles (Scrollbar, Transitions, Focus, Body)
+ * 2. Layout Components (Header, Main, Footer)
+ * 3. Controls Section (Filters, Buttons, Inputs)
+ * 4. Form Components (Input, Select, Checkbox)
+ * 5. Button Components (Primary, Secondary, Danger)
+ * 6. Badge Components (Warning, Danger)
+ * 7. Modal Components (Backdrop, Content, Header)
+ * 8. Item Table (Responsive Grid Layout)
+ * 9. Saved Checklists Section
+ * 10. Print Styles
+ *
+ * デザイン原則:
+ * - モバイルファースト: 小さい画面から設計
+ * - プログレッシブエンハンスメント: 基本機能から拡張
+ * - アクセシビリティ: キーボード・スクリーンリーダー対応
+ * - パフォーマンス: トランジション最小化、GPU加速
+ */
+
+/* ============================================================
+   1. Global Styles (グローバルスタイル)
+   ============================================================ */
+
+/* Scrollbar styling - カスタムスクロールバー（WebKit） */
 .scrollbar-thin::-webkit-scrollbar {
   height: 8px;
   width: 8px;
@@ -49,149 +84,219 @@ body {
   min-height: 100vh;
 }
 
-/* Layout Components */
+/* ============================================================
+   2. Layout Components (レイアウトコンポーネント)
+   ============================================================
+   アプリケーション全体のレイアウト構造を定義
+   - Header: アプリケーションヘッダー
+   - Main: メインコンテンツエリア
+   - Footer: フッター
+   - Checklist Section: チェックリスト表示エリア
+*/
+
 .app-header {
   background-color: white;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-  padding: 1rem;
+  padding: 0.875rem 1rem;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.75rem;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 @media (min-width: 768px) {
   .app-header {
-    flex-direction: row;
-    align-items: center;
-  }
-}
-
-.header-controls {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
-  width: 100%;
-}
-
-@media (min-width: 768px) {
-  .header-controls {
-    width: auto;
+    padding: 1rem 1.5rem;
   }
 }
 
 .app-title {
-  font-size: 1.125rem;
-  font-weight: 600;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  color: #1f2937;
+  letter-spacing: -0.025em;
 }
 
 @media (min-width: 768px) {
   .app-title {
-    font-size: 1.25rem;
+    font-size: 1.875rem;
   }
 }
 
-.main-grid {
-  padding: 0.5rem;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
+.app-subtitle {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.4;
 }
 
 @media (min-width: 768px) {
-  .main-grid {
-    padding: 1rem;
+  .app-subtitle {
+    font-size: 0.8125rem;
   }
 }
 
-@media (min-width: 1024px) {
-  .main-grid {
-    grid-template-columns: repeat(12, 1fr);
-  }
-}
+/* ============================================================
+   3. Controls Section (コントロールセクション)
+   ============================================================
+   フィルタリング、検索、カテゴリー選択などのコントロール要素
+   - Category Buttons: カテゴリーフィルターボタン
+   - Search Input: 検索入力欄
+   - Checkbox Filters: チェックボックスフィルター
+*/
 
-.panel-card {
+.controls-section {
   background-color: white;
-  padding: 0.75rem;
-  border-radius: 0.375rem;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-  max-height: 70vh;
-  overflow: auto;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0.75rem 1rem;
 }
 
-@media (min-width: 1024px) {
-  .panel-card {
-    height: 72vh;
-  }
+.controls-container {
+  max-width: 80rem;
+  margin: 0 auto;
 }
 
-.sidebar-left {
-  grid-column: span 1;
-}
-
-@media (min-width: 1024px) {
-  .sidebar-left {
-    grid-column: span 3;
-  }
-}
-
-.content-main {
-  grid-column: span 1;
+.controls-row {
   display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
 }
 
-@media (min-width: 1024px) {
-  .content-main {
-    grid-column: span 6;
-  }
+.controls-row:last-child {
+  margin-bottom: 0;
 }
 
-.content-main .section-header {
-  flex-shrink: 0;
-}
-
-.content-main #itemCountDisplay {
-  flex-shrink: 0;
-}
-
-.content-main #itemTable {
+.control-group {
   flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
+  min-width: 200px;
 }
 
-.content-main #itemTable::-webkit-scrollbar {
-  width: 8px;
+.control-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
 }
 
-.content-main #itemTable::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.15);
-  border-radius: 4px;
+.category-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
 }
 
-.content-main #itemTable::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.25);
+.control-group-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
 }
 
-.content-main #itemTable::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.05);
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+  cursor: pointer;
 }
 
-.sidebar-right {
-  grid-column: span 1;
+/* Main Content */
+.main-content {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 1rem;
 }
 
-@media (min-width: 1024px) {
-  .sidebar-right {
-    grid-column: span 3;
-  }
+.checklist-section {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  margin-bottom: 1rem;
 }
 
-/* Button Components */
+.checklist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.checklist-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.item-count {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+
+/* Item Detail Accordion */
+.item-detail-accordion {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #f9fafb;
+  border-radius: 0.375rem;
+  border: 1px solid #e5e7eb;
+}
+
+.item-detail-accordion.hidden {
+  display: none;
+}
+
+/* Footer Bar */
+.footer-bar {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.footer-bar-left {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.footer-info {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.footer-bar-right {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-sm {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+/* ============================================================
+   4. Button Components (ボタンコンポーネント)
+   ============================================================
+   汎用ボタンスタイル
+   - btn-primary: 主要アクション（保存、確定など）
+   - btn-secondary: 副次アクション（キャンセル、編集など）
+   - btn-danger: 危険な操作（削除など）
+   - btn-sm: 小サイズボタン
+*/
+
 .btn {
   padding: 0.5rem 0.75rem;
   border-radius: 0.375rem;
@@ -251,7 +356,16 @@ body {
   }
 }
 
-/* Form Components */
+/* ============================================================
+   5. Form Components (フォームコンポーネント)
+   ============================================================
+   入力フォーム要素
+   - form-input: テキスト入力フィールド
+   - form-select: セレクトボックス
+   - form-checkbox: チェックボックス
+   - Focus States: フォーカス時のスタイル（アクセシビリティ）
+*/
+
 .form-input {
   width: 100%;
   border: 1px solid #d1d5db;
@@ -304,15 +418,23 @@ body {
   box-shadow: 0 0 0 2px #3b82f6;
 }
 
-/* Badge Components */
+/* ============================================================
+   6. Badge Components (バッジコンポーネント)
+   ============================================================
+   アイテムの属性表示用バッジ
+   - badge-warning: 軍民両用フラグ（黄色）
+   - badge-danger: 危険物フラグ（赤色）
+*/
+
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.125rem 0.5rem;
-  font-size: 0.75rem;
+  gap: 0.125rem;
+  padding: 0.0625rem 0.375rem;
+  font-size: 0.625rem;
   border-radius: 9999px;
   font-weight: 500;
+  line-height: 1.2;
 }
 
 .badge-warning {
@@ -326,11 +448,20 @@ body {
 }
 
 .badge svg {
-  width: 0.75rem;
-  height: 0.75rem;
+  width: 0.625rem;
+  height: 0.625rem;
 }
 
-/* Modal Components */
+/* ============================================================
+   7. Modal Components (モーダルコンポーネント)
+   ============================================================
+   モーダルダイアログシステム
+   - modal-backdrop: モーダル背景オーバーレイ（fixed inset-0）
+   - modal-content: モーダルコンテンツ本体
+   - modal-header: モーダルヘッダー
+   - active クラスで表示切り替え（display: flex）
+*/
+
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -363,22 +494,241 @@ body {
   }
 }
 
-/* Item Card */
-.item-card {
-  padding: 0.75rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.modal-body {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 0.25rem;
+  width: 2rem;
+  height: 2rem;
   display: flex;
   align-items: center;
+  justify-content: center;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+}
+
+.btn-close:hover {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
+/* Saved List */
+.saved-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.saved-list li {
+  padding: 0.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  margin-bottom: 0.5rem;
+  display: flex;
   justify-content: space-between;
-  transition: box-shadow 0.2s;
+  align-items: center;
+  transition: background-color 0.15s;
 }
 
-.item-card:hover {
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+.saved-list li:hover {
+  background-color: #f9fafb;
 }
 
-/* Filter Item */
+.saved-list-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.saved-list-name {
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: #1f2937;
+  margin-bottom: 0.125rem;
+}
+
+.saved-list-date {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.saved-list-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   8. Item Table (アイテムテーブル)
+   ============================================================
+   レスポンシブグリッドレイアウト
+   - デスクトップ: 7カラムグリッド（checkbox, name, category, weight, qty, badge, actions）
+   - モバイル: フレックスボックスで縦積み
+   - トランジション: hover時の背景色変更
+   - Performance: Event Delegation（親要素でイベント処理）
+*/
+
+.item-table {
+  width: 100%;
+  font-size: 0.8125rem;
+}
+
+.item-table-header {
+  display: none;
+  grid-template-columns: 2rem 1fr 8rem 4rem 4rem 7rem 6rem;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background-color: #f9fafb;
+  border-bottom: 2px solid #e5e7eb;
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+@media (min-width: 768px) {
+  .item-table-header {
+    display: grid;
+  }
+}
+
+.item-table-row {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0.625rem;
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.15s;
+  gap: 0.375rem;
+}
+
+@media (min-width: 768px) {
+  .item-table-row {
+    display: grid;
+    grid-template-columns: 2rem 1fr 8rem 4rem 4rem 7rem 6rem;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.375rem 0.75rem;
+  }
+}
+
+.item-table-row:hover {
+  background-color: #f9fafb;
+}
+
+.item-table-row .col-check {
+  display: flex;
+  align-items: center;
+}
+
+.item-table-row .col-name {
+  font-weight: 500;
+  color: #1f2937;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-table-row .col-category {
+  color: #6b7280;
+  font-size: 0.75rem;
+}
+
+.item-table-row .col-weight,
+.item-table-row .col-qty {
+  font-size: 0.75rem;
+  color: #4b5563;
+}
+
+.item-table-row .col-badge {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.item-table-row .col-actions {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: flex-end;
+}
+
+/* Mobile layout adjustments */
+@media (max-width: 767px) {
+  .item-table-row {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.375rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .item-table-row .col-check {
+    position: absolute;
+    margin-top: 0.25rem;
+  }
+
+  .item-table-row .col-name {
+    margin-left: 2rem;
+  }
+
+  .item-table-row .col-category,
+  .item-table-row .col-weight,
+  .item-table-row .col-qty {
+    display: inline-block;
+    margin-right: 0.75rem;
+  }
+
+  .item-table-row .col-actions {
+    margin-top: 0.25rem;
+  }
+}
+
+/* Action buttons */
+.action-btn-icon {
+  padding: 0.25rem;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-btn-icon:hover {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
+.action-btn-icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.action-btn-icon.danger:hover {
+  background-color: #fef2f2;
+  color: #dc2626;
+}
+
+/* ============================================================
+   9. Filter & Empty State (フィルターと空状態)
+   ============================================================ */
+
 .filter-item {
   display: flex;
   align-items: center;
@@ -421,7 +771,7 @@ body {
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   gap: 0.5rem;
 }
 
@@ -445,9 +795,198 @@ body {
   }
 }
 
-/* Print styles */
+/* Category Filter Buttons */
+.category-filter-btn {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid #d1d5db;
+  background-color: white;
+  color: #6b7280;
+  font-size: 0.6875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+.category-filter-btn:hover {
+  border-color: #2563eb;
+  color: #2563eb;
+  background-color: #eff6ff;
+}
+
+.category-filter-btn.active {
+  background-color: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+
+.category-filter-btn.active:hover {
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+/* Footer */
+.app-footer {
+  margin-top: 2rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+}
+
+.app-footer-content {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+.app-footer-text {
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.app-footer-link {
+  color: #2563eb;
+  transition: color 0.2s;
+}
+
+.app-footer-link:hover {
+  color: #1e40af;
+  text-decoration: underline;
+}
+
+/* ============================================================
+   10. Saved Checklists Section (保存済みチェックリストセクション)
+   ============================================================
+   ローカルストレージから読み込んだチェックリストの一覧表示
+   - inline版: メインページ下部に表示
+   - modal版: モーダルダイアログ内に表示
+   - active状態: 現在読み込み中のチェックリストをハイライト
+*/
+
+.saved-checklists-section {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.saved-checklists-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.saved-list-inline {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.saved-list-inline li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  margin-bottom: 0.5rem;
+  transition: all 0.15s;
+  gap: 0.75rem;
+}
+
+.saved-list-inline li:last-child {
+  margin-bottom: 0;
+}
+
+.saved-list-inline li:hover {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.saved-list-inline li.active {
+  background-color: #eff6ff;
+  border-color: #3b82f6;
+}
+
+.saved-list-inline-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.saved-list-inline-name {
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: #1f2937;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.saved-list-inline-date {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.125rem;
+}
+
+.saved-list-inline-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.saved-list-inline-actions button {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.625rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  transition: all 0.15s;
+}
+
+.saved-list-inline-actions .load-btn {
+  color: #2563eb;
+}
+
+.saved-list-inline-actions .load-btn:hover {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+}
+
+.saved-list-inline-actions .delete-btn {
+  color: #dc2626;
+}
+
+.saved-list-inline-actions .delete-btn:hover {
+  background-color: #fef2f2;
+  color: #b91c1c;
+}
+
+.empty-state-inline {
+  text-align: center;
+  padding: 1.5rem 1rem;
+}
+
+.empty-state-inline.hidden {
+  display: none;
+}
+
+/* ============================================================
+   11. Print Styles (印刷スタイル)
+   ============================================================
+   印刷時の最適化
+   - ナビゲーション、ボタンを非表示
+   - レイアウトを1カラムに変更
+*/
+
 @media print {
-  header, nav, aside {
+  header, nav, aside, footer {
     display: none !important;
   }
 

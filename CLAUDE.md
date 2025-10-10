@@ -4,18 +4,29 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Escape Kit Checklist** is a fact-based checklist manager for emergency escape kits (SERE / Embassy / Law-Enforcement). This is a defensive security educational tool designed for training and legitimate organizational use. Items are sourced from public documents including:
+**OpsLoadout** is a generic operations packing checklist tool designed for managing equipment configurations across various use cases (SERE / Embassy / Law-Enforcement / Disaster Preparedness / General EDC). This is a defensive security educational tool designed for training and legitimate organizational use.
+
+**Expanded Packing Features:**
+- **Quantity Management**: Track current quantity and recommended quantity for each item
+- **Repack Frequency**: Set maintenance schedules (daily, weekly, monthly, never)
+- **Category Tags**: Flexible tagging system for multi-dimensional categorization
+- **Inline Editing**: Quick quantity adjustments directly in the table view
+- **Smart Totals**: Automatic weight/volume calculation based on checked items × quantity
+
+Items are sourced from public documents including:
 - US Air Force SERE Handbook (AFH 10-644)
 - US State Department embassy evacuation guidance
 - CIA Museum Escape & Evasion kit documentation
 - MARSOC SERE gear lists
 - Ready.gov emergency preparedness resources
+- Japanese disaster preparedness guidelines (内閣府防災情報)
 
 **Design Principles:**
 - **Fact-based**: All items reference public sources and documentation
 - **Educational/operational use only**: For training, preparation, and equipment audits
 - **Legal compliance**: Items flagged with `dual_use` or `hazard_flag` include explicit legal warnings
 - **Transparency**: Every item includes source attribution
+- **Backward compatibility**: Auto-normalization ensures old presets work seamlessly
 
 **Critical Security Policy**: This tool is for DEFENSIVE SECURITY ONLY. Items with `dual_use=true` or `hazard_flag=true` (e.g., lock picks, diamond wire, ceramic blades) are documented for historical accuracy but include mandatory legal warnings. These items should NEVER be promoted for misuse.
 
@@ -24,8 +35,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is a **vanilla JavaScript single-page application** with no build system:
 
 - **index.html**: Main UI structure using Tailwind CSS (CDN)
-- **app.js**: Core application logic (vanilla JS, no frameworks)
-- **data/presets.json**: Comprehensive item database with fact-based sourcing
+- **app.js**: Core application logic with embedded PRESETS data (vanilla JS, no frameworks)
+- **style.css**: Custom styling and component styles
 
 ### State Management
 The application uses a single in-memory state object (`app.js:38-45`):
@@ -44,7 +55,7 @@ State persists to `localStorage` with keys:
 - `ekc_recent`: Recent checklist history (max 10)
 
 ### Data Model
-Each item in the checklist follows this schema (see data/presets.json:8-23):
+Each item in the checklist follows this schema:
 ```javascript
 {
   id: string,
@@ -52,11 +63,19 @@ Each item in the checklist follows this schema (see data/presets.json:8-23):
   category: string,  // Survival/Signalling/Tools/Evasion/Medical/etc
   weight_g: number,
   volume_cm3: number,
+
+  // NEW: Packing fields (auto-normalized with defaults)
+  quantity: number,                    // Current quantity (default: 1)
+  recommended_quantity: number,        // Recommended quantity (default: 1)
+  packed_by_default: boolean,          // Auto-pack this item (default: false)
+  category_tags: string[],             // Flexible tags (default: [category.toLowerCase()])
+  repack_frequency: string,            // 'daily'|'weekly'|'monthly'|'never' (default: 'never')
+
   purpose_short: string,
-  hazard_flag: boolean,     // Regulatory restrictions (batteries, alcohol, etc)
-  dual_use: boolean,        // Civilian/military dual-use items (requires legal warnings)
+  hazard_flag: boolean,                // Regulatory restrictions (batteries, alcohol, etc)
+  dual_use: boolean,                   // Civilian/military dual-use items (requires legal warnings)
   legality_notes: {[country]: string},
-  concealability: string,   // high/medium/low
+  concealability: string,              // high/medium/low
   recommended_location_on_body: string,
   sources: [{title: string, url: string}],
   scores: {
@@ -68,6 +87,8 @@ Each item in the checklist follows this schema (see data/presets.json:8-23):
   }
 }
 ```
+
+**Backward Compatibility**: The `normalizeItem()` function (app.js:141-150) automatically adds default values for new fields when loading legacy presets, ensuring seamless migration.
 
 ### Key Functions
 
@@ -124,28 +145,29 @@ git push origin main
 ## Code Conventions
 
 ### Adding New Items to Presets
-Edit `data/presets.json` following the schema above. **REQUIRED fields**:
+Edit the `PRESETS` object in `app.js` (lines 7-140). **REQUIRED fields**:
 - `sources`: MUST include at least one source with title/URL
 - `legality_notes`: MUST document legal status in relevant jurisdictions
 - `dual_use`: Set to `true` if item has military/civilian dual-use concerns
 - `hazard_flag`: Set to `true` if item has transport/regulatory restrictions
 
-**Example of a properly documented dual-use item** (data/presets.json:419-434):
-```json
+**Example of a properly documented item**:
+```javascript
 {
-  "id": "item-025",
-  "name": "Lock-Opening Tools (documented in historical kits) — LEGAL NOTE",
-  "category": "Tools",
-  "dual_use": true,
-  "hazard_flag": true,
-  "legality_notes": {
-    "US": "Possession/use may be illegal; for authorized personnel only",
-    "JP": "Likely restricted"
+  id: "em_multitool",
+  name: "小型マルチツール（ハサミ、缶切り、プライヤー）",
+  category: "工具",
+  weight_g: 80,
+  volume_cm3: 30,
+  purpose_short: "汎用工具作業（非破壊的）",
+  dual_use: true,
+  hazard_flag: false,
+  legality_notes: {
+    US: "航空機内で制限される場合あり",
+    JP: "制限される場合あり"
   },
-  "sources": [
-    {"title": "CIA Museum — Escape & Evasion Survival Kit (lock picks listed)",
-     "url": "https://www.cia.gov/legacy/museum/artifact/escape-evasion-survival-kit/"}
-  ]
+  sources: [{title: "CIA博物館 E&Eキット マルチツール事例"}],
+  scores: {survivability:2, signalability:0, exfiltration_support:1, concealability:2, legality_penalty:1}
 }
 ```
 
@@ -158,10 +180,11 @@ Edit `data/presets.json` following the schema above. **REQUIRED fields**:
 
 ## Important Files
 
-- **index.html** (`index.html:1-167`): UI structure, Tailwind CDN, jsPDF import
-- **app.js** (`app.js:1-456`): Core logic with PRESETS embedded (lines 7-36)
-- **data/presets.json** (`data/presets.json:1-525`): Comprehensive 30-item embassy-escape preset with full documentation
+- **index.html**: UI structure, Tailwind CDN, jsPDF and html2canvas import
+- **app.js**: Core logic with PRESETS embedded (lines 7-140), all state management and rendering
+- **style.css**: Custom styling for components, saved checklist UI, badges, etc.
 - **README.md**: Project documentation with design principles and features
+- **CLAUDE.md**: This file - development guidance and architecture documentation
 
 ## Security Considerations
 
