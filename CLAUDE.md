@@ -39,7 +39,7 @@ This is a **vanilla JavaScript single-page application** with no build system:
 - **style.css**: Custom styling and component styles
 
 ### State Management
-The application uses a single in-memory state object (`app.js:38-45`):
+The application uses a single in-memory state object:
 ```javascript
 {
   checklistName: string,
@@ -51,8 +51,8 @@ The application uses a single in-memory state object (`app.js:38-45`):
 ```
 
 State persists to `localStorage` with keys:
-- `ekc_current`: Current checklist state
-- `ekc_recent`: Recent checklist history (max 10)
+- `ekc_saved_checklists`: Saved checklist list
+- `ekc_custom_presets`: User-created custom presets
 
 ### Data Model
 Each item in the checklist follows this schema:
@@ -88,30 +88,40 @@ Each item in the checklist follows this schema:
 }
 ```
 
-**Backward Compatibility**: The `normalizeItem()` function (app.js:141-150) automatically adds default values for new fields when loading legacy presets, ensuring seamless migration.
+**Backward Compatibility**: The `normalizeItem()` function automatically adds default values for new fields when loading legacy presets, ensuring seamless migration.
 
 ### Key Functions
 
-**Rendering Pipeline** (`app.js:137-268`):
+The app.js file is organized into these sections (see header comments for exact line ranges):
+- **Lines 7-360**: PRESETS definitions (18 built-in presets)
+- **Lines 361-419**: DOM element references
+- **Lines 420-699**: Utility functions
+- **Lines 700-906**: Rendering functions
+- **Lines 907-992**: Modal management
+- **Lines 993-1086**: Export functions (PDF/CSV/JSON)
+- **Lines 1087-1400**: Event listeners
+
+**Rendering Pipeline**:
 - `renderAll()`: Master render function that updates all UI sections
 - `renderList()`: Renders filtered item table with search/filter application
-- `renderDetail(id)`: Shows detailed item view in right panel
-- `renderTotals()`: Calculates weight/volume for checked items
+- `renderDetail(id)`: Shows detailed item view in accordion panel
+- `renderTotals()`: Calculates weight/volume for checked items × quantity
 
-**Data Management** (`app.js:84-131`):
-- `saveToLocal()`: Persists state to localStorage and updates recent history
+**Data Management**:
+- `saveCurrentChecklist()`: Persists state to localStorage
 - `loadFromPreset(key)`: Loads predefined preset from PRESETS object
 - `filteredItems()`: Applies search query and dual_use/hazard filters
+- `getAllCustomPresets()` / `saveAllCustomPresets()`: Custom preset CRUD
 
-**Modal System** (`app.js:270-330`):
+**Modal System**:
 - `openItemModal(mode, item)`: Opens add/edit modal
+- `showSaveOptionsModal()`: Overwrite vs save-as-new dialog
 - Form submission creates/updates items with validation
-- Legality notes must be valid JSON
 
-**Export Functions** (`app.js:335-400`):
+**Export Functions**:
 - `exportJSON()`: Full checklist export
 - `exportCSV()`: Spreadsheet-compatible export
-- `exportPDF()`: PDF generation using jsPDF (includes dual-use confirmation dialog)
+- `exportPDF()`: PDF generation using html2canvas + jsPDF (Japanese-friendly)
 
 ## Development Workflow
 
@@ -139,13 +149,13 @@ GitHub Pages is configured to serve from the root:
 git add .
 git commit -m "Update checklist data"
 git push origin main
-# Site updates at: https://ipusiron.github.io/escape-kit-checklist/
+# Site updates at: https://ipusiron.github.io/ops-loadout/
 ```
 
 ## Code Conventions
 
 ### Adding New Items to Presets
-Edit the `PRESETS` object in `app.js` (lines 7-140). **REQUIRED fields**:
+Edit the `PRESETS` object in `app.js` (lines 7-360). **REQUIRED fields**:
 - `sources`: MUST include at least one source with title/URL
 - `legality_notes`: MUST document legal status in relevant jurisdictions
 - `dual_use`: Set to `true` if item has military/civilian dual-use concerns
@@ -176,15 +186,19 @@ Edit the `PRESETS` object in `app.js` (lines 7-140). **REQUIRED fields**:
 - Modal backdrop uses `fixed inset-0` with flex centering
 - Items with `dual_use=true` show yellow badge
 - Items with `hazard_flag=true` show red badge
-- Export PDF prompts confirmation if dual_use items present
+- Category filter buttons at the top for preset filtering (evasion/edc/rescue/security/disaster/hacker)
+- Inline quantity editing in the table view
+- Save flow: prompts for overwrite vs new-save if checklist already exists
 
 ## Important Files
 
-- **index.html**: UI structure, Tailwind CDN, jsPDF and html2canvas import
-- **app.js**: Core logic with PRESETS embedded (lines 7-140), all state management and rendering
-- **style.css**: Custom styling for components, saved checklist UI, badges, etc.
-- **README.md**: Project documentation with design principles and features
-- **CLAUDE.md**: This file - development guidance and architecture documentation
+- **index.html**: UI structure, Tailwind CDN, jsPDF and html2canvas import (with SRI hashes)
+- **app.js**: Core logic with 18 PRESETS embedded, all state management and rendering (~1400 lines)
+- **style.css**: Custom styling for components, saved checklist UI, badges
+- **README.md**: Project documentation with design principles, use cases, and data model
+- **DEVELOPMENT.md**: Detailed technical documentation for developers
+- **SECURITY.md**: Security policy and XSS protection details
+- **CLAUDE.md**: This file - development guidance for Claude Code
 
 ## Security Considerations
 
@@ -197,9 +211,9 @@ This tool serves DEFENSIVE purposes:
 
 ### Legal Warnings
 Items flagged as `dual_use=true` include mandatory warnings in:
-1. Item detail view (app.js:223-246)
-2. PDF export confirmation dialog (app.js:371-375)
-3. Visual badges in item list (app.js:171)
+1. Item detail view (accordion panel)
+2. PDF export confirmation dialog
+3. Visual badges in item list (yellow for dual_use, red for hazard_flag)
 
 ### Restricted Items Documentation
 The preset includes historically documented items (lock picks, diamond wire, ceramic blades) from CIA Museum collections. These are:

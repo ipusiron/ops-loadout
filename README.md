@@ -1,11 +1,46 @@
 <!--
 ---
-title: OpsLoadout
-category: physical-security, cyber-ninjutsu, spy
-difficulty: 2
-description: "Interactive tool for designing, auditing, and exporting mission-focused pack and kit loadouts — define, edit, and visualize custom equipment configurations with legality/dual-use flags and export options. Intended for training and legitimate organizational use only."
-tags: [ops, loadout, kit-management, inventory, tactical, fieldcraft, packlist, javascript]
-demo: https://ipusiron.github.io/ops-loadout/
+id: day098
+slug: ops-loadout
+
+title: "OpsLoadout"
+
+subtitle_ja: "緊急脱出キットのチェックリストツール"
+subtitle_en: "Operations Packing Checklist Tool"
+
+description_ja: "任務に特化した装備構成（Loadout）を計画・編集・監査・エクスポートするためのツール。軍民両用フラグ、危険物フラグ、出典リンク、国別の法的注意を管理可能。SERE訓練、大使館脱出、災害対策、ペンテスター装備など18種類のプリセットを収録。"
+description_en: "Interactive tool for designing, auditing, and exporting mission-focused pack and kit loadouts. Define, edit, and visualize custom equipment configurations with dual-use/hazard flags, source citations, and country-specific legality notes. Includes 18 presets for SERE, embassy evacuation, disaster preparedness, pentester gear, and more."
+
+category_ja:
+  - 物理的セキュリティ
+  - サイバー忍術
+  - スパイ
+  - プレッパー
+category_en:
+  - Physical Security
+  - Cyber Ninjutsu
+  - Spy
+  - Prepper
+
+difficulty: 3
+
+tags:
+  - ops
+  - loadout
+  - kit-management
+  - inventory
+  - tactical
+  - fieldcraft
+  - packlist
+  - javascript
+  - sere
+  - edc
+  - disaster-preparedness
+
+repo_url: "https://github.com/ipusiron/ops-loadout"
+demo_url: "https://ipusiron.github.io/ops-loadout/"
+
+hub: true
 ---
 -->
 
@@ -39,8 +74,8 @@ demo: https://ipusiron.github.io/ops-loadout/
 
 ## 📸 スクリーンショット
 
->![ダミー](assets/screenshot.png)
->*ダミー*
+>![ペネトレーションテスターの装備品](assets/screenshot.png)
+>*ペネトレーションテスターの装備品*
 
 ---
 
