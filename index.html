@@ -3,6 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com 'unsafe-inline';
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' data: https:;
+    font-src 'self';
+    connect-src 'self';
+    frame-ancestors 'none';
+    base-uri 'self';
+    form-action 'self';
+  " />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>OpsLoadout</title>
 
   <!-- Favicon -->
@@ -35,6 +47,9 @@
         <p class="app-subtitle" data-i18n="app.subtitle">装備構成を計画・編集・エクスポートする任務対応型チェックリストツール</p>
       </div>
       <div class="header-actions">
+        <button id="helpBtn" class="header-btn" data-i18n-title="button.help" title="Help">
+          <span>?</span>
+        </button>
         <button id="langToggle" class="lang-btn" title="Toggle Language">
           <span id="langLabel">EN</span>
         </button>
@@ -62,15 +77,15 @@
 
       <div class="controls-row">
         <div class="control-group">
-          <label for="presetSelect" class="control-label">プリセット</label>
+          <label for="presetSelect" class="control-label" data-i18n="label.preset">プリセット</label>
           <div class="flex gap-2 items-center">
             <select id="presetSelect" class="form-select text-sm flex-1"></select>
-            <button id="renamePresetBtn" class="btn btn-secondary btn-sm hidden" title="選択中のカスタムプリセットの名前を変更">✏️</button>
-            <button id="deletePresetBtn" class="btn btn-secondary btn-sm hidden" title="選択中のカスタムプリセットを削除">🗑️</button>
+            <button id="renamePresetBtn" class="btn btn-secondary btn-sm hidden" data-i18n-title="preset.rename.title" title="選択中のカスタムプリセットの名前を変更">✏️</button>
+            <button id="deletePresetBtn" class="btn btn-secondary btn-sm hidden" data-i18n-title="preset.delete.title" title="選択中のカスタムプリセットを削除">🗑️</button>
           </div>
         </div>
         <div class="control-group">
-          <label for="globalSearch" class="control-label">検索</label>
+          <label for="globalSearch" class="control-label" data-i18n="label.search">検索</label>
           <input id="globalSearch" type="search" placeholder="アイテムを検索..." data-i18n-placeholder="placeholder.search" class="form-input text-sm" />
         </div>
       </div>
@@ -79,16 +94,12 @@
         <div class="control-group-inline">
           <label class="checkbox-label">
             <input id="filterDual" type="checkbox" class="form-checkbox" />
-            <span>軍民両用のみ</span>
+            <span data-i18n="filter.dualUseOnly">軍民両用のみ</span>
           </label>
           <label class="checkbox-label">
             <input id="filterHazard" type="checkbox" class="form-checkbox" />
-            <span>危険物のみ</span>
+            <span data-i18n="filter.hazardOnly">危険物のみ</span>
           </label>
-        </div>
-        <div class="control-group-inline">
-          <button id="newChecklist" class="btn btn-secondary text-sm">新規</button>
-          <button id="addItemBtn" class="btn btn-secondary text-sm">＋ 追加</button>
         </div>
       </div>
     </div>
@@ -98,16 +109,20 @@
   <main class="main-content">
     <section class="checklist-section">
       <div class="checklist-header">
-        <h2 class="checklist-title">チェックリスト — <span id="currentChecklistName">大使館脱出型</span></h2>
+        <h2 class="checklist-title">
+          <span data-i18n="checklist.title">チェックリスト</span> —
+          <span id="currentChecklistName">大使館脱出型</span>
+          <button id="renameChecklistBtn" class="rename-btn" data-i18n-title="button.rename" title="名前を変更">✏️</button>
+        </h2>
         <div class="flex items-center gap-3">
-          <label class="checkbox-label text-sm">
-            <input id="saveAsPreset" type="checkbox" class="form-checkbox" />
-            <span>⭐ プリセット化</span>
-          </label>
+          <button id="newChecklist" class="btn btn-secondary" data-i18n="button.new">新規</button>
           <button id="saveBtn" class="btn btn-primary" data-i18n="button.save">保存</button>
         </div>
       </div>
-      <div id="itemCountDisplay" class="item-count"></div>
+      <div class="table-toolbar">
+        <div id="itemCountDisplay" class="item-count"></div>
+        <button id="addItemBtn" class="btn btn-secondary btn-sm" data-i18n="button.add">＋ 追加</button>
+      </div>
       <div id="itemTable" class="item-table"></div>
       <div id="itemDetail" class="item-detail-accordion hidden"></div>
     </section>
@@ -115,8 +130,8 @@
     <!-- Footer Bar -->
     <div class="footer-bar">
       <div class="footer-bar-left">
-        <span class="footer-info">合計重量: <strong id="totalWeight">0</strong> g</span>
-        <span class="footer-info">体積: <strong id="totalVolume">0</strong> cm³</span>
+        <span class="footer-info"><span data-i18n="total.weight">合計重量:</span> <strong id="totalWeight">0</strong> g</span>
+        <span class="footer-info"><span data-i18n="total.volume">体積:</span> <strong id="totalVolume">0</strong> cm³</span>
       </div>
       <div class="footer-bar-right">
         <button id="exportJson" class="btn btn-secondary btn-sm">JSON</button>
@@ -125,34 +140,7 @@
       </div>
     </div>
 
-    <!-- Saved Checklists Section -->
-    <section class="saved-checklists-section">
-      <h3 class="saved-checklists-title" data-i18n="saved.title">保存済みチェックリスト</h3>
-      <ul id="savedListInline" class="saved-list-inline"></ul>
-      <div id="savedListInlineEmpty" class="empty-state-inline hidden">
-        <p class="text-sm text-gray-500">保存済みチェックリストはありません</p>
-      </div>
-    </section>
   </main>
-
-  <!-- Saved Checklists Modal -->
-  <div id="savedChecklistModal" class="modal-backdrop">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="text-lg font-semibold">保存済みチェックリスト</h3>
-        <button id="closeSavedModal" class="btn-close">×</button>
-      </div>
-      <div class="modal-body">
-        <ul id="savedList" class="saved-list"></ul>
-        <div id="savedListEmpty" class="empty-state hidden">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-          <p>保存済みチェックリストはありません</p>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Save Options Modal (Overwrite or Save As New) -->
   <div id="saveOptionsModal" class="modal-backdrop">
@@ -163,19 +151,18 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
           </svg>
         </div>
-        <h3 class="text-lg font-semibold text-gray-900 mb-2">保存方法を選択</h3>
-        <p class="text-sm text-gray-600 mb-6">
-          <span class="font-medium" id="saveOptionsChecklistName"></span> はすでに保存されています。<br/>
-          上書き保存しますか？それとも別名で保存しますか？
+        <h3 class="text-lg font-semibold text-gray-900 mb-2" data-i18n="modal.saveOptions">保存方法を選択</h3>
+        <p class="text-sm text-gray-600 mb-6" id="saveOptionsMessage">
+          <span class="font-medium" id="saveOptionsChecklistName"></span> <span data-i18n="msg.saveOptionsExisting">はすでに保存されています。</span>
         </p>
         <div class="space-y-3">
-          <button id="saveOverwriteBtn" class="btn btn-primary w-full">
+          <button id="saveOverwriteBtn" class="btn btn-primary w-full" data-i18n="button.overwrite">
             上書き保存
           </button>
-          <button id="saveAsNewBtn" class="btn btn-secondary w-full">
+          <button id="saveAsNewBtn" class="btn btn-secondary w-full" data-i18n="button.saveAsNew">
             別名で保存（新規作成）
           </button>
-          <button id="saveCancelBtn" class="btn btn-secondary w-full">
+          <button id="saveCancelBtn" class="btn btn-secondary w-full" data-i18n="button.cancel">
             キャンセル
           </button>
         </div>
@@ -192,13 +179,34 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h3 class="text-lg font-semibold text-gray-900 mb-2">保存完了</h3>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2" data-i18n="modal.saveComplete">保存完了</h3>
         <div class="text-sm text-gray-600 space-y-1 mb-6">
-          <p><span class="font-medium">チェックリスト名:</span> <span id="savedChecklistName"></span></p>
-          <p><span class="font-medium">保存日時:</span> <span id="savedDateTime"></span></p>
-          <p class="text-xs text-gray-500 mt-2">ローカルストレージに保存されました</p>
+          <p><span class="font-medium" data-i18n="msg.checklistName">チェックリスト名:</span> <span id="savedChecklistName"></span></p>
+          <p><span class="font-medium" data-i18n="msg.savedAt">保存日時:</span> <span id="savedDateTime"></span></p>
+          <p class="text-xs text-gray-500 mt-2" data-i18n="msg.savedToLocal">ローカルストレージに保存されました</p>
         </div>
-        <button id="saveConfirmOk" class="btn btn-primary w-full">OK</button>
+        <button id="saveConfirmOk" class="btn btn-primary w-full" data-i18n="button.ok">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checklist Name Edit Modal -->
+  <div id="nameEditModal" class="modal-backdrop">
+    <div class="modal-content max-w-md">
+      <div class="text-center">
+        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 mb-4">
+          <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-4" data-i18n="modal.editName">チェックリスト名を編集</h3>
+        <div class="mb-6">
+          <input type="text" id="nameEditInput" class="form-input w-full text-center" placeholder="" />
+        </div>
+        <div class="space-y-3">
+          <button id="nameEditSaveBtn" class="btn btn-primary w-full" data-i18n="button.save">保存</button>
+          <button id="nameEditCancelBtn" class="btn btn-secondary w-full" data-i18n="button.cancel">キャンセル</button>
+        </div>
       </div>
     </div>
   </div>
@@ -286,6 +294,46 @@
       </form>
     </div>
   </div>
+  <!-- Help Modal -->
+  <div id="helpModal" class="modal-backdrop">
+    <div class="modal-content max-w-lg">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-semibold" data-i18n="help.title">使い方</h3>
+        <button id="helpCloseBtn" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+      </div>
+      <div class="help-content text-sm text-gray-700 space-y-4">
+        <section>
+          <h4 class="font-semibold text-gray-900 mb-1" data-i18n="help.gettingStarted">はじめに</h4>
+          <p data-i18n="help.gettingStartedDesc">プリセットを選択するか、「新規」ボタンで空のチェックリストを作成します。</p>
+        </section>
+        <section>
+          <h4 class="font-semibold text-gray-900 mb-1" data-i18n="help.addingItems">アイテムの追加</h4>
+          <p data-i18n="help.addingItemsDesc">「＋ アイテム追加」ボタンでアイテムを追加できます。カテゴリー、重量、数量などを入力してください。</p>
+        </section>
+        <section>
+          <h4 class="font-semibold text-gray-900 mb-1" data-i18n="help.savingExporting">保存とエクスポート</h4>
+          <p data-i18n="help.savingExportingDesc">「保存」でローカルストレージに保存されます。JSON/CSV/PDF形式でエクスポートも可能です。</p>
+        </section>
+        <section>
+          <h4 class="font-semibold text-gray-900 mb-1" data-i18n="help.badges">バッジについて</h4>
+          <ul class="list-disc list-inside space-y-1">
+            <li><span class="badge-dual text-xs px-1 py-0.5 rounded" data-i18n="badge.dualUse">両用</span> <span data-i18n="help.badgeDualDesc">— 軍民両用品目（法的制限の可能性あり）</span></li>
+            <li><span class="badge-hazard text-xs px-1 py-0.5 rounded" data-i18n="badge.hazard">危険</span> <span data-i18n="help.badgeHazardDesc">— 輸送規制対象品目</span></li>
+          </ul>
+        </section>
+        <section>
+          <h4 class="font-semibold text-gray-900 mb-1" data-i18n="help.keyboard">キーボードショートカット</h4>
+          <ul class="text-xs space-y-1 font-mono">
+            <li><kbd class="kbd">Esc</kbd> <span data-i18n="help.keyEsc">— モーダルを閉じる</span></li>
+          </ul>
+        </section>
+      </div>
+      <div class="mt-6 text-center">
+        <button id="helpOkBtn" class="btn btn-primary" data-i18n="button.ok">OK</button>
+      </div>
+    </div>
+  </div>
+
   <footer class="app-footer">
     <div class="app-footer-content">
       <p class="app-footer-text">🔗 <span data-i18n="footer.github">GitHubリポジトリはこちら</span>（ <a href="https://github.com/ipusiron/ops-loadout" target="_blank" class="app-footer-link">ipusiron/ops-loadout</a> ）</p>

@@ -98,16 +98,11 @@
   const globalSearch = document.getElementById('globalSearch');
   const filterDual = document.getElementById('filterDual');
   const filterHazard = document.getElementById('filterHazard');
-  const savedList = document.getElementById('savedList');
   const newChecklistBtn = document.getElementById('newChecklist');
   const saveConfirmModal = document.getElementById('saveConfirmModal');
   const saveConfirmOk = document.getElementById('saveConfirmOk');
   const savedChecklistName = document.getElementById('savedChecklistName');
   const savedDateTime = document.getElementById('savedDateTime');
-  const savedChecklistModal = document.getElementById('savedChecklistModal');
-  const savedListInline = document.getElementById('savedListInline');
-  const savedListInlineEmpty = document.getElementById('savedListInlineEmpty');
-  const saveAsPreset = document.getElementById('saveAsPreset');
   const deletePresetBtn = document.getElementById('deletePresetBtn');
   const renamePresetBtn = document.getElementById('renamePresetBtn');
   const saveOptionsModal = document.getElementById('saveOptionsModal');
@@ -115,6 +110,15 @@
   const saveOverwriteBtn = document.getElementById('saveOverwriteBtn');
   const saveAsNewBtn = document.getElementById('saveAsNewBtn');
   const saveCancelBtn = document.getElementById('saveCancelBtn');
+  const nameEditModal = document.getElementById('nameEditModal');
+  const nameEditInput = document.getElementById('nameEditInput');
+  const nameEditSaveBtn = document.getElementById('nameEditSaveBtn');
+  const nameEditCancelBtn = document.getElementById('nameEditCancelBtn');
+  const renameChecklistBtn = document.getElementById('renameChecklistBtn');
+  const helpBtn = document.getElementById('helpBtn');
+  const helpModal = document.getElementById('helpModal');
+  const helpCloseBtn = document.getElementById('helpCloseBtn');
+  const helpOkBtn = document.getElementById('helpOkBtn');
 
   // ============================================================
   // ユーティリティ関数 (Utility Functions)
@@ -158,6 +162,18 @@
     };
   }
 
+  /**
+   * Get localized field value from an item or preset
+   * @param {Object} obj - Item or preset object
+   * @param {string} field - Field name (e.g., 'name', 'category', 'purpose_short')
+   * @returns {string} Localized value or fallback
+   */
+  function getL(obj, field) {
+    const lang = getLang(); // from i18n.js
+    const localizedField = field + '_' + lang;
+    return obj[localizedField] ?? obj[field] ?? '';
+  }
+
   // Multiple checklist management
   let currentChecklistId = null;
 
@@ -184,82 +200,6 @@
     }
   }
 
-  // Custom preset management
-  function getAllCustomPresets() {
-    try {
-      const data = localStorage.getItem('ekc_custom_presets');
-      return data ? JSON.parse(data) : [];
-    } catch (error) {
-      console.error('Failed to parse custom presets from localStorage:', error);
-      return [];
-    }
-  }
-
-  function saveAllCustomPresets(presets) {
-    try {
-      localStorage.setItem('ekc_custom_presets', JSON.stringify(presets));
-    } catch (error) {
-      if (error.name === 'QuotaExceededError') {
-        alert(t('msg.presetStorageQuotaExceeded'));
-      } else {
-        console.error('Failed to save custom presets to localStorage:', error);
-        alert(t('msg.presetSaveFailed'));
-      }
-    }
-  }
-
-  function saveAsCustomPreset() {
-    const presets = getAllCustomPresets();
-    const preset = {
-      id: uid('preset'),
-      name: state.checklistName,
-      items: JSON.parse(JSON.stringify(state.items)), // deep copy
-      createdAt: new Date().toISOString()
-    };
-    presets.push(preset);
-    saveAllCustomPresets(presets);
-    renderPresetOptions(currentCategory);
-  }
-
-  function deleteCustomPreset(id) {
-    const presets = getAllCustomPresets();
-    const filtered = presets.filter(p => p.id !== id);
-    saveAllCustomPresets(filtered);
-    renderPresetOptions(currentCategory);
-  }
-
-  function renameCustomPreset(id) {
-    const presets = getAllCustomPresets();
-    const preset = presets.find(p => p.id === id);
-    if (!preset) return;
-
-    const newName = prompt(t('msg.enterPresetName'), preset.name);
-    if (!newName || newName.trim() === '') return;
-    if (newName === preset.name) return; // No change
-
-    preset.name = newName.trim();
-    saveAllCustomPresets(presets);
-
-    // Update current state if this preset is currently loaded
-    if (state.checklistName === preset.name) {
-      state.checklistName = newName.trim();
-    }
-
-    renderPresetOptions(currentCategory);
-    renderAll();
-  }
-
-  function loadFromCustomPreset(id) {
-    const presets = getAllCustomPresets();
-    const preset = presets.find(p => p.id === id);
-    if (preset) {
-      state.checklistName = preset.name;
-      state.items = JSON.parse(JSON.stringify(preset.items)).map(normalizeItem);
-      currentChecklistId = null; // Treat as new checklist
-      renderAll();
-    }
-  }
-
   function saveCurrentChecklist() {
     const checklists = getAllChecklists();
     const payload = {
@@ -283,8 +223,7 @@
     }
 
     saveAllChecklists(checklists);
-    renderSavedList();
-    renderSavedListInline();
+    renderPresetOptions(currentCategory);
   }
 
   function loadChecklist(id) {
@@ -295,7 +234,6 @@
       state.checklistName = checklist.name;
       state.items = JSON.parse(JSON.stringify(checklist.items)).map(normalizeItem);
       renderAll();
-      renderSavedListInline();
     }
   }
 
@@ -306,8 +244,7 @@
     if (currentChecklistId === id) {
       createNewChecklist();
     }
-    renderSavedList();
-    renderSavedListInline();
+    renderPresetOptions(currentCategory);
   }
 
   function createNewChecklist() {
@@ -320,101 +257,29 @@
   function loadFromPreset(key) {
     const p = PRESETS[key];
     if (!p) return;
-    state.checklistName = p.name;
+    state.checklistName = getL(p, 'name');
     state.items = JSON.parse(JSON.stringify(p.items)).map(normalizeItem);
     currentChecklistId = null; // Treat as new checklist
     renderAll();
   }
 
-  function renderSavedList() {
-    const checklists = getAllChecklists();
-    const savedListEmpty = document.getElementById('savedListEmpty');
-
-    if (checklists.length === 0) {
-      savedList.classList.add('hidden');
-      savedListEmpty.classList.remove('hidden');
-    } else {
-      savedList.classList.remove('hidden');
-      savedListEmpty.classList.add('hidden');
-      savedList.innerHTML = checklists.map(c => {
-        const isActive = c.id === currentChecklistId;
-        return `<li class="filter-item ${isActive ? 'bg-blue-50' : ''}">
-          <div class="flex-1 min-w-0">
-            <div class="text-sm truncate font-medium">${escapeHtml(c.name)}</div>
-            <div class="text-xs text-gray-500">${new Date(c.updatedAt).toLocaleDateString(getLocale())}</div>
-          </div>
-          <div class="flex gap-1 flex-shrink-0">
-            <button class="text-xs text-blue-600 hover:text-blue-800" data-id="${c.id}" data-action="load">${t('button.load')}</button>
-            <button class="text-xs text-red-600 hover:text-red-800" data-id="${c.id}" data-action="delete">${t('button.delete')}</button>
-          </div>
-        </li>`;
-      }).join('');
-
-      savedList.querySelectorAll('button').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const id = btn.dataset.id;
-          const action = btn.dataset.action;
-          if (action === 'load') {
-            loadChecklist(id);
-            savedChecklistModal.classList.remove('active');
-          } else if (action === 'delete') {
-            if (confirm(t('msg.confirmDeleteChecklist'))) {
-              deleteChecklist(id);
-            }
-          }
-        });
-      });
-    }
-  }
-
-
-  function renderSavedListInline() {
-    const checklists = getAllChecklists();
-
-    if (checklists.length === 0) {
-      savedListInline.classList.add('hidden');
-      savedListInlineEmpty.classList.remove('hidden');
-    } else {
-      savedListInline.classList.remove('hidden');
-      savedListInlineEmpty.classList.add('hidden');
-      savedListInline.innerHTML = checklists.map(c => {
-        const isActive = c.id === currentChecklistId;
-        return `<li class="${isActive ? 'active' : ''}">
-          <div class="saved-list-inline-info">
-            <div class="saved-list-inline-name">${escapeHtml(c.name)}</div>
-            <div class="saved-list-inline-date">${new Date(c.updatedAt).toLocaleString(getLocale(), {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'})}</div>
-          </div>
-          <div class="saved-list-inline-actions">
-            <button class="load-btn" data-id="${c.id}">${t('button.load')}</button>
-            <button class="delete-btn" data-id="${c.id}">${t('button.delete')}</button>
-          </div>
-        </li>`;
-      }).join('');
-
-      // Attach event listeners
-      savedListInline.querySelectorAll('.load-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const id = btn.dataset.id;
-          loadChecklist(id);
-        });
-      });
-
-      savedListInline.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const id = btn.dataset.id;
-          if (confirm(t('msg.confirmDeleteChecklist'))) {
-            deleteChecklist(id);
-          }
-        });
-      });
-    }
-  }
-
   function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]; });
+  }
+
+  /**
+   * URL安全性検証 - javascript:, data:, vbscript: スキームをブロック
+   * @param {string} url - 検証するURL
+   * @returns {string} 安全なURLまたは空文字列
+   */
+  function sanitizeUrl(url) {
+    if (!url || typeof url !== 'string') return '';
+    const trimmed = url.trim().toLowerCase();
+    if (trimmed.startsWith('javascript:') || trimmed.startsWith('data:') || trimmed.startsWith('vbscript:')) {
+      console.warn('Blocked potentially dangerous URL:', url);
+      return '';
+    }
+    return url;
   }
 
   // Render functions
@@ -431,7 +296,9 @@
       if (filterDual.checked && !it.dual_use) return false;
       if (filterHazard.checked && !it.hazard_flag) return false;
       if (!q) return true;
-      return (it.name && it.name.toLowerCase().includes(q)) || (it.purpose_short && it.purpose_short.toLowerCase().includes(q));
+      const name = getL(it, 'name').toLowerCase();
+      const purpose = getL(it, 'purpose_short').toLowerCase();
+      return name.includes(q) || purpose.includes(q);
     });
   }
 
@@ -495,8 +362,8 @@
         <div class="col-check">
           <input type="checkbox" data-id="${it.id}" ${it.checked ? 'checked' : ''} class="item-check cursor-pointer focus:ring-2 focus:ring-blue-500"/>
         </div>
-        <div class="col-name">${escapeHtml(it.name)}</div>
-        <div class="col-category">${escapeHtml(it.category)}</div>
+        <div class="col-name">${escapeHtml(getL(it, 'name'))}</div>
+        <div class="col-category">${escapeHtml(getL(it, 'category'))}</div>
         <div class="col-weight">${it.weight_g ?? 0}</div>
         <div class="col-qty">
           <input type="number" min="0" max="999" value="${it.quantity ?? 1}" data-id="${it.id}"
@@ -581,16 +448,17 @@
 
     // Show accordion and populate content
     itemDetail.classList.remove('hidden');
-    const legalityHtml = JSON.stringify(it.legality_notes || {}, null, 2);
+    const legalityObj = getL(it, 'legality_notes') || it.legality_notes || {};
+    const legalityHtml = JSON.stringify(legalityObj, null, 2);
     const repackLabels = {never: t('freq.never'), daily: t('freq.daily'), weekly: t('freq.weekly'), monthly: t('freq.monthly')};
     itemDetail.innerHTML = `
       <div class="flex justify-between items-start mb-2">
-        <h4 class="font-semibold text-base">${escapeHtml(it.name)}</h4>
+        <h4 class="font-semibold text-base">${escapeHtml(getL(it, 'name'))}</h4>
         <button id="closeDetail" class="text-gray-400 hover:text-gray-600 text-xl leading-none">×</button>
       </div>
-      <p class="text-sm text-gray-600 mb-3">${escapeHtml(it.purpose_short || '')}</p>
+      <p class="text-sm text-gray-600 mb-3">${escapeHtml(getL(it, 'purpose_short'))}</p>
       <dl class="text-sm text-gray-700 space-y-2">
-        <div><dt class="font-medium text-xs text-gray-500">${t('detail.category')}</dt><dd class="mt-0.5">${escapeHtml(it.category)}</dd></div>
+        <div><dt class="font-medium text-xs text-gray-500">${t('detail.category')}</dt><dd class="mt-0.5">${escapeHtml(getL(it, 'category'))}</dd></div>
         <div><dt class="font-medium text-xs text-gray-500">${t('detail.weight')}</dt><dd class="mt-0.5">${it.weight_g ?? 0} g</dd></div>
         <div><dt class="font-medium text-xs text-gray-500">${t('detail.volume')}</dt><dd class="mt-0.5">${it.volume_cm3 ?? 0} cm³</dd></div>
         <div><dt class="font-medium text-xs text-gray-500">${t('detail.quantity')}</dt><dd class="mt-0.5">${it.quantity ?? 1}</dd></div>
@@ -606,10 +474,11 @@
           </dd>
         </div>
         <div><dt class="font-medium text-xs text-gray-500">${t('detail.legality')}</dt><dd class="mt-0.5"><pre class="text-xs bg-gray-50 p-2 rounded overflow-x-auto">${escapeHtml(legalityHtml)}</pre></dd></div>
-        ${it.description ? `<div><dt class="font-medium text-xs text-gray-500">${t('detail.description')}</dt><dd class="mt-0.5 whitespace-pre-wrap text-sm">${escapeHtml(it.description)}</dd></div>` : ''}
+        ${getL(it, 'description') ? `<div><dt class="font-medium text-xs text-gray-500">${t('detail.description')}</dt><dd class="mt-0.5 whitespace-pre-wrap text-sm">${escapeHtml(getL(it, 'description'))}</dd></div>` : ''}
         <div><dt class="font-medium text-xs text-gray-500">${t('detail.sources')}</dt><dd class="mt-0.5">${(it.sources||[]).map(s => {
-          if (s.url) {
-            return `<a href="${escapeHtml(s.url)}" target="_blank" class="text-blue-600 hover:underline">${escapeHtml(s.title)}</a>`;
+          const safeUrl = sanitizeUrl(s.url);
+          if (safeUrl) {
+            return `<a href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">${escapeHtml(s.title)}</a>`;
           }
           return escapeHtml(s.title);
         }).join('<br/>')}</dd></div>
@@ -647,18 +516,19 @@
     if (mode === 'edit' && item) {
       modalTitle.textContent = t('modal.editItem');
       editingId = item.id;
-      f_name.value = item.name || '';
-      f_category.value = item.category || 'サバイバル';
+      f_name.value = getL(item, 'name') || '';
+      f_category.value = getL(item, 'category') || 'サバイバル';
       f_weight.value = item.weight_g || 0;
       f_volume.value = item.volume_cm3 || 0;
       f_quantity.value = item.quantity || 1;
       f_recommended_quantity.value = item.recommended_quantity || 1;
       f_repack_frequency.value = item.repack_frequency || 'never';
-      f_purpose.value = item.purpose_short || '';
+      f_purpose.value = getL(item, 'purpose_short') || '';
       f_dual.checked = !!item.dual_use;
       f_hazard.checked = !!item.hazard_flag;
-      f_legality.value = JSON.stringify(item.legality_notes || {});
-      f_description.value = item.description || '';
+      const legalityObj = getL(item, 'legality_notes') || item.legality_notes || {};
+      f_legality.value = JSON.stringify(legalityObj);
+      f_description.value = getL(item, 'description') || '';
       // sources配列を「タイトル URL」形式の複数行に変換
       f_sources.value = (item.sources || []).map(s => {
         return s.url ? `${s.title} ${s.url}` : s.title;
@@ -731,7 +601,6 @@
   });
 
   addItemBtn.addEventListener('click', ()=> openItemModal('add'));
-  document.getElementById('addItemBtn').addEventListener('click', ()=> openItemModal('add'));
 
   // Export functions
   function exportJSON() {
@@ -752,8 +621,9 @@
   function itemsToCsv(items) {
     const header = ['id','name','category','weight_g','volume_cm3','purpose_short','dual_use','hazard_flag','legality_notes'];
     const rows = items.map(it => {
-      const leg = JSON.stringify(it.legality_notes || {});
-      return [it.id, it.name, it.category, it.weight_g||0, it.volume_cm3||0, it.purpose_short||'', it.dual_use?1:0, it.hazard_flag?1:0, `"${leg.replace(/"/g,'""')}"`];
+      const legalityObj = getL(it, 'legality_notes') || it.legality_notes || {};
+      const leg = JSON.stringify(legalityObj);
+      return [it.id, getL(it, 'name'), getL(it, 'category'), it.weight_g||0, it.volume_cm3||0, getL(it, 'purpose_short'), it.dual_use?1:0, it.hazard_flag?1:0, `"${leg.replace(/"/g,'""')}"`];
     });
     return [header, ...rows].map(r => r.join(',')).join('\n');
   }
@@ -818,8 +688,8 @@
         html += `
           <tr style="border-bottom: 1px solid #e5e7eb; ${it.checked ? 'background: #f0fdf4;' : ''}">
             <td style="padding: 6px; text-align: center; border: 1px solid #e5e7eb;">${checkbox}</td>
-            <td style="padding: 6px; border: 1px solid #e5e7eb;">${escapeHtml(it.category || '')}</td>
-            <td style="padding: 6px; border: 1px solid #e5e7eb;">${escapeHtml(it.name || '')}</td>
+            <td style="padding: 6px; border: 1px solid #e5e7eb;">${escapeHtml(getL(it, 'category'))}</td>
+            <td style="padding: 6px; border: 1px solid #e5e7eb;">${escapeHtml(getL(it, 'name'))}</td>
             <td style="padding: 6px; text-align: right; border: 1px solid #e5e7eb;">${it.weight_g || 0}</td>
             <td style="padding: 6px; text-align: right; border: 1px solid #e5e7eb;">${it.quantity || 1}</td>
             <td style="padding: 6px; text-align: center; border: 1px solid #e5e7eb;">${badges.join(' ')}</td>
@@ -921,6 +791,64 @@
     if (e.target === saveOptionsModal) closeSaveOptionsModal();
   });
 
+  // ============================================================
+  // チェックリスト名編集モーダル (Name Edit Modal)
+  // ============================================================
+  let nameEditMode = 'save'; // 'save' = save after edit, 'rename' = just rename
+
+  function showNameEditModal(mode = 'save') {
+    nameEditMode = mode;
+    nameEditInput.value = state.checklistName;
+    nameEditModal.classList.add('active');
+    nameEditInput.focus();
+    nameEditInput.select();
+  }
+
+  function closeNameEditModal() {
+    nameEditModal.classList.remove('active');
+  }
+
+  nameEditSaveBtn.addEventListener('click', () => {
+    const newName = nameEditInput.value.trim();
+    if (newName) {
+      state.checklistName = newName;
+      renderAll();
+    }
+    closeNameEditModal();
+
+    if (nameEditMode === 'save') {
+      // Continue to save flow
+      if (currentChecklistId) {
+        showSaveOptionsModal();
+      } else {
+        performSave(false);
+      }
+    }
+  });
+
+  nameEditCancelBtn.addEventListener('click', () => {
+    closeNameEditModal();
+  });
+
+  nameEditModal.addEventListener('click', (e) => {
+    if (e.target === nameEditModal) closeNameEditModal();
+  });
+
+  // Enter key to confirm
+  nameEditInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      nameEditSaveBtn.click();
+    } else if (e.key === 'Escape') {
+      closeNameEditModal();
+    }
+  });
+
+  // Rename button next to checklist name
+  renameChecklistBtn.addEventListener('click', () => {
+    showNameEditModal('rename');
+  });
+
   // Save confirmation modal functions
   function showSaveConfirmation() {
     savedChecklistName.textContent = state.checklistName;
@@ -944,6 +872,27 @@
     if (e.target === saveConfirmModal) closeSaveConfirmation();
   });
 
+  // Help modal functions
+  function openHelpModal() {
+    helpModal.classList.add('active');
+  }
+
+  function closeHelpModal() {
+    helpModal.classList.remove('active');
+  }
+
+  helpBtn.addEventListener('click', openHelpModal);
+  helpCloseBtn.addEventListener('click', closeHelpModal);
+  helpOkBtn.addEventListener('click', closeHelpModal);
+  helpModal.addEventListener('click', (e) => {
+    if (e.target === helpModal) closeHelpModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && helpModal.classList.contains('active')) {
+      closeHelpModal();
+    }
+  });
+
   // Perform save (overwrite or save as new)
   function performSave(saveAsNew) {
     if (saveAsNew) {
@@ -952,25 +901,13 @@
     }
 
     saveCurrentChecklist();
-
-    // If "プリセット化" checkbox is checked, also save as custom preset
-    if (saveAsPreset.checked) {
-      saveAsCustomPreset();
-      saveAsPreset.checked = false; // Reset checkbox after saving
-    }
-
     showSaveConfirmation();
   }
 
   // Save button
   saveBtn.addEventListener('click', ()=> {
-    // If editing existing checklist, ask whether to overwrite or save as new
-    if (currentChecklistId) {
-      showSaveOptionsModal();
-    } else {
-      // New checklist: save directly
-      performSave(false);
-    }
+    // First, show name edit modal to allow changing the name before saving
+    showNameEditModal('save');
   });
 
   // New checklist button
@@ -981,12 +918,12 @@
   // Preset loading
   presetSelectEl.addEventListener('change', (e)=>{
     const value = e.target.value;
-    // Check if it's a custom preset
-    if (value.startsWith('custom-')) {
+    // Check if it's a saved checklist
+    if (value.startsWith('saved-')) {
       const selectedOption = presetSelectEl.options[presetSelectEl.selectedIndex];
-      const customId = selectedOption.dataset.customId;
-      loadFromCustomPreset(customId);
-      // Show rename and delete buttons for custom presets
+      const checklistId = selectedOption.dataset.checklistId;
+      loadChecklist(checklistId);
+      // Show rename and delete buttons for saved checklists
       renamePresetBtn.classList.remove('hidden');
       deletePresetBtn.classList.remove('hidden');
     } else {
@@ -997,29 +934,28 @@
     }
   });
 
-  // Delete custom preset button
+  // Delete saved checklist button
   deletePresetBtn.addEventListener('click', ()=> {
     const value = presetSelectEl.value;
-    if (value.startsWith('custom-')) {
+    if (value.startsWith('saved-')) {
       const selectedOption = presetSelectEl.options[presetSelectEl.selectedIndex];
-      const customId = selectedOption.dataset.customId;
-      const preset = getAllCustomPresets().find(p => p.id === customId);
+      const checklistId = selectedOption.dataset.checklistId;
+      const checklist = getAllChecklists().find(c => c.id === checklistId);
 
-      if (preset && confirm(t('msg.confirmDeletePreset', { name: preset.name }))) {
-        deleteCustomPreset(customId);
+      if (checklist && confirm(t('msg.confirmDeleteChecklist'))) {
+        deleteChecklist(checklistId);
         deletePresetBtn.classList.add('hidden');
         renamePresetBtn.classList.add('hidden');
+        renderPresetOptions(currentCategory);
       }
     }
   });
 
-  // Rename custom preset button
+  // Rename saved checklist button
   renamePresetBtn.addEventListener('click', ()=> {
     const value = presetSelectEl.value;
-    if (value.startsWith('custom-')) {
-      const selectedOption = presetSelectEl.options[presetSelectEl.selectedIndex];
-      const customId = selectedOption.dataset.customId;
-      renameCustomPreset(customId);
+    if (value.startsWith('saved-')) {
+      showNameEditModal('rename');
     }
   });
 
@@ -1042,21 +978,21 @@
 
     presetSelectEl.innerHTML = '';
 
-    // Add custom presets at the top (always shown)
-    const customPresets = getAllCustomPresets();
-    if (customPresets.length > 0) {
-      const customOptgroup = document.createElement('optgroup');
-      customOptgroup.label = '⭐ ' + t('optgroup.customPresets');
+    // Add saved checklists at the top (always shown)
+    const savedChecklists = getAllChecklists();
+    if (savedChecklists.length > 0) {
+      const savedOptgroup = document.createElement('optgroup');
+      savedOptgroup.label = '💾 ' + t('optgroup.saved');
 
-      customPresets.forEach(preset => {
+      savedChecklists.forEach(checklist => {
         const option = document.createElement('option');
-        option.value = 'custom-' + preset.id; // Prefix to distinguish from built-in
-        option.textContent = preset.name;
-        option.dataset.customId = preset.id;
-        customOptgroup.appendChild(option);
+        option.value = 'saved-' + checklist.id;
+        option.textContent = checklist.name;
+        option.dataset.checklistId = checklist.id;
+        savedOptgroup.appendChild(option);
       });
 
-      presetSelectEl.appendChild(customOptgroup);
+      presetSelectEl.appendChild(savedOptgroup);
     }
 
     if (category === 'all') {
@@ -1077,7 +1013,7 @@
         presetsByCategory[cat].forEach(presetKey => {
           const option = document.createElement('option');
           option.value = presetKey;
-          option.textContent = PRESETS[presetKey].name;
+          option.textContent = getL(PRESETS[presetKey], 'name');
           optgroup.appendChild(option);
         });
 
@@ -1089,7 +1025,7 @@
       presetsToShow.forEach(presetKey => {
         const option = document.createElement('option');
         option.value = presetKey;
-        option.textContent = PRESETS[presetKey].name;
+        option.textContent = getL(PRESETS[presetKey], 'name');
         presetSelectEl.appendChild(option);
       });
     }
@@ -1098,16 +1034,16 @@
     if (presetSelectEl.options.length > 0) {
       const firstPresetKey = presetSelectEl.options[0].value;
       presetSelectEl.value = firstPresetKey;
-      // Check if it's a custom preset
-      if (firstPresetKey.startsWith('custom-')) {
-        const customId = presetSelectEl.options[0].dataset.customId;
-        loadFromCustomPreset(customId);
-        renamePresetBtn.classList.remove('hidden'); // Show rename button
-        deletePresetBtn.classList.remove('hidden'); // Show delete button
+      // Check if it's a saved checklist
+      if (firstPresetKey.startsWith('saved-')) {
+        const checklistId = presetSelectEl.options[0].dataset.checklistId;
+        loadChecklist(checklistId);
+        renamePresetBtn.classList.remove('hidden');
+        deletePresetBtn.classList.remove('hidden');
       } else {
         loadFromPreset(firstPresetKey);
-        renamePresetBtn.classList.add('hidden'); // Hide rename button
-        deletePresetBtn.classList.add('hidden'); // Hide delete button
+        renamePresetBtn.classList.add('hidden');
+        deletePresetBtn.classList.add('hidden');
       }
     }
   }
@@ -1156,13 +1092,11 @@
 
   function initApp() {
     const defaultPreset = PRESETS.embassy || Object.values(PRESETS)[0];
-    state.checklistName = defaultPreset.name;
+    state.checklistName = getL(defaultPreset, 'name');
     state.items = JSON.parse(JSON.stringify(defaultPreset.items)).map(normalizeItem);
     renderPresetOptions('all');
     presetSelectEl.value = Object.keys(PRESETS).find(k => PRESETS[k] === defaultPreset) || Object.keys(PRESETS)[0];
     renderAll();
-    renderSavedList();
-    renderSavedListInline();
   }
 
   // ============================================================
@@ -1172,8 +1106,6 @@
   document.addEventListener('langchange', () => {
     renderAll();
     renderPresetOptions(currentCategory);
-    renderSavedList();
-    renderSavedListInline();
   });
 
   // アプリケーション起動

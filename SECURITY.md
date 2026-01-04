@@ -14,6 +14,7 @@ This is a client-side application with no backend. All data is stored locally in
 - All user inputs are sanitized using `escapeHtml()` function
 - innerHTML usage is carefully controlled and escaped
 - No `eval()` or `Function()` constructor usage
+- URL sanitization blocks `javascript:`, `data:`, and `vbscript:` schemes via `sanitizeUrl()` function
 
 ### 2. Data Safety
 - All data stored in localStorage (client-side only)
@@ -26,10 +27,15 @@ This is a client-side application with no backend. All data is stored locally in
 - CORS and referrer policies configured
 - Integrity checks for jsPDF and html2canvas libraries
 
-### 4. Content Security
-- No inline script execution (except Tailwind CSS JIT compilation)
-- External link targets use `rel="noopener noreferrer"` where applicable
-- **Note**: Security headers (X-Frame-Options, X-Content-Type-Options, Referrer-Policy) are HTTP header-only and cannot be set via meta tags. GitHub Pages does not support custom HTTP headers. For production deployments with custom server configurations, these headers should be added at the HTTP level.
+### 4. Content Security Policy (CSP)
+- CSP meta tag configured with restrictive policy:
+  - `default-src 'self'` - Only same-origin resources by default
+  - `script-src` - Limited to self, Tailwind CDN, and cdnjs.cloudflare.com
+  - `frame-ancestors 'none'` - Prevents clickjacking
+  - `base-uri 'self'` - Prevents base tag hijacking
+- External link targets use `rel="noopener noreferrer"` to prevent tabnabbing
+- Referrer-Policy set to `strict-origin-when-cross-origin`
+- **Note**: Some security headers (X-Frame-Options, X-Content-Type-Options) require HTTP server configuration. GitHub Pages does not support custom HTTP headers.
 
 ## Reporting a Vulnerability
 

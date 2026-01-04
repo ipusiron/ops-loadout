@@ -33,7 +33,7 @@ const I18N = {
 
     // Buttons
     "button.new": "New",
-    "button.add": "+ Add",
+    "button.add": "+ Add Item",
     "button.save": "Save",
     "button.cancel": "Cancel",
     "button.edit": "Edit",
@@ -43,6 +43,7 @@ const I18N = {
     "button.makePreset": "Make Preset",
     "button.overwrite": "Overwrite",
     "button.saveAsNew": "Save as New",
+    "button.rename": "Rename",
 
     // Checklist display
     "checklist.title": "Checklist",
@@ -78,6 +79,7 @@ const I18N = {
     // Modal titles
     "modal.addItem": "Add Item",
     "modal.editItem": "Edit Item",
+    "modal.editName": "Edit Checklist Name",
     "modal.saveOptions": "Select Save Method",
     "modal.saveComplete": "Save Complete",
     "modal.savedChecklists": "Saved Checklists",
@@ -157,7 +159,7 @@ const I18N = {
     "no": "No",
 
     // Preset optgroup labels
-    "optgroup.customPresets": "Custom Presets",
+    "optgroup.saved": "Saved",
     "optgroup.evasion": "Evasion/Escape",
     "optgroup.edc": "EDC/Personal",
     "optgroup.rescue": "Rescue/Fire",
@@ -171,7 +173,22 @@ const I18N = {
     "pdf.totalVolume": "Total Volume (checked items):",
 
     // Footer
-    "footer.github": "GitHub repository here"
+    "footer.github": "GitHub repository here",
+
+    // Help
+    "button.help": "Help",
+    "help.title": "How to Use",
+    "help.gettingStarted": "Getting Started",
+    "help.gettingStartedDesc": "Select a preset or create an empty checklist with the 'New' button.",
+    "help.addingItems": "Adding Items",
+    "help.addingItemsDesc": "Click '+ Add Item' to add items. Enter category, weight, quantity, etc.",
+    "help.savingExporting": "Save & Export",
+    "help.savingExportingDesc": "'Save' stores to local storage. Export to JSON/CSV/PDF is also available.",
+    "help.badges": "About Badges",
+    "help.badgeDualDesc": "— Dual-use item (may have legal restrictions)",
+    "help.badgeHazardDesc": "— Subject to transport regulations",
+    "help.keyboard": "Keyboard Shortcuts",
+    "help.keyEsc": "— Close modal"
   },
 
   ja: {
@@ -201,7 +218,7 @@ const I18N = {
 
     // Buttons
     "button.new": "新規",
-    "button.add": "＋ 追加",
+    "button.add": "＋ アイテム追加",
     "button.save": "保存",
     "button.cancel": "キャンセル",
     "button.edit": "編集",
@@ -211,6 +228,7 @@ const I18N = {
     "button.makePreset": "プリセット化",
     "button.overwrite": "上書き保存",
     "button.saveAsNew": "別名で保存（新規作成）",
+    "button.rename": "名前を変更",
 
     // Checklist display
     "checklist.title": "チェックリスト",
@@ -246,6 +264,7 @@ const I18N = {
     // Modal titles
     "modal.addItem": "アイテム追加",
     "modal.editItem": "アイテム編集",
+    "modal.editName": "チェックリスト名を編集",
     "modal.saveOptions": "保存方法を選択",
     "modal.saveComplete": "保存完了",
     "modal.savedChecklists": "保存済みチェックリスト",
@@ -325,7 +344,7 @@ const I18N = {
     "no": "いいえ",
 
     // Preset optgroup labels
-    "optgroup.customPresets": "カスタムプリセット",
+    "optgroup.saved": "保存済み",
     "optgroup.evasion": "脱出・回避系 (Evasion/Escape)",
     "optgroup.edc": "日常携行系 (EDC/Personal)",
     "optgroup.rescue": "救助・消防系 (Rescue/Fire)",
@@ -339,7 +358,22 @@ const I18N = {
     "pdf.totalVolume": "合計体積（チェック済みアイテム）:",
 
     // Footer
-    "footer.github": "GitHubリポジトリはこちら"
+    "footer.github": "GitHubリポジトリはこちら",
+
+    // Help
+    "button.help": "ヘルプ",
+    "help.title": "使い方",
+    "help.gettingStarted": "はじめに",
+    "help.gettingStartedDesc": "プリセットを選択するか、「新規」ボタンで空のチェックリストを作成します。",
+    "help.addingItems": "アイテムの追加",
+    "help.addingItemsDesc": "「＋ アイテム追加」ボタンでアイテムを追加できます。カテゴリー、重量、数量などを入力してください。",
+    "help.savingExporting": "保存とエクスポート",
+    "help.savingExportingDesc": "「保存」でローカルストレージに保存されます。JSON/CSV/PDF形式でエクスポートも可能です。",
+    "help.badges": "バッジについて",
+    "help.badgeDualDesc": "— 軍民両用品目（法的制限の可能性あり）",
+    "help.badgeHazardDesc": "— 輸送規制対象品目",
+    "help.keyboard": "キーボードショートカット",
+    "help.keyEsc": "— モーダルを閉じる"
   }
 };
 
