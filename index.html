@@ -153,6 +153,11 @@
             <span class="footer-info"><span data-i18n="total.weight">合計重量:</span> <strong id="totalWeight">0</strong> g</span>
             <span class="weight-target-wrapper">
               / <input type="number" id="targetWeight" class="target-weight-input" value="5000" min="100" step="100" /> g
+              <span class="weight-presets">
+                <button type="button" class="weight-preset-btn" data-weight="3000" data-i18n-title="weight.ultralight" title="ウルトラライト">UL</button>
+                <button type="button" class="weight-preset-btn active" data-weight="5000" data-i18n-title="weight.standard" title="スタンダード">STD</button>
+                <button type="button" class="weight-preset-btn" data-weight="10000" data-i18n-title="weight.heavy" title="ヘビー">HVY</button>
+              </span>
             </span>
           </div>
           <div class="weight-progress-bar">
@@ -163,6 +168,13 @@
         <span class="footer-info volume-info"><span data-i18n="total.volume">体積:</span> <strong id="totalVolume">0</strong> cm³</span>
       </div>
       <div class="footer-bar-right">
+        <button id="graphBtn" class="btn btn-primary btn-sm export-btn" data-i18n-title="button.graph" title="グラフ表示">
+          <svg class="export-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21.21 15.89A10 10 0 1 1 8 2.83"/>
+            <path d="M22 12A10 10 0 0 0 12 2v10z"/>
+          </svg>
+          <span data-i18n="button.graph">Graph</span>
+        </button>
         <button id="exportJson" class="btn btn-secondary btn-sm export-btn">
           <svg class="export-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
@@ -381,6 +393,34 @@
       </div>
       <div class="mt-6 text-center">
         <button id="helpOkBtn" class="btn btn-primary" data-i18n="button.ok">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Graph Modal -->
+  <div id="graphModal" class="modal-backdrop">
+    <div class="modal-content graph-modal-content">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-semibold" data-i18n="graph.title">グラフ</h3>
+        <button id="graphCloseBtn" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+      </div>
+      <div class="graph-canvas-wrapper">
+        <canvas id="graphCanvas" width="1200" height="675"></canvas>
+      </div>
+      <div class="mt-4 flex justify-center gap-3">
+        <button id="graphDownloadBtn" class="btn btn-primary">
+          <svg class="inline w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+          </svg>
+          <span data-i18n="graph.download">ダウンロード</span>
+        </button>
+        <button id="graphCopyBtn" class="btn btn-secondary">
+          <svg class="inline w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+          </svg>
+          <span data-i18n="graph.copy">コピー</span>
+        </button>
       </div>
     </div>
   </div>

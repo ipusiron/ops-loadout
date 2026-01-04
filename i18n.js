@@ -53,6 +53,15 @@ const I18N = {
     // Footer bar
     "total.weight": "Total Weight:",
     "total.volume": "Volume:",
+    "weight.ultralight": "Ultralight (3kg)",
+    "weight.standard": "Standard (5kg)",
+    "weight.heavy": "Heavy (10kg)",
+
+    // Graph
+    "button.graph": "Graph",
+    "graph.title": "Graph",
+    "graph.download": "Download",
+    "graph.copy": "Copy",
 
     // Saved checklists
     "saved.title": "Saved Checklists",
@@ -239,12 +248,21 @@ const I18N = {
     "button.checkAll": "全選択",
     "button.uncheckAll": "全解除",
 
+    // Graph
+    "button.graph": "グラフ",
+    "graph.title": "グラフ",
+    "graph.download": "ダウンロード",
+    "graph.copy": "コピー",
+
     // Checklist display
     "checklist.title": "チェックリスト",
 
     // Footer bar
     "total.weight": "合計重量:",
     "total.volume": "体積:",
+    "weight.ultralight": "ウルトラライト (3kg)",
+    "weight.standard": "スタンダード (5kg)",
+    "weight.heavy": "ヘビー (10kg)",
 
     // Saved checklists
     "saved.title": "保存済みチェックリスト",

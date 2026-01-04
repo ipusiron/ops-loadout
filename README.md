@@ -77,6 +77,12 @@ hub: true
 >![ペネトレーションテスターの装備品](assets/screenshot.png)
 >*ペネトレーションテスターの装備品*
 
+>![ブラッシュクラフト（ミニマル）の装備品](assets/screenshot.png)
+>*ブラッシュクラフト（ミニマル）の装備品*
+
+>![画像の表示](assets/screenshot.png)
+>*共有画像の表示*
+
 ---
 
 ## 🎯 主要な設計方針（Design principles）

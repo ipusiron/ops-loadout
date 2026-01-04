@@ -766,12 +766,34 @@
     renderTotals();
     // Save target weight to localStorage
     localStorage.setItem('ops_target_weight', targetWeightInput.value);
+    // Update active button
+    updateWeightPresetButtons();
+  });
+
+  // Weight preset buttons
+  function updateWeightPresetButtons() {
+    const currentWeight = parseInt(targetWeightInput.value) || 5000;
+    document.querySelectorAll('.weight-preset-btn').forEach(btn => {
+      const btnWeight = parseInt(btn.dataset.weight);
+      btn.classList.toggle('active', btnWeight === currentWeight);
+    });
+  }
+
+  document.querySelectorAll('.weight-preset-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const weight = btn.dataset.weight;
+      targetWeightInput.value = weight;
+      localStorage.setItem('ops_target_weight', weight);
+      updateWeightPresetButtons();
+      renderTotals();
+    });
   });
 
   // Load saved target weight
   const savedTargetWeight = localStorage.getItem('ops_target_weight');
   if (savedTargetWeight) {
     targetWeightInput.value = savedTargetWeight;
+    updateWeightPresetButtons();
   }
 
   // Export functions
@@ -810,6 +832,253 @@
     a.click();
     URL.revokeObjectURL(url);
   }
+
+  // ============================================================
+  // Graph Modal (グラフ表示・SNS共有用画像生成)
+  // ============================================================
+  const graphModal = document.getElementById('graphModal');
+  const graphCanvas = document.getElementById('graphCanvas');
+  const graphCloseBtn = document.getElementById('graphCloseBtn');
+  const graphDownloadBtn = document.getElementById('graphDownloadBtn');
+  const graphCopyBtn = document.getElementById('graphCopyBtn');
+  const graphBtn = document.getElementById('graphBtn');
+
+  // Category colors for pie chart
+  const categoryColors = {
+    'サバイバル': '#10b981', 'Survival': '#10b981',
+    '信号・通信': '#3b82f6', 'Signaling': '#3b82f6', 'Communications': '#3b82f6',
+    '工具': '#f59e0b', 'Tools': '#f59e0b',
+    'ナビゲーション': '#8b5cf6', 'Navigation': '#8b5cf6',
+    '医療': '#ef4444', 'Medical': '#ef4444',
+    'シェルター': '#06b6d4', 'Shelter': '#06b6d4',
+    '寝具': '#6366f1', 'Sleep System': '#6366f1',
+    '水・衛生': '#0ea5e9', 'Water & Hygiene': '#0ea5e9', 'Water & Cooking': '#0ea5e9',
+    '調理': '#f97316', 'Cooking': '#f97316',
+    '書類': '#84cc16', 'Documents': '#84cc16',
+    'デジタル': '#a855f7', 'Digital Devices': '#a855f7',
+    '修理・メンテナンス': '#64748b', 'Repair & Maintenance': '#64748b',
+    '衛生・快適': '#14b8a6', 'Hygiene/Comfort': '#14b8a6',
+    'その他': '#9ca3af', 'Other': '#9ca3af'
+  };
+
+  function getColorForCategory(cat) {
+    return categoryColors[cat] || '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+  }
+
+  function drawGraphImage() {
+    const ctx = graphCanvas.getContext('2d');
+    const W = 1200, H = 675;
+
+    // Background gradient
+    const grad = ctx.createLinearGradient(0, 0, W, H);
+    grad.addColorStop(0, '#1a1a2e');
+    grad.addColorStop(0.5, '#16213e');
+    grad.addColorStop(1, '#0f3460');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    // Decorative elements
+    ctx.fillStyle = 'rgba(255,255,255,0.03)';
+    ctx.beginPath();
+    ctx.arc(W - 100, 100, 200, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(100, H - 50, 150, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Header
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 42px system-ui, sans-serif';
+    ctx.fillText('📦 OpsLoadout', 50, 65);
+
+    ctx.font = '24px system-ui, sans-serif';
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText(state.checklistName, 50, 105);
+
+    // Calculate stats
+    const checkedItems = state.items.filter(it => it.checked);
+    const totalWeight = checkedItems.reduce((acc, it) => acc + (Number(it.weight_g || 0) * (Number(it.quantity) || 1)), 0);
+    const totalVolume = checkedItems.reduce((acc, it) => acc + (Number(it.volume_cm3 || 0) * (Number(it.quantity) || 1)), 0);
+    const totalQty = checkedItems.reduce((acc, it) => acc + (Number(it.quantity) || 1), 0);
+
+    // Category breakdown
+    const catBreakdown = {};
+    checkedItems.forEach(it => {
+      const cat = getL(it, 'category') || 'Other';
+      const weight = (Number(it.weight_g || 0) * (Number(it.quantity) || 1));
+      catBreakdown[cat] = (catBreakdown[cat] || 0) + weight;
+    });
+
+    // Draw pie chart
+    const pieX = 250, pieY = 400, pieR = 150;
+    let startAngle = -Math.PI / 2;
+    const catEntries = Object.entries(catBreakdown).sort((a, b) => b[1] - a[1]);
+
+    if (catEntries.length > 0) {
+      catEntries.forEach(([cat, weight]) => {
+        const sliceAngle = (weight / totalWeight) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.moveTo(pieX, pieY);
+        ctx.arc(pieX, pieY, pieR, startAngle, startAngle + sliceAngle);
+        ctx.closePath();
+        ctx.fillStyle = getColorForCategory(cat);
+        ctx.fill();
+        startAngle += sliceAngle;
+      });
+
+      // Inner circle (donut)
+      ctx.beginPath();
+      ctx.arc(pieX, pieY, pieR * 0.55, 0, Math.PI * 2);
+      ctx.fillStyle = '#1a1a2e';
+      ctx.fill();
+
+      // Center text
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 36px system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(`${(totalWeight / 1000).toFixed(1)}`, pieX, pieY - 5);
+      ctx.font = '18px system-ui, sans-serif';
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText('kg', pieX, pieY + 25);
+      ctx.textAlign = 'left';
+    }
+
+    // Legend
+    let legendY = 180;
+    ctx.font = '14px system-ui, sans-serif';
+    catEntries.slice(0, 8).forEach(([cat, weight]) => {
+      ctx.fillStyle = getColorForCategory(cat);
+      ctx.beginPath();
+      ctx.arc(70, legendY, 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#e2e8f0';
+      ctx.fillText(cat, 85, legendY + 5);
+
+      ctx.fillStyle = '#94a3b8';
+      ctx.textAlign = 'right';
+      ctx.fillText(`${(weight / 1000).toFixed(2)}kg`, 380, legendY + 5);
+      ctx.textAlign = 'left';
+
+      legendY += 28;
+    });
+
+    // Stats cards (right side)
+    const cardX = 480, cardY = 150, cardW = 200, cardH = 100, cardGap = 20;
+
+    const stats = [
+      { label: currentLang === 'ja' ? 'アイテム数' : 'Items', value: totalQty, unit: currentLang === 'ja' ? '個' : 'pcs', icon: '📋' },
+      { label: currentLang === 'ja' ? '合計重量' : 'Total Weight', value: (totalWeight / 1000).toFixed(2), unit: 'kg', icon: '⚖️' },
+      { label: currentLang === 'ja' ? '体積' : 'Volume', value: (totalVolume / 1000).toFixed(1), unit: 'L', icon: '📦' }
+    ];
+
+    stats.forEach((stat, i) => {
+      const x = cardX + (i % 3) * (cardW + cardGap);
+      const y = cardY;
+
+      // Card background
+      ctx.fillStyle = 'rgba(255,255,255,0.08)';
+      ctx.beginPath();
+      ctx.roundRect(x, y, cardW, cardH, 12);
+      ctx.fill();
+
+      // Icon
+      ctx.font = '28px system-ui, sans-serif';
+      ctx.fillText(stat.icon, x + 15, y + 40);
+
+      // Value
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 28px system-ui, sans-serif';
+      ctx.fillText(stat.value, x + 55, y + 42);
+
+      // Unit
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '16px system-ui, sans-serif';
+      ctx.fillText(stat.unit, x + 55 + ctx.measureText(String(stat.value)).width + 5, y + 42);
+
+      // Label
+      ctx.fillStyle = '#64748b';
+      ctx.font = '13px system-ui, sans-serif';
+      ctx.fillText(stat.label, x + 15, y + 75);
+    });
+
+    // Item list (top items by weight)
+    const listX = 480, listY = 300;
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 16px system-ui, sans-serif';
+    ctx.fillText(currentLang === 'ja' ? '🎒 主要アイテム (重量順)' : '🎒 Top Items (by weight)', listX, listY);
+
+    const topItems = [...checkedItems]
+      .map(it => ({ ...it, totalWeight: (Number(it.weight_g || 0) * (Number(it.quantity) || 1)) }))
+      .sort((a, b) => b.totalWeight - a.totalWeight)
+      .slice(0, 8);
+
+    ctx.font = '14px system-ui, sans-serif';
+    topItems.forEach((it, i) => {
+      const y = listY + 30 + i * 28;
+      const name = getL(it, 'name');
+      const displayName = name.length > 28 ? name.slice(0, 26) + '…' : name;
+
+      ctx.fillStyle = '#e2e8f0';
+      ctx.fillText(`${i + 1}. ${displayName}`, listX, y);
+
+      ctx.fillStyle = '#94a3b8';
+      ctx.textAlign = 'right';
+      ctx.fillText(`${it.totalWeight}g`, W - 60, y);
+      ctx.textAlign = 'left';
+    });
+
+    // Footer
+    ctx.fillStyle = '#475569';
+    ctx.font = '12px system-ui, sans-serif';
+    const dateStr = new Date().toLocaleDateString(currentLang === 'ja' ? 'ja-JP' : 'en-US');
+    ctx.fillText(`Generated: ${dateStr}  |  github.com/ipusiron/ops-loadout`, 50, H - 25);
+
+    // Watermark
+    ctx.fillStyle = 'rgba(255,255,255,0.1)';
+    ctx.font = 'bold 120px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('📦', W - 120, H - 80);
+    ctx.textAlign = 'left';
+  }
+
+  function openGraphModal() {
+    graphModal.classList.add('active');
+    drawGraphImage();
+  }
+
+  function closeGraphModal() {
+    graphModal.classList.remove('active');
+  }
+
+  graphBtn.addEventListener('click', openGraphModal);
+  graphCloseBtn.addEventListener('click', closeGraphModal);
+  graphModal.addEventListener('click', (e) => {
+    if (e.target === graphModal) closeGraphModal();
+  });
+
+  graphDownloadBtn.addEventListener('click', () => {
+    const link = document.createElement('a');
+    link.download = `${state.checklistName.replace(/\s+/g, '_')}_${getTimestamp()}.png`;
+    link.href = graphCanvas.toDataURL('image/png');
+    link.click();
+  });
+
+  graphCopyBtn.addEventListener('click', async () => {
+    try {
+      const blob = await new Promise(resolve => graphCanvas.toBlob(resolve, 'image/png'));
+      await navigator.clipboard.write([
+        new ClipboardItem({ 'image/png': blob })
+      ]);
+      graphCopyBtn.textContent = currentLang === 'ja' ? '✓ コピー済み' : '✓ Copied';
+      setTimeout(() => {
+        graphCopyBtn.innerHTML = `<svg class="inline w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg><span>${currentLang === 'ja' ? 'コピー' : 'Copy'}</span>`;
+      }, 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+      alert(currentLang === 'ja' ? 'コピーに失敗しました' : 'Failed to copy');
+    }
+  });
 
   async function exportPDF() {
     // Check if libraries are loaded
