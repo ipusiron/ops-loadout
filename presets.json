@@ -3905,7 +3905,7 @@
       },
       {
         "id": "ls_safe_massager",
-        "name": "金庫用電動マッサージ機（THRIVE製推奨）",
+        "name": "金庫用電動マッサージ機",
         "category": "工具",
         "weight_g": 400,
         "volume_cm3": 300,
@@ -3928,7 +3928,7 @@
           "concealability": 1,
           "legality_penalty": 4
         },
-        "description": ""
+        "description": "THRIVE製推奨"
       }
     ]
   },

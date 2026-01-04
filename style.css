@@ -998,3 +998,68 @@ body {
     display: none !important;
   }
 }
+
+/* ============================================================
+   12. Language Toggle (言語切り替え)
+   ============================================================
+   右上の言語切り替えボタン
+*/
+
+.header-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+.header-text {
+  text-align: center;
+}
+
+.header-actions {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.lang-btn {
+  background: #3b82f6;
+  border: 1px solid #2563eb;
+  color: white;
+  padding: 0.375rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.75rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.lang-btn:hover {
+  background: #2563eb;
+  border-color: #1d4ed8;
+}
+
+.lang-btn:active {
+  transform: scale(0.95);
+}
+
+@media (max-width: 640px) {
+  .header-actions {
+    position: static;
+    transform: none;
+    margin-top: 0.5rem;
+  }
+
+  .header-content {
+    flex-direction: column;
+  }
+
+  .lang-btn:active {
+    transform: scale(0.95);
+  }
+}

@@ -29,9 +29,16 @@
 
   <!-- Header -->
   <header class="app-header">
-    <div>
-      <h1 class="app-title">OpsLoadout</h1>
-      <p class="app-subtitle">装備構成を計画・編集・エクスポートする任務対応型チェックリストツール</p>
+    <div class="header-content">
+      <div class="header-text">
+        <h1 class="app-title">OpsLoadout</h1>
+        <p class="app-subtitle" data-i18n="app.subtitle">装備構成を計画・編集・エクスポートする任務対応型チェックリストツール</p>
+      </div>
+      <div class="header-actions">
+        <button id="langToggle" class="lang-btn" title="Toggle Language">
+          <span id="langLabel">EN</span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -40,15 +47,15 @@
     <div class="controls-container">
       <div class="controls-row">
         <div class="control-group">
-          <label class="control-label">カテゴリー</label>
+          <label class="control-label" data-i18n="label.category">カテゴリー</label>
           <div class="category-buttons">
-            <button class="category-filter-btn active" data-category="all">All</button>
-            <button class="category-filter-btn" data-category="evasion">脱出</button>
-            <button class="category-filter-btn" data-category="edc">日常</button>
-            <button class="category-filter-btn" data-category="rescue">救助</button>
-            <button class="category-filter-btn" data-category="security">警備</button>
-            <button class="category-filter-btn" data-category="disaster">災害</button>
-            <button class="category-filter-btn" data-category="hacker">IT</button>
+            <button class="category-filter-btn active" data-category="all" data-i18n="cat.all">All</button>
+            <button class="category-filter-btn" data-category="evasion" data-i18n="cat.evasion">脱出</button>
+            <button class="category-filter-btn" data-category="edc" data-i18n="cat.edc">日常</button>
+            <button class="category-filter-btn" data-category="rescue" data-i18n="cat.rescue">救助</button>
+            <button class="category-filter-btn" data-category="security" data-i18n="cat.security">警備</button>
+            <button class="category-filter-btn" data-category="disaster" data-i18n="cat.disaster">災害</button>
+            <button class="category-filter-btn" data-category="hacker" data-i18n="cat.hacker">IT</button>
           </div>
         </div>
       </div>
@@ -64,7 +71,7 @@
         </div>
         <div class="control-group">
           <label for="globalSearch" class="control-label">検索</label>
-          <input id="globalSearch" type="search" placeholder="アイテムを検索..." class="form-input text-sm" />
+          <input id="globalSearch" type="search" placeholder="アイテムを検索..." data-i18n-placeholder="placeholder.search" class="form-input text-sm" />
         </div>
       </div>
 
@@ -97,7 +104,7 @@
             <input id="saveAsPreset" type="checkbox" class="form-checkbox" />
             <span>⭐ プリセット化</span>
           </label>
-          <button id="saveBtn" class="btn btn-primary">保存</button>
+          <button id="saveBtn" class="btn btn-primary" data-i18n="button.save">保存</button>
         </div>
       </div>
       <div id="itemCountDisplay" class="item-count"></div>
@@ -120,7 +127,7 @@
 
     <!-- Saved Checklists Section -->
     <section class="saved-checklists-section">
-      <h3 class="saved-checklists-title">保存済みチェックリスト</h3>
+      <h3 class="saved-checklists-title" data-i18n="saved.title">保存済みチェックリスト</h3>
       <ul id="savedListInline" class="saved-list-inline"></ul>
       <div id="savedListInlineEmpty" class="empty-state-inline hidden">
         <p class="text-sm text-gray-500">保存済みチェックリストはありません</p>
@@ -199,92 +206,93 @@
   <!-- Modals -->
   <div id="modalBackdrop" class="modal-backdrop">
     <div class="modal-content">
-      <h3 id="modalTitle" class="text-lg font-semibold mb-4">アイテム編集</h3>
+      <h3 id="modalTitle" class="text-lg font-semibold mb-4" data-i18n="modal.editItem">アイテム編集</h3>
       <form id="itemForm" class="space-y-3 text-sm">
         <div>
-          <label for="f_name" class="form-label">名称</label>
+          <label for="f_name" class="form-label" data-i18n="form.name">名称</label>
           <input id="f_name" class="form-input" required />
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <div>
-            <label for="f_category" class="form-label">カテゴリー</label>
+            <label for="f_category" class="form-label" data-i18n="form.category">カテゴリー</label>
             <select id="f_category" class="form-select">
-              <option>サバイバル</option>
-              <option>信号発信</option>
-              <option>工具</option>
-              <option>ナビゲーション</option>
-              <option>都市型回避</option>
-              <option>医療</option>
-              <option>通信</option>
-              <option>書類</option>
-              <option>デジタル機器</option>
-              <option>その他</option>
+              <option data-i18n="item.cat.survival">サバイバル</option>
+              <option data-i18n="item.cat.signaling">信号発信</option>
+              <option data-i18n="item.cat.tools">工具</option>
+              <option data-i18n="item.cat.navigation">ナビゲーション</option>
+              <option data-i18n="item.cat.urban">都市型回避</option>
+              <option data-i18n="item.cat.medical">医療</option>
+              <option data-i18n="item.cat.comm">通信</option>
+              <option data-i18n="item.cat.docs">書類</option>
+              <option data-i18n="item.cat.digital">デジタル機器</option>
+              <option data-i18n="item.cat.other">その他</option>
             </select>
           </div>
           <div>
-            <label for="f_weight" class="form-label">重量 (g)</label>
+            <label for="f_weight" class="form-label" data-i18n="form.weight">重量 (g)</label>
             <input id="f_weight" type="number" min="0" class="form-input" />
           </div>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <div>
-            <label for="f_volume" class="form-label">体積 (cm³)</label>
+            <label for="f_volume" class="form-label" data-i18n="form.volume">体積 (cm³)</label>
             <input id="f_volume" type="number" min="0" class="form-input" />
           </div>
           <div>
-            <label for="f_quantity" class="form-label">数量</label>
+            <label for="f_quantity" class="form-label" data-i18n="form.quantity">数量</label>
             <input id="f_quantity" type="number" min="1" value="1" class="form-input" />
           </div>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <div>
-            <label for="f_recommended_quantity" class="form-label">推奨数</label>
+            <label for="f_recommended_quantity" class="form-label" data-i18n="form.recommendedQty">推奨数</label>
             <input id="f_recommended_quantity" type="number" min="1" value="1" class="form-input" />
           </div>
           <div>
-            <label for="f_repack_frequency" class="form-label">入替頻度</label>
+            <label for="f_repack_frequency" class="form-label" data-i18n="form.repackFreq">入替頻度</label>
             <select id="f_repack_frequency" class="form-select">
-              <option value="never">なし</option>
-              <option value="daily">毎日</option>
-              <option value="weekly">毎週</option>
-              <option value="monthly">毎月</option>
+              <option value="never" data-i18n="freq.never">なし</option>
+              <option value="daily" data-i18n="freq.daily">毎日</option>
+              <option value="weekly" data-i18n="freq.weekly">毎週</option>
+              <option value="monthly" data-i18n="freq.monthly">毎月</option>
             </select>
           </div>
         </div>
         <div>
-          <label for="f_purpose" class="form-label">用途（簡潔に）</label>
+          <label for="f_purpose" class="form-label" data-i18n="form.purpose">用途（簡潔に）</label>
           <input id="f_purpose" class="form-input" />
         </div>
         <div>
-          <label for="f_description" class="form-label">詳細メモ（Markdown可）</label>
-          <textarea id="f_description" rows="4" class="form-input" placeholder="詳細な説明、使用方法、注意事項など"></textarea>
+          <label for="f_description" class="form-label" data-i18n="form.description">詳細メモ（Markdown可）</label>
+          <textarea id="f_description" rows="4" class="form-input" placeholder="詳細な説明、使用方法、注意事項など" data-i18n-placeholder="placeholder.description"></textarea>
         </div>
         <div class="flex items-center gap-4">
-          <label class="flex items-center gap-2 cursor-pointer"><input id="f_dual" type="checkbox" class="form-checkbox" /> <span class="text-xs">軍民両用</span></label>
-          <label class="flex items-center gap-2 cursor-pointer"><input id="f_hazard" type="checkbox" class="form-checkbox" /> <span class="text-xs">危険物</span></label>
+          <label class="flex items-center gap-2 cursor-pointer"><input id="f_dual" type="checkbox" class="form-checkbox" /> <span class="text-xs" data-i18n="form.dualUse">軍民両用</span></label>
+          <label class="flex items-center gap-2 cursor-pointer"><input id="f_hazard" type="checkbox" class="form-checkbox" /> <span class="text-xs" data-i18n="form.hazard">危険物</span></label>
         </div>
         <div>
-          <label for="f_legality" class="form-label">法的注意事項（JSON形式）</label>
-          <textarea id="f_legality" rows="2" class="form-input" placeholder='{"US":"許可","JP":"許可"}'></textarea>
+          <label for="f_legality" class="form-label" data-i18n="form.legality">法的注意事項（JSON形式）</label>
+          <textarea id="f_legality" rows="2" class="form-input" placeholder='{"US":"許可","JP":"許可"}' data-i18n-placeholder="placeholder.legality"></textarea>
         </div>
         <div>
-          <label for="f_sources" class="form-label">出典（1行1件、タイトル URL形式）</label>
-          <textarea id="f_sources" rows="3" class="form-input" placeholder="米国務省ガイダンス https://example.gov&#10;AF SERE ハンドブック"></textarea>
+          <label for="f_sources" class="form-label" data-i18n="form.sources">出典（1行1件、タイトル URL形式）</label>
+          <textarea id="f_sources" rows="3" class="form-input" placeholder="米国務省ガイダンス https://example.gov&#10;AF SERE ハンドブック" data-i18n-placeholder="placeholder.sources"></textarea>
         </div>
 
         <div class="flex flex-col sm:flex-row justify-end gap-2 pt-2">
-          <button type="button" id="modalCancel" class="btn btn-secondary">キャンセル</button>
-          <button id="modalSave" class="btn btn-primary">保存</button>
+          <button type="button" id="modalCancel" class="btn btn-secondary" data-i18n="button.cancel">キャンセル</button>
+          <button id="modalSave" class="btn btn-primary" data-i18n="button.save">保存</button>
         </div>
       </form>
     </div>
   </div>
   <footer class="app-footer">
     <div class="app-footer-content">
-      <p class="app-footer-text">🔗 GitHubリポジトリはこちら（ <a href="https://github.com/ipusiron/ops-loadout" target="_blank" class="app-footer-link">ipusiron/ops-loadout</a> ）</p>
+      <p class="app-footer-text">🔗 <span data-i18n="footer.github">GitHubリポジトリはこちら</span>（ <a href="https://github.com/ipusiron/ops-loadout" target="_blank" class="app-footer-link">ipusiron/ops-loadout</a> ）</p>
     </div>
   </footer>
 
+  <script src="i18n.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

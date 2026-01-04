@@ -176,10 +176,10 @@
       localStorage.setItem('ekc_checklists', JSON.stringify(checklists));
     } catch (error) {
       if (error.name === 'QuotaExceededError') {
-        alert('保存容量が不足しています。古いチェックリストを削除してください。');
+        alert(t('msg.storageQuotaExceeded'));
       } else {
         console.error('Failed to save checklists to localStorage:', error);
-        alert('チェックリストの保存に失敗しました。');
+        alert(t('msg.saveFailed'));
       }
     }
   }
@@ -200,10 +200,10 @@
       localStorage.setItem('ekc_custom_presets', JSON.stringify(presets));
     } catch (error) {
       if (error.name === 'QuotaExceededError') {
-        alert('保存容量が不足しています。カスタムプリセットを削除してください。');
+        alert(t('msg.presetStorageQuotaExceeded'));
       } else {
         console.error('Failed to save custom presets to localStorage:', error);
-        alert('カスタムプリセットの保存に失敗しました。');
+        alert(t('msg.presetSaveFailed'));
       }
     }
   }
@@ -233,7 +233,7 @@
     const preset = presets.find(p => p.id === id);
     if (!preset) return;
 
-    const newName = prompt('新しいプリセット名を入力してください:', preset.name);
+    const newName = prompt(t('msg.enterPresetName'), preset.name);
     if (!newName || newName.trim() === '') return;
     if (newName === preset.name) return; // No change
 
@@ -312,7 +312,7 @@
 
   function createNewChecklist() {
     currentChecklistId = null;
-    state.checklistName = '新規チェックリスト';
+    state.checklistName = t('msg.newChecklist');
     state.items = [];
     renderAll();
   }
@@ -341,11 +341,11 @@
         return `<li class="filter-item ${isActive ? 'bg-blue-50' : ''}">
           <div class="flex-1 min-w-0">
             <div class="text-sm truncate font-medium">${escapeHtml(c.name)}</div>
-            <div class="text-xs text-gray-500">${new Date(c.updatedAt).toLocaleDateString('ja-JP')}</div>
+            <div class="text-xs text-gray-500">${new Date(c.updatedAt).toLocaleDateString(getLocale())}</div>
           </div>
           <div class="flex gap-1 flex-shrink-0">
-            <button class="text-xs text-blue-600 hover:text-blue-800" data-id="${c.id}" data-action="load">読込</button>
-            <button class="text-xs text-red-600 hover:text-red-800" data-id="${c.id}" data-action="delete">削除</button>
+            <button class="text-xs text-blue-600 hover:text-blue-800" data-id="${c.id}" data-action="load">${t('button.load')}</button>
+            <button class="text-xs text-red-600 hover:text-red-800" data-id="${c.id}" data-action="delete">${t('button.delete')}</button>
           </div>
         </li>`;
       }).join('');
@@ -359,7 +359,7 @@
             loadChecklist(id);
             savedChecklistModal.classList.remove('active');
           } else if (action === 'delete') {
-            if (confirm('このチェックリストを削除しますか？')) {
+            if (confirm(t('msg.confirmDeleteChecklist'))) {
               deleteChecklist(id);
             }
           }
@@ -383,11 +383,11 @@
         return `<li class="${isActive ? 'active' : ''}">
           <div class="saved-list-inline-info">
             <div class="saved-list-inline-name">${escapeHtml(c.name)}</div>
-            <div class="saved-list-inline-date">${new Date(c.updatedAt).toLocaleString('ja-JP', {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'})}</div>
+            <div class="saved-list-inline-date">${new Date(c.updatedAt).toLocaleString(getLocale(), {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'})}</div>
           </div>
           <div class="saved-list-inline-actions">
-            <button class="load-btn" data-id="${c.id}">読込</button>
-            <button class="delete-btn" data-id="${c.id}">削除</button>
+            <button class="load-btn" data-id="${c.id}">${t('button.load')}</button>
+            <button class="delete-btn" data-id="${c.id}">${t('button.delete')}</button>
           </div>
         </li>`;
       }).join('');
@@ -405,7 +405,7 @@
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
           const id = btn.dataset.id;
-          if (confirm('このチェックリストを削除しますか？')) {
+          if (confirm(t('msg.confirmDeleteChecklist'))) {
             deleteChecklist(id);
           }
         });
@@ -443,10 +443,10 @@
     // Update item count display
     if (itemCountDisplay) {
       if (list.length < totalItems) {
-        itemCountDisplay.textContent = `${totalItems}件中 ${list.length}件を表示`;
+        itemCountDisplay.textContent = t('msg.itemCountFiltered', { total: totalItems, shown: list.length });
         itemCountDisplay.classList.remove('hidden');
       } else {
-        itemCountDisplay.textContent = `${totalItems}件のアイテム`;
+        itemCountDisplay.textContent = t('msg.itemCount', { count: totalItems });
         itemCountDisplay.classList.remove('hidden');
       }
     }
@@ -459,7 +459,7 @@
         <svg class="mx-auto h-12 w-12 text-gray-300 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
         </svg>
-        <p class="text-sm text-gray-500">${totalItems === 0 ? 'アイテムがありません。「アイテム追加」を使うか、プリセットを読み込んでください。' : 'フィルター条件に一致するアイテムがありません。'}</p>
+        <p class="text-sm text-gray-500">${totalItems === 0 ? t('msg.noItems') : t('msg.noMatchingItems')}</p>
       </div>`;
       return;
     }
@@ -469,12 +469,12 @@
     header.className = 'item-table-header';
     header.innerHTML = `
       <div></div>
-      <div>名前</div>
-      <div>カテゴリー</div>
-      <div>重量(g)</div>
-      <div>数量</div>
-      <div>タグ</div>
-      <div class="text-right">操作</div>
+      <div>${t('th.name')}</div>
+      <div>${t('th.category')}</div>
+      <div>${t('th.weight')}</div>
+      <div>${t('th.quantity')}</div>
+      <div>${t('th.tags')}</div>
+      <div class="text-right">${t('th.actions')}</div>
     `;
     itemTable.appendChild(header);
 
@@ -485,10 +485,10 @@
 
       const badges = [];
       if (it.dual_use) {
-        badges.push('<span class="badge badge-warning"><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>両用</span>');
+        badges.push(`<span class="badge badge-warning"><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>${t('badge.dualUse')}</span>`);
       }
       if (it.hazard_flag) {
-        badges.push('<span class="badge badge-danger"><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>危険</span>');
+        badges.push(`<span class="badge badge-danger"><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>${t('badge.hazard')}</span>`);
       }
 
       row.innerHTML = `
@@ -560,7 +560,7 @@
     itemTable.querySelectorAll('.delBtn').forEach(btn=>{
       btn.addEventListener('click', e=>{
         const id = e.currentTarget.dataset.id;
-        if (confirm('このアイテムを削除しますか？')) {
+        if (confirm(t('msg.confirmDelete'))) {
           state.items = state.items.filter(x=>x.id!==id);
           renderAll();
         }
@@ -582,7 +582,7 @@
     // Show accordion and populate content
     itemDetail.classList.remove('hidden');
     const legalityHtml = JSON.stringify(it.legality_notes || {}, null, 2);
-    const repackLabels = {never: 'Never/なし', daily: 'Daily/毎日', weekly: 'Weekly/毎週', monthly: 'Monthly/毎月'};
+    const repackLabels = {never: t('freq.never'), daily: t('freq.daily'), weekly: t('freq.weekly'), monthly: t('freq.monthly')};
     itemDetail.innerHTML = `
       <div class="flex justify-between items-start mb-2">
         <h4 class="font-semibold text-base">${escapeHtml(it.name)}</h4>
@@ -590,24 +590,24 @@
       </div>
       <p class="text-sm text-gray-600 mb-3">${escapeHtml(it.purpose_short || '')}</p>
       <dl class="text-sm text-gray-700 space-y-2">
-        <div><dt class="font-medium text-xs text-gray-500">カテゴリー</dt><dd class="mt-0.5">${escapeHtml(it.category)}</dd></div>
-        <div><dt class="font-medium text-xs text-gray-500">重量</dt><dd class="mt-0.5">${it.weight_g ?? 0} g</dd></div>
-        <div><dt class="font-medium text-xs text-gray-500">体積</dt><dd class="mt-0.5">${it.volume_cm3 ?? 0} cm³</dd></div>
-        <div><dt class="font-medium text-xs text-gray-500">Quantity / 数量</dt><dd class="mt-0.5">${it.quantity ?? 1}</dd></div>
-        <div><dt class="font-medium text-xs text-gray-500">Recommended Qty / 推奨数</dt><dd class="mt-0.5">${it.recommended_quantity ?? 1}</dd></div>
-        <div><dt class="font-medium text-xs text-gray-500">Repack Frequency / 入替頻度</dt><dd class="mt-0.5">${repackLabels[it.repack_frequency] || it.repack_frequency || 'Never/なし'}</dd></div>
-        <div><dt class="font-medium text-xs text-gray-500">Category Tags / カテゴリータグ</dt><dd class="mt-0.5">${(it.category_tags||[]).join(', ') || 'なし'}</dd></div>
+        <div><dt class="font-medium text-xs text-gray-500">${t('detail.category')}</dt><dd class="mt-0.5">${escapeHtml(it.category)}</dd></div>
+        <div><dt class="font-medium text-xs text-gray-500">${t('detail.weight')}</dt><dd class="mt-0.5">${it.weight_g ?? 0} g</dd></div>
+        <div><dt class="font-medium text-xs text-gray-500">${t('detail.volume')}</dt><dd class="mt-0.5">${it.volume_cm3 ?? 0} cm³</dd></div>
+        <div><dt class="font-medium text-xs text-gray-500">${t('detail.quantity')}</dt><dd class="mt-0.5">${it.quantity ?? 1}</dd></div>
+        <div><dt class="font-medium text-xs text-gray-500">${t('detail.recommendedQty')}</dt><dd class="mt-0.5">${it.recommended_quantity ?? 1}</dd></div>
+        <div><dt class="font-medium text-xs text-gray-500">${t('detail.repackFreq')}</dt><dd class="mt-0.5">${repackLabels[it.repack_frequency] || it.repack_frequency || t('freq.never')}</dd></div>
+        <div><dt class="font-medium text-xs text-gray-500">${t('detail.categoryTags')}</dt><dd class="mt-0.5">${(it.category_tags||[]).join(', ') || t('detail.none')}</dd></div>
         <div>
-          <dt class="font-medium text-xs text-gray-500">隠蔽性 / 軍民両用 / 危険物</dt>
+          <dt class="font-medium text-xs text-gray-500">${t('detail.concealDualHazard')}</dt>
           <dd class="mt-0.5">
-            隠蔽性: ${it.concealability ?? '不明'} <br/>
-            軍民両用: ${it.dual_use ? 'はい' : 'いいえ'} <br/>
-            危険物: ${it.hazard_flag ? 'はい' : 'いいえ'}
+            ${t('detail.concealability')}: ${it.concealability ?? t('detail.unknown')} <br/>
+            ${t('detail.dualUse')}: ${it.dual_use ? t('yes') : t('no')} <br/>
+            ${t('detail.hazard')}: ${it.hazard_flag ? t('yes') : t('no')}
           </dd>
         </div>
-        <div><dt class="font-medium text-xs text-gray-500">法的注意事項</dt><dd class="mt-0.5"><pre class="text-xs bg-gray-50 p-2 rounded overflow-x-auto">${escapeHtml(legalityHtml)}</pre></dd></div>
-        ${it.description ? `<div><dt class="font-medium text-xs text-gray-500">詳細メモ</dt><dd class="mt-0.5 whitespace-pre-wrap text-sm">${escapeHtml(it.description)}</dd></div>` : ''}
-        <div><dt class="font-medium text-xs text-gray-500">出典</dt><dd class="mt-0.5">${(it.sources||[]).map(s => {
+        <div><dt class="font-medium text-xs text-gray-500">${t('detail.legality')}</dt><dd class="mt-0.5"><pre class="text-xs bg-gray-50 p-2 rounded overflow-x-auto">${escapeHtml(legalityHtml)}</pre></dd></div>
+        ${it.description ? `<div><dt class="font-medium text-xs text-gray-500">${t('detail.description')}</dt><dd class="mt-0.5 whitespace-pre-wrap text-sm">${escapeHtml(it.description)}</dd></div>` : ''}
+        <div><dt class="font-medium text-xs text-gray-500">${t('detail.sources')}</dt><dd class="mt-0.5">${(it.sources||[]).map(s => {
           if (s.url) {
             return `<a href="${escapeHtml(s.url)}" target="_blank" class="text-blue-600 hover:underline">${escapeHtml(s.title)}</a>`;
           }
@@ -615,7 +615,7 @@
         }).join('<br/>')}</dd></div>
       </dl>
       <div class="mt-4">
-        <button id="detailEdit" class="btn btn-primary btn-sm">編集</button>
+        <button id="detailEdit" class="btn btn-primary btn-sm">${t('button.edit')}</button>
       </div>
     `;
 
@@ -645,7 +645,7 @@
   function openItemModal(mode='add', item=null) {
     modalBackdrop.classList.add('active');
     if (mode === 'edit' && item) {
-      modalTitle.textContent = 'アイテム編集';
+      modalTitle.textContent = t('modal.editItem');
       editingId = item.id;
       f_name.value = item.name || '';
       f_category.value = item.category || 'サバイバル';
@@ -664,7 +664,7 @@
         return s.url ? `${s.title} ${s.url}` : s.title;
       }).join('\n');
     } else {
-      modalTitle.textContent = 'アイテム追加';
+      modalTitle.textContent = t('modal.addItem');
       editingId = null;
       itemForm.reset();
       f_quantity.value = 1;
@@ -689,7 +689,7 @@
     e.preventDefault();
     // gather
     let legalityObj = {};
-    try { legalityObj = JSON.parse(f_legality.value || '{}'); } catch(err){ alert('法的注意事項は有効なJSON形式である必要があります'); return; }
+    try { legalityObj = JSON.parse(f_legality.value || '{}'); } catch(err){ alert(t('msg.invalidJson')); return; }
 
     // sources: 「タイトル URL」形式の複数行から配列に変換
     const sourcesArr = f_sources.value.trim().split('\n')
@@ -706,7 +706,7 @@
 
     const payload = normalizeItem({
       id: editingId || uid('item'),
-      name: f_name.value.trim() || '名称未設定',
+      name: f_name.value.trim() || t('msg.unnamed'),
       category: f_category.value,
       weight_g: Number(f_weight.value || 0),
       volume_cm3: Number(f_volume.value || 0),
@@ -772,11 +772,11 @@
   async function exportPDF() {
     // Check if libraries are loaded
     if (!window.jspdf || !window.jspdf.jsPDF) {
-      alert('PDFライブラリが読み込まれていません。ページを再読み込みしてください。');
+      alert(t('msg.pdfLibNotLoaded'));
       return;
     }
     if (!window.html2canvas) {
-      alert('html2canvasライブラリが読み込まれていません。ページを再読み込みしてください。');
+      alert(t('msg.html2canvasNotLoaded'));
       return;
     }
 
@@ -789,17 +789,17 @@
       let html = `
         <div style="margin-bottom: 20px;">
           <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">${escapeHtml(state.checklistName)}</h1>
-          <p style="font-size: 12px; color: #666; margin-bottom: 20px;">生成日時: ${new Date().toLocaleString('ja-JP')}</p>
+          <p style="font-size: 12px; color: #666; margin-bottom: 20px;">${t('pdf.generatedAt')} ${new Date().toLocaleString(getLocale())}</p>
         </div>
         <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
           <thead>
             <tr style="background: #f3f4f6; border-bottom: 2px solid #d1d5db;">
               <th style="padding: 8px; text-align: center; border: 1px solid #e5e7eb; width: 40px;">✓</th>
-              <th style="padding: 8px; text-align: left; border: 1px solid #e5e7eb;">カテゴリー</th>
-              <th style="padding: 8px; text-align: left; border: 1px solid #e5e7eb;">名称</th>
-              <th style="padding: 8px; text-align: right; border: 1px solid #e5e7eb;">重量(g)</th>
-              <th style="padding: 8px; text-align: right; border: 1px solid #e5e7eb;">数量</th>
-              <th style="padding: 8px; text-align: center; border: 1px solid #e5e7eb;">タグ</th>
+              <th style="padding: 8px; text-align: left; border: 1px solid #e5e7eb;">${t('th.category')}</th>
+              <th style="padding: 8px; text-align: left; border: 1px solid #e5e7eb;">${t('th.name')}</th>
+              <th style="padding: 8px; text-align: right; border: 1px solid #e5e7eb;">${t('th.weight')}</th>
+              <th style="padding: 8px; text-align: right; border: 1px solid #e5e7eb;">${t('th.quantity')}</th>
+              <th style="padding: 8px; text-align: center; border: 1px solid #e5e7eb;">${t('th.tags')}</th>
             </tr>
           </thead>
           <tbody>
@@ -807,8 +807,8 @@
 
       state.items.forEach(it => {
         const badges = [];
-        if (it.dual_use) badges.push('<span style="background: #fef3c7; color: #92400e; padding: 2px 6px; border-radius: 3px; font-size: 9px;">両用</span>');
-        if (it.hazard_flag) badges.push('<span style="background: #fee2e2; color: #991b1b; padding: 2px 6px; border-radius: 3px; font-size: 9px;">危険</span>');
+        if (it.dual_use) badges.push(`<span style="background: #fef3c7; color: #92400e; padding: 2px 6px; border-radius: 3px; font-size: 9px;">${t('badge.dualUse')}</span>`);
+        if (it.hazard_flag) badges.push(`<span style="background: #fee2e2; color: #991b1b; padding: 2px 6px; border-radius: 3px; font-size: 9px;">${t('badge.hazard')}</span>`);
 
         // Checkbox representation
         const checkbox = it.checked
@@ -831,8 +831,8 @@
           </tbody>
         </table>
         <div style="margin-top: 20px; padding: 10px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 4px;">
-          <p style="font-size: 12px; margin: 0;"><strong>合計重量（チェック済みアイテム）:</strong> ${state.items.reduce((acc, it) => acc + (it.checked ? (Number(it.weight_g || 0) * Number(it.quantity || 1)) : 0), 0)} g</p>
-          <p style="font-size: 12px; margin: 5px 0 0 0;"><strong>合計体積（チェック済みアイテム）:</strong> ${state.items.reduce((acc, it) => acc + (it.checked ? (Number(it.volume_cm3 || 0) * Number(it.quantity || 1)) : 0), 0)} cm³</p>
+          <p style="font-size: 12px; margin: 0;"><strong>${t('pdf.totalWeight')}</strong> ${state.items.reduce((acc, it) => acc + (it.checked ? (Number(it.weight_g || 0) * Number(it.quantity || 1)) : 0), 0)} g</p>
+          <p style="font-size: 12px; margin: 5px 0 0 0;"><strong>${t('pdf.totalVolume')}</strong> ${state.items.reduce((acc, it) => acc + (it.checked ? (Number(it.volume_cm3 || 0) * Number(it.quantity || 1)) : 0), 0)} cm³</p>
         </div>
       `;
 
@@ -883,8 +883,8 @@
       const filename = `${state.checklistName.replace(/\s+/g, '_')}_${getTimestamp()}.pdf`;
       doc.save(filename);
     } catch (error) {
-      console.error('PDF生成エラー:', error);
-      alert('PDF生成中にエラーが発生しました: ' + error.message);
+      console.error('PDF generation error:', error);
+      alert(t('msg.pdfError') + error.message);
     }
   }
 
@@ -924,7 +924,7 @@
   // Save confirmation modal functions
   function showSaveConfirmation() {
     savedChecklistName.textContent = state.checklistName;
-    savedDateTime.textContent = new Date().toLocaleString('ja-JP', {
+    savedDateTime.textContent = new Date().toLocaleString(getLocale(), {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
@@ -1005,7 +1005,7 @@
       const customId = selectedOption.dataset.customId;
       const preset = getAllCustomPresets().find(p => p.id === customId);
 
-      if (preset && confirm(`カスタムプリセット「${preset.name}」を削除しますか？`)) {
+      if (preset && confirm(t('msg.confirmDeletePreset', { name: preset.name }))) {
         deleteCustomPreset(customId);
         deletePresetBtn.classList.add('hidden');
         renamePresetBtn.classList.add('hidden');
@@ -1046,7 +1046,7 @@
     const customPresets = getAllCustomPresets();
     if (customPresets.length > 0) {
       const customOptgroup = document.createElement('optgroup');
-      customOptgroup.label = '⭐ カスタムプリセット';
+      customOptgroup.label = '⭐ ' + t('optgroup.customPresets');
 
       customPresets.forEach(preset => {
         const option = document.createElement('option');
@@ -1062,12 +1062,12 @@
     if (category === 'all') {
       // Show all with optgroups
       const categoryLabels = {
-        evasion: '🏃 脱出・回避系 (Evasion/Escape)',
-        edc: '🎒 日常携行系 (EDC/Personal)',
-        rescue: '🚒 救助・消防系 (Rescue/Fire)',
-        security: '🛡️ 警備・防犯系 (Security)',
-        disaster: '⚠️ 災害対応系 (Disaster)',
-        hacker: '💻 ハッカー・IT系 (Hacker/IT)'
+        evasion: '🏃 ' + t('optgroup.evasion'),
+        edc: '🎒 ' + t('optgroup.edc'),
+        rescue: '🚒 ' + t('optgroup.rescue'),
+        security: '🛡️ ' + t('optgroup.security'),
+        disaster: '⚠️ ' + t('optgroup.disaster'),
+        hacker: '💻 ' + t('optgroup.hacker')
       };
 
       Object.keys(presetsByCategory).forEach(cat => {
@@ -1142,10 +1142,10 @@
       initApp();
     } catch (error) {
       console.error('Failed to load presets:', error);
-      // Fallback: 空のプリセットで初期化
+      // Fallback: empty preset for initialization
       PRESETS = {
         empty: {
-          name: "空のチェックリスト",
+          name: t('msg.newChecklist'),
           category: "edc",
           items: []
         }
@@ -1164,6 +1164,17 @@
     renderSavedList();
     renderSavedListInline();
   }
+
+  // ============================================================
+  // 言語切り替えイベントリスナー (Language Change Event Listener)
+  // ============================================================
+  // i18n.jsからのlangchangeイベントを受け取り、動的コンテンツを再描画
+  document.addEventListener('langchange', () => {
+    renderAll();
+    renderPresetOptions(currentCategory);
+    renderSavedList();
+    renderSavedListInline();
+  });
 
   // アプリケーション起動
   loadPresets();
