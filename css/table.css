@@ -1,0 +1,146 @@
+/**
+ * table.css — Item Table (アイテムテーブル)
+ * レスポンシブグリッドレイアウト
+ */
+
+.item-table {
+  width: 100%;
+  font-size: 0.8125rem;
+}
+
+.item-table-header {
+  display: none;
+  grid-template-columns: 2rem 1fr 8rem 4rem 4rem 7rem 6rem;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background-color: #f9fafb;
+  border-bottom: 2px solid #e5e7eb;
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+@media (min-width: 768px) {
+  .item-table-header {
+    display: grid;
+  }
+}
+
+.item-table-row {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0.625rem;
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.15s;
+  gap: 0.375rem;
+}
+
+@media (min-width: 768px) {
+  .item-table-row {
+    display: grid;
+    grid-template-columns: 2rem 1fr 8rem 4rem 4rem 7rem 6rem;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.375rem 0.75rem;
+  }
+}
+
+.item-table-row:hover {
+  background-color: #f9fafb;
+}
+
+.item-table-row .col-check {
+  display: flex;
+  align-items: center;
+}
+
+.item-table-row .col-name {
+  font-weight: 500;
+  color: #1f2937;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-table-row .col-category {
+  color: #6b7280;
+  font-size: 0.75rem;
+}
+
+.item-table-row .col-weight,
+.item-table-row .col-qty {
+  font-size: 0.75rem;
+  color: #4b5563;
+}
+
+.item-table-row .col-badge {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.item-table-row .col-actions {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: flex-end;
+}
+
+/* Mobile layout adjustments */
+@media (max-width: 767px) {
+  .item-table-row {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.375rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .item-table-row .col-check {
+    position: absolute;
+    margin-top: 0.25rem;
+  }
+
+  .item-table-row .col-name {
+    margin-left: 2rem;
+  }
+
+  .item-table-row .col-category,
+  .item-table-row .col-weight,
+  .item-table-row .col-qty {
+    display: inline-block;
+    margin-right: 0.75rem;
+  }
+
+  .item-table-row .col-actions {
+    margin-top: 0.25rem;
+  }
+}
+
+/* Action buttons */
+.action-btn-icon {
+  padding: 0.25rem;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-btn-icon:hover {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
+.action-btn-icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.action-btn-icon.danger:hover {
+  background-color: #fef2f2;
+  color: #dc2626;
+}

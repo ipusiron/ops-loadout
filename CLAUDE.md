@@ -34,9 +34,11 @@ Items are sourced from public documents including:
 
 This is a **vanilla JavaScript single-page application** with no build system:
 
-- **index.html**: Main UI structure using Tailwind CSS (CDN)
-- **app.js**: Core application logic with embedded PRESETS data (vanilla JS, no frameworks)
-- **style.css**: Custom styling and component styles
+- **index.html**: Main UI structure using Tailwind CSS (CDN), CSP headers
+- **app.js**: Core application logic with lazy-loaded presets (vanilla JS, no frameworks)
+- **i18n.js**: Internationalization module (Japanese/English)
+- **css/**: Modular CSS files (main.css as entry point)
+- **presets/**: JSON preset files with lazy loading (index.json for metadata)
 
 ### State Management
 The application uses a single in-memory state object:
@@ -53,6 +55,7 @@ The application uses a single in-memory state object:
 State persists to `localStorage` with keys:
 - `ekc_saved_checklists`: Saved checklist list
 - `ekc_custom_presets`: User-created custom presets
+- `ops_lang`: Language preference (`ja` or `en`)
 
 ### Data Model
 Each item in the checklist follows this schema:
@@ -92,14 +95,14 @@ Each item in the checklist follows this schema:
 
 ### Key Functions
 
-The app.js file is organized into these sections (see header comments for exact line ranges):
-- **Lines 7-360**: PRESETS definitions (18 built-in presets)
-- **Lines 361-419**: DOM element references
-- **Lines 420-699**: Utility functions
-- **Lines 700-906**: Rendering functions
-- **Lines 907-992**: Modal management
-- **Lines 993-1086**: Export functions (PDF/CSV/JSON)
-- **Lines 1087-1400**: Event listeners
+The app.js file is organized into these main sections:
+- **PRESETS loading**: Lazy-loaded from `presets/` folder (index.json for metadata, individual JSON files for data)
+- **DOM element references**: Cached for performance
+- **Utility functions**: Item normalization, escapeHtml, localStorage helpers
+- **Rendering functions**: Table, detail panel, totals, graph views
+- **Modal management**: Add/edit items, save options, graph display
+- **Export functions**: PDF/CSV/JSON generation
+- **Event listeners**: User interactions, i18n updates
 
 **Rendering Pipeline**:
 - `renderAll()`: Master render function that updates all UI sections
@@ -107,9 +110,15 @@ The app.js file is organized into these sections (see header comments for exact 
 - `renderDetail(id)`: Shows detailed item view in accordion panel
 - `renderTotals()`: Calculates weight/volume for checked items × quantity
 
+**Preset Loading**:
+- `loadPresetsMeta()`: Loads presets/index.json at startup
+- `loadPresetData(key)`: Lazy-loads individual preset JSON on demand
+- `PRESETS_META`: Metadata cache (name, category, file path)
+- `PRESETS`: Full preset data cache (loaded on demand)
+
 **Data Management**:
 - `saveCurrentChecklist()`: Persists state to localStorage
-- `loadFromPreset(key)`: Loads predefined preset from PRESETS object
+- `loadFromPreset(key)`: Loads predefined preset (lazy-load if needed)
 - `filteredItems()`: Applies search query and dual_use/hazard filters
 - `getAllCustomPresets()` / `saveAllCustomPresets()`: Custom preset CRUD
 
@@ -117,6 +126,12 @@ The app.js file is organized into these sections (see header comments for exact 
 - `openItemModal(mode, item)`: Opens add/edit modal
 - `showSaveOptionsModal()`: Overwrite vs save-as-new dialog
 - Form submission creates/updates items with validation
+
+**Graph Visualization**:
+- `drawGraphImage()`: Main dispatcher for graph views
+- `drawPieView()`: Category breakdown pie chart
+- `drawRadarView()`: 5-axis radar chart (weight, volume, items, dual_use, hazard)
+- `drawItemsView()`: Top items table by weight
 
 **Export Functions**:
 - `exportJSON()`: Full checklist export
@@ -155,7 +170,7 @@ git push origin main
 ## Code Conventions
 
 ### Adding New Items to Presets
-Edit the `PRESETS` object in `app.js` (lines 7-360). **REQUIRED fields**:
+Edit the JSON file in `presets/{category}/{preset}.json`. **REQUIRED fields**:
 - `sources`: MUST include at least one source with title/URL
 - `legality_notes`: MUST document legal status in relevant jurisdictions
 - `dual_use`: Set to `true` if item has military/civilian dual-use concerns
@@ -192,12 +207,15 @@ Edit the `PRESETS` object in `app.js` (lines 7-360). **REQUIRED fields**:
 
 ## Important Files
 
-- **index.html**: UI structure, Tailwind CDN, jsPDF and html2canvas import (with SRI hashes)
-- **app.js**: Core logic with 18 PRESETS embedded, all state management and rendering (~1400 lines)
-- **style.css**: Custom styling for components, saved checklist UI, badges
+- **index.html**: UI structure, Tailwind CDN, jsPDF/html2canvas import (with SRI), CSP headers
+- **app.js**: Core logic with lazy-loaded presets, state management, rendering, graph visualization
+- **i18n.js**: Internationalization (Japanese/English), language resources, UI translation
+- **css/main.css**: Entry point for modular CSS (@import for base, layout, controls, etc.)
+- **presets/index.json**: Preset metadata (name, category, file path for lazy loading)
+- **presets/{category}/{preset}.json**: Individual preset data with items
+- **docs/DEVELOPMENT.md**: Detailed technical documentation for developers
+- **docs/SECURITY.md**: Security policy, CSP configuration, XSS protection details
 - **README.md**: Project documentation with design principles, use cases, and data model
-- **DEVELOPMENT.md**: Detailed technical documentation for developers
-- **SECURITY.md**: Security policy and XSS protection details
 - **CLAUDE.md**: This file - development guidance for Claude Code
 
 ## Security Considerations
@@ -227,6 +245,6 @@ The preset includes historically documented items (lock picks, diamond wire, cer
 From README.md feature list:
 - Workflow states (draft → pending → approved) mentioned but not implemented
 - Audit log / change history tracking
-- Scenario-based scoring visualization
-- Multi-language support (UI currently mixed Japanese/English)
 - Import functionality (currently export-only)
+- ~~Multi-language support~~ ✅ Implemented (i18n.js with JA/EN toggle)
+- ~~Scenario-based scoring visualization~~ ✅ Implemented (Graph modal with 3 views)

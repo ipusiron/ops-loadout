@@ -1,0 +1,36 @@
+/**
+ * main.css — OpsLoadout カスタムスタイル エントリーポイント
+ *
+ * このファイルは、分割されたCSSモジュールを統合します。
+ *
+ * アーキテクチャ:
+ * - Tailwind CSS (CDN) をベースとして使用
+ * - カスタムコンポーネントで不足部分を補完
+ * - レスポンシブデザイン（モバイルファースト）
+ * - アクセシビリティ対応（focus-visible、ARIA）
+ *
+ * モジュール構成:
+ * 1. base.css      - グローバルスタイル（スクロールバー、トランジション、フォーカス）
+ * 2. layout.css    - レイアウトコンポーネント（ヘッダー、フッター）
+ * 3. controls.css  - コントロールセクション（フィルター、検索、プログレスバー）
+ * 4. buttons.css   - ボタンコンポーネント（primary、secondary、danger）
+ * 5. forms.css     - フォームコンポーネント（input、select、checkbox）
+ * 6. badges.css    - バッジコンポーネント（warning、danger、weight）
+ * 7. modals.css    - モーダルコンポーネント（backdrop、content）
+ * 8. table.css     - アイテムテーブル（レスポンシブグリッド）
+ * 9. filters.css   - フィルターと空状態
+ * 10. saved.css    - 保存済みチェックリスト
+ * 11. print.css    - 印刷スタイル
+ */
+
+@import url('base.css');
+@import url('layout.css');
+@import url('controls.css');
+@import url('buttons.css');
+@import url('forms.css');
+@import url('badges.css');
+@import url('modals.css');
+@import url('table.css');
+@import url('filters.css');
+@import url('saved.css');
+@import url('print.css');

@@ -1,0 +1,56 @@
+/**
+ * forms.css — Form Components (フォームコンポーネント)
+ * 入力フォーム要素: input, select, checkbox
+ */
+
+.form-input {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  font-family: inherit;
+  font-size: inherit;
+  transition: all 0.2s;
+}
+
+.form-input:focus {
+  outline: none;
+  ring: 2px;
+  ring-color: #3b82f6;
+  border-color: transparent;
+  box-shadow: 0 0 0 2px #3b82f6;
+}
+
+.form-select {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  font-family: inherit;
+  font-size: inherit;
+  background-color: white;
+  transition: all 0.2s;
+}
+
+.form-select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #3b82f6;
+  border-color: transparent;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.form-checkbox {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.form-checkbox:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #3b82f6;
+}

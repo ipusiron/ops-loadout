@@ -842,8 +842,10 @@
   const graphDownloadBtn = document.getElementById('graphDownloadBtn');
   const graphCopyBtn = document.getElementById('graphCopyBtn');
   const graphBtn = document.getElementById('graphBtn');
+  const graphTabs = graphModal.querySelectorAll('.graph-tab');
+  let currentGraphView = 'pie';
 
-  // Category colors for pie chart
+  // Category colors for charts
   const categoryColors = {
     'サバイバル': '#10b981', 'Survival': '#10b981',
     '信号・通信': '#3b82f6', 'Signaling': '#3b82f6', 'Communications': '#3b82f6',
@@ -865,10 +867,25 @@
     return categoryColors[cat] || '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
   }
 
-  function drawGraphImage() {
-    const ctx = graphCanvas.getContext('2d');
-    const W = 1200, H = 675;
+  // Get checked items stats
+  function getGraphStats() {
+    const checkedItems = state.items.filter(it => it.checked);
+    const totalWeight = checkedItems.reduce((acc, it) => acc + (Number(it.weight_g || 0) * (Number(it.quantity) || 1)), 0);
+    const totalVolume = checkedItems.reduce((acc, it) => acc + (Number(it.volume_cm3 || 0) * (Number(it.quantity) || 1)), 0);
+    const totalQty = checkedItems.reduce((acc, it) => acc + (Number(it.quantity) || 1), 0);
 
+    const catBreakdown = {};
+    checkedItems.forEach(it => {
+      const cat = getL(it, 'category') || 'Other';
+      const weight = (Number(it.weight_g || 0) * (Number(it.quantity) || 1));
+      catBreakdown[cat] = (catBreakdown[cat] || 0) + weight;
+    });
+
+    return { checkedItems, totalWeight, totalVolume, totalQty, catBreakdown };
+  }
+
+  // Draw common header and stats bar
+  function drawGraphHeader(ctx, W, H, stats) {
     // Background gradient
     const grad = ctx.createLinearGradient(0, 0, W, H);
     grad.addColorStop(0, '#1a1a2e');
@@ -877,179 +894,427 @@
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, W, H);
 
-    // Decorative elements
-    ctx.fillStyle = 'rgba(255,255,255,0.03)';
+    // Decorative circles
+    ctx.fillStyle = 'rgba(255,255,255,0.02)';
     ctx.beginPath();
-    ctx.arc(W - 100, 100, 200, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(100, H - 50, 150, 0, Math.PI * 2);
+    ctx.arc(W - 80, 80, 150, 0, Math.PI * 2);
     ctx.fill();
 
     // Header
     ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 42px system-ui, sans-serif';
-    ctx.fillText('📦 OpsLoadout', 50, 65);
+    ctx.font = 'bold 36px system-ui, sans-serif';
+    ctx.fillText('📦 OpsLoadout', 50, 55);
 
-    ctx.font = '24px system-ui, sans-serif';
+    ctx.font = '20px system-ui, sans-serif';
     ctx.fillStyle = '#94a3b8';
-    ctx.fillText(state.checklistName, 50, 105);
+    const checklistName = state.checklistName || (currentLang === 'ja' ? '無題' : 'Untitled');
+    ctx.fillText(checklistName, 50, 90);
 
-    // Calculate stats
-    const checkedItems = state.items.filter(it => it.checked);
-    const totalWeight = checkedItems.reduce((acc, it) => acc + (Number(it.weight_g || 0) * (Number(it.quantity) || 1)), 0);
-    const totalVolume = checkedItems.reduce((acc, it) => acc + (Number(it.volume_cm3 || 0) * (Number(it.quantity) || 1)), 0);
-    const totalQty = checkedItems.reduce((acc, it) => acc + (Number(it.quantity) || 1), 0);
-
-    // Category breakdown
-    const catBreakdown = {};
-    checkedItems.forEach(it => {
-      const cat = getL(it, 'category') || 'Other';
-      const weight = (Number(it.weight_g || 0) * (Number(it.quantity) || 1));
-      catBreakdown[cat] = (catBreakdown[cat] || 0) + weight;
-    });
-
-    // Draw pie chart
-    const pieX = 250, pieY = 400, pieR = 150;
-    let startAngle = -Math.PI / 2;
-    const catEntries = Object.entries(catBreakdown).sort((a, b) => b[1] - a[1]);
-
-    if (catEntries.length > 0) {
-      catEntries.forEach(([cat, weight]) => {
-        const sliceAngle = (weight / totalWeight) * Math.PI * 2;
-        ctx.beginPath();
-        ctx.moveTo(pieX, pieY);
-        ctx.arc(pieX, pieY, pieR, startAngle, startAngle + sliceAngle);
-        ctx.closePath();
-        ctx.fillStyle = getColorForCategory(cat);
-        ctx.fill();
-        startAngle += sliceAngle;
-      });
-
-      // Inner circle (donut)
-      ctx.beginPath();
-      ctx.arc(pieX, pieY, pieR * 0.55, 0, Math.PI * 2);
-      ctx.fillStyle = '#1a1a2e';
-      ctx.fill();
-
-      // Center text
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 36px system-ui, sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(`${(totalWeight / 1000).toFixed(1)}`, pieX, pieY - 5);
-      ctx.font = '18px system-ui, sans-serif';
-      ctx.fillStyle = '#94a3b8';
-      ctx.fillText('kg', pieX, pieY + 25);
-      ctx.textAlign = 'left';
-    }
-
-    // Legend
-    let legendY = 180;
-    ctx.font = '14px system-ui, sans-serif';
-    catEntries.slice(0, 8).forEach(([cat, weight]) => {
-      ctx.fillStyle = getColorForCategory(cat);
-      ctx.beginPath();
-      ctx.arc(70, legendY, 6, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.fillStyle = '#e2e8f0';
-      ctx.fillText(cat, 85, legendY + 5);
-
-      ctx.fillStyle = '#94a3b8';
-      ctx.textAlign = 'right';
-      ctx.fillText(`${(weight / 1000).toFixed(2)}kg`, 380, legendY + 5);
-      ctx.textAlign = 'left';
-
-      legendY += 28;
-    });
-
-    // Stats cards (right side)
-    const cardX = 480, cardY = 150, cardW = 200, cardH = 100, cardGap = 20;
-
-    const stats = [
-      { label: currentLang === 'ja' ? 'アイテム数' : 'Items', value: totalQty, unit: currentLang === 'ja' ? '個' : 'pcs', icon: '📋' },
-      { label: currentLang === 'ja' ? '合計重量' : 'Total Weight', value: (totalWeight / 1000).toFixed(2), unit: 'kg', icon: '⚖️' },
-      { label: currentLang === 'ja' ? '体積' : 'Volume', value: (totalVolume / 1000).toFixed(1), unit: 'L', icon: '📦' }
+    // Stats bar (top right) - compact layout
+    const statItems = [
+      { icon: '📋', value: stats.totalQty, unit: currentLang === 'ja' ? '個' : 'pcs' },
+      { icon: '⚖️', value: (stats.totalWeight / 1000).toFixed(2), unit: 'kg' },
+      { icon: '📦', value: (stats.totalVolume / 1000).toFixed(1), unit: 'L' }
     ];
 
-    stats.forEach((stat, i) => {
-      const x = cardX + (i % 3) * (cardW + cardGap);
-      const y = cardY;
-
-      // Card background
-      ctx.fillStyle = 'rgba(255,255,255,0.08)';
-      ctx.beginPath();
-      ctx.roundRect(x, y, cardW, cardH, 12);
-      ctx.fill();
-
-      // Icon
-      ctx.font = '28px system-ui, sans-serif';
-      ctx.fillText(stat.icon, x + 15, y + 40);
-
-      // Value
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 28px system-ui, sans-serif';
-      ctx.fillText(stat.value, x + 55, y + 42);
-
-      // Unit
-      ctx.fillStyle = '#94a3b8';
-      ctx.font = '16px system-ui, sans-serif';
-      ctx.fillText(stat.unit, x + 55 + ctx.measureText(String(stat.value)).width + 5, y + 42);
-
-      // Label
-      ctx.fillStyle = '#64748b';
-      ctx.font = '13px system-ui, sans-serif';
-      ctx.fillText(stat.label, x + 15, y + 75);
-    });
-
-    // Item list (top items by weight)
-    const listX = 480, listY = 300;
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 16px system-ui, sans-serif';
-    ctx.fillText(currentLang === 'ja' ? '🎒 主要アイテム (重量順)' : '🎒 Top Items (by weight)', listX, listY);
-
-    const topItems = [...checkedItems]
-      .map(it => ({ ...it, totalWeight: (Number(it.weight_g || 0) * (Number(it.quantity) || 1)) }))
-      .sort((a, b) => b.totalWeight - a.totalWeight)
-      .slice(0, 8);
-
-    ctx.font = '14px system-ui, sans-serif';
-    topItems.forEach((it, i) => {
-      const y = listY + 30 + i * 28;
-      const name = getL(it, 'name');
-      const displayName = name.length > 28 ? name.slice(0, 26) + '…' : name;
-
-      ctx.fillStyle = '#e2e8f0';
-      ctx.fillText(`${i + 1}. ${displayName}`, listX, y);
+    ctx.font = '18px system-ui, sans-serif';
+    let statX = W - 50;
+    for (let i = statItems.length - 1; i >= 0; i--) {
+      const s = statItems[i];
+      const text = `${s.value} ${s.unit}`;
+      const textWidth = ctx.measureText(text).width;
+      const iconWidth = ctx.measureText(s.icon).width;
 
       ctx.fillStyle = '#94a3b8';
       ctx.textAlign = 'right';
-      ctx.fillText(`${it.totalWeight}g`, W - 60, y);
-      ctx.textAlign = 'left';
-    });
+      ctx.fillText(text, statX, 55);
+      statX -= textWidth + 10;
+      ctx.fillText(s.icon, statX, 55);
+      statX -= iconWidth + 30;
+    }
+    ctx.textAlign = 'left';
 
     // Footer
     ctx.fillStyle = '#475569';
     ctx.font = '12px system-ui, sans-serif';
     const dateStr = new Date().toLocaleDateString(currentLang === 'ja' ? 'ja-JP' : 'en-US');
     ctx.fillText(`Generated: ${dateStr}  |  github.com/ipusiron/ops-loadout`, 50, H - 25);
+  }
 
-    // Watermark
-    ctx.fillStyle = 'rgba(255,255,255,0.1)';
-    ctx.font = 'bold 120px system-ui, sans-serif';
+  // View 1: Pie Chart
+  function drawPieView() {
+    const ctx = graphCanvas.getContext('2d');
+    const W = 1200, H = 675;
+    const stats = getGraphStats();
+
+    drawGraphHeader(ctx, W, H, stats);
+
+    const catEntries = Object.entries(stats.catBreakdown).sort((a, b) => b[1] - a[1]);
+    if (catEntries.length === 0) {
+      ctx.fillStyle = '#64748b';
+      ctx.font = '24px system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(currentLang === 'ja' ? 'チェックされたアイテムがありません' : 'No checked items', W / 2, H / 2);
+      ctx.textAlign = 'left';
+      return;
+    }
+
+    // Pie chart (center)
+    const pieX = W / 2, pieY = 360, pieR = 180;
+    let startAngle = -Math.PI / 2;
+
+    catEntries.forEach(([cat, weight]) => {
+      const sliceAngle = (weight / stats.totalWeight) * Math.PI * 2;
+      ctx.beginPath();
+      ctx.moveTo(pieX, pieY);
+      ctx.arc(pieX, pieY, pieR, startAngle, startAngle + sliceAngle);
+      ctx.closePath();
+      ctx.fillStyle = getColorForCategory(cat);
+      ctx.fill();
+      startAngle += sliceAngle;
+    });
+
+    // Donut hole
+    ctx.beginPath();
+    ctx.arc(pieX, pieY, pieR * 0.5, 0, Math.PI * 2);
+    ctx.fillStyle = '#1a1a2e';
+    ctx.fill();
+
+    // Center text
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 48px system-ui, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('📦', W - 120, H - 80);
+    ctx.fillText(`${(stats.totalWeight / 1000).toFixed(1)}`, pieX, pieY + 5);
+    ctx.font = '20px system-ui, sans-serif';
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText('kg', pieX, pieY + 35);
     ctx.textAlign = 'left';
+
+    // Legend (left side)
+    ctx.font = 'bold 14px system-ui, sans-serif';
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText(currentLang === 'ja' ? 'カテゴリー別重量' : 'Weight by Category', 50, 140);
+
+    let legendY = 170;
+    ctx.font = '14px system-ui, sans-serif';
+    catEntries.slice(0, 10).forEach(([cat, weight]) => {
+      const percent = ((weight / stats.totalWeight) * 100).toFixed(1);
+
+      ctx.fillStyle = getColorForCategory(cat);
+      ctx.beginPath();
+      ctx.arc(60, legendY, 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#e2e8f0';
+      const catName = cat.length > 12 ? cat.slice(0, 11) + '…' : cat;
+      ctx.fillText(catName, 75, legendY + 5);
+
+      ctx.fillStyle = '#94a3b8';
+      ctx.textAlign = 'right';
+      ctx.fillText(`${percent}%`, 220, legendY + 5);
+      ctx.textAlign = 'left';
+
+      legendY += 32;
+    });
+
+    // Right side - weight breakdown
+    ctx.font = 'bold 14px system-ui, sans-serif';
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText(currentLang === 'ja' ? '重量詳細' : 'Weight Details', W - 220, 140);
+
+    legendY = 170;
+    ctx.font = '14px system-ui, sans-serif';
+    catEntries.slice(0, 10).forEach(([cat, weight]) => {
+      ctx.fillStyle = '#e2e8f0';
+      ctx.textAlign = 'right';
+      ctx.fillText(`${(weight / 1000).toFixed(2)} kg`, W - 50, legendY + 5);
+      ctx.textAlign = 'left';
+      legendY += 32;
+    });
+  }
+
+  // View 2: Radar Chart
+  function drawRadarView() {
+    const ctx = graphCanvas.getContext('2d');
+    const W = 1200, H = 675;
+    const stats = getGraphStats();
+
+    drawGraphHeader(ctx, W, H, stats);
+
+    // Define score categories for radar
+    const scoreLabels = currentLang === 'ja'
+      ? ['生存性', '信号性', '脱出支援', '隠匿性', '合法性']
+      : ['Survivability', 'Signalability', 'Exfiltration', 'Concealability', 'Legality'];
+
+    // Calculate average scores from checked items
+    const scoreKeys = ['survivability', 'signalability', 'exfiltration_support', 'concealability', 'legality_penalty'];
+    const avgScores = scoreKeys.map(key => {
+      const items = stats.checkedItems.filter(it => it.scores && it.scores[key] !== undefined);
+      if (items.length === 0) return 0;
+      const sum = items.reduce((acc, it) => acc + Number(it.scores[key] || 0), 0);
+      // For legality_penalty, invert (lower is better)
+      if (key === 'legality_penalty') {
+        return 5 - (sum / items.length);
+      }
+      return sum / items.length;
+    });
+
+    if (stats.checkedItems.length === 0) {
+      ctx.fillStyle = '#64748b';
+      ctx.font = '24px system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(currentLang === 'ja' ? 'チェックされたアイテムがありません' : 'No checked items', W / 2, H / 2);
+      ctx.textAlign = 'left';
+      return;
+    }
+
+    // Radar chart
+    const centerX = W / 2, centerY = 380;
+    const maxR = 200;
+    const numAxes = 5;
+    const angleStep = (Math.PI * 2) / numAxes;
+
+    // Draw grid circles
+    for (let r = 1; r <= 5; r++) {
+      const radius = (r / 5) * maxR;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+
+    // Draw axes
+    for (let i = 0; i < numAxes; i++) {
+      const angle = -Math.PI / 2 + i * angleStep;
+      const x = centerX + Math.cos(angle) * maxR;
+      const y = centerY + Math.sin(angle) * maxR;
+
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.lineTo(x, y);
+      ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Labels
+      const labelR = maxR + 30;
+      const lx = centerX + Math.cos(angle) * labelR;
+      const ly = centerY + Math.sin(angle) * labelR;
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '14px system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(scoreLabels[i], lx, ly + 5);
+    }
+
+    // Draw data polygon
+    ctx.beginPath();
+    for (let i = 0; i < numAxes; i++) {
+      const angle = -Math.PI / 2 + i * angleStep;
+      const value = Math.min(avgScores[i], 5) / 5;
+      const x = centerX + Math.cos(angle) * maxR * value;
+      const y = centerY + Math.sin(angle) * maxR * value;
+
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(59, 130, 246, 0.3)';
+    ctx.fill();
+    ctx.strokeStyle = '#3b82f6';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Draw data points
+    for (let i = 0; i < numAxes; i++) {
+      const angle = -Math.PI / 2 + i * angleStep;
+      const value = Math.min(avgScores[i], 5) / 5;
+      const x = centerX + Math.cos(angle) * maxR * value;
+      const y = centerY + Math.sin(angle) * maxR * value;
+
+      ctx.beginPath();
+      ctx.arc(x, y, 6, 0, Math.PI * 2);
+      ctx.fillStyle = '#3b82f6';
+      ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    // Score values (right side)
+    ctx.font = 'bold 14px system-ui, sans-serif';
+    ctx.fillStyle = '#94a3b8';
+    ctx.textAlign = 'left';
+    ctx.fillText(currentLang === 'ja' ? 'スコア詳細' : 'Score Details', W - 220, 140);
+
+    ctx.font = '14px system-ui, sans-serif';
+    let scoreY = 170;
+    scoreLabels.forEach((label, i) => {
+      const score = avgScores[i].toFixed(1);
+      ctx.fillStyle = '#e2e8f0';
+      ctx.fillText(label, W - 220, scoreY);
+      ctx.fillStyle = '#3b82f6';
+      ctx.textAlign = 'right';
+      ctx.fillText(`${score} / 5`, W - 50, scoreY);
+      ctx.textAlign = 'left';
+      scoreY += 32;
+    });
+
+    // Legend (left side) - category breakdown
+    ctx.font = 'bold 14px system-ui, sans-serif';
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText(currentLang === 'ja' ? 'アイテム構成' : 'Item Composition', 50, 140);
+
+    const catEntries = Object.entries(stats.catBreakdown).sort((a, b) => b[1] - a[1]);
+    let legendY = 170;
+    ctx.font = '13px system-ui, sans-serif';
+    catEntries.slice(0, 8).forEach(([cat, weight]) => {
+      ctx.fillStyle = getColorForCategory(cat);
+      ctx.beginPath();
+      ctx.arc(60, legendY, 5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#e2e8f0';
+      const catName = cat.length > 14 ? cat.slice(0, 13) + '…' : cat;
+      ctx.fillText(catName, 75, legendY + 4);
+      legendY += 28;
+    });
+  }
+
+  // View 3: Top Items List
+  function drawItemsView() {
+    const ctx = graphCanvas.getContext('2d');
+    const W = 1200, H = 675;
+    const stats = getGraphStats();
+
+    drawGraphHeader(ctx, W, H, stats);
+
+    if (stats.checkedItems.length === 0) {
+      ctx.fillStyle = '#64748b';
+      ctx.font = '24px system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(currentLang === 'ja' ? 'チェックされたアイテムがありません' : 'No checked items', W / 2, H / 2);
+      ctx.textAlign = 'left';
+      return;
+    }
+
+    // Sort items by weight
+    const topItems = [...stats.checkedItems]
+      .map(it => ({
+        ...it,
+        totalWeight: (Number(it.weight_g || 0) * (Number(it.quantity) || 1))
+      }))
+      .sort((a, b) => b.totalWeight - a.totalWeight);
+
+    // Title
+    ctx.font = 'bold 18px system-ui, sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(currentLang === 'ja' ? '🎒 主要アイテム（重量順）' : '🎒 Top Items (by weight)', 50, 140);
+
+    // Table header
+    const tableY = 175;
+    const cols = { rank: 60, name: 80, cat: 680, weight: 900, pct: 1050 };
+
+    ctx.font = 'bold 12px system-ui, sans-serif';
+    ctx.fillStyle = '#64748b';
+    ctx.fillText('#', cols.rank, tableY);
+    ctx.fillText(currentLang === 'ja' ? 'アイテム名' : 'Item Name', cols.name, tableY);
+    ctx.fillText(currentLang === 'ja' ? 'カテゴリー' : 'Category', cols.cat, tableY);
+    ctx.textAlign = 'right';
+    ctx.fillText(currentLang === 'ja' ? '重量' : 'Weight', cols.weight, tableY);
+    ctx.fillText('%', cols.pct, tableY);
+    ctx.textAlign = 'left';
+
+    // Divider
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+    ctx.beginPath();
+    ctx.moveTo(50, tableY + 10);
+    ctx.lineTo(W - 50, tableY + 10);
+    ctx.stroke();
+
+    // Items (max 15)
+    ctx.font = '14px system-ui, sans-serif';
+    const maxItems = Math.min(topItems.length, 15);
+    const rowHeight = 30;
+
+    topItems.slice(0, maxItems).forEach((it, i) => {
+      const y = tableY + 35 + i * rowHeight;
+      const name = getL(it, 'name');
+      const cat = getL(it, 'category');
+      const displayName = name.length > 45 ? name.slice(0, 43) + '…' : name;
+      const displayCat = cat.length > 12 ? cat.slice(0, 11) + '…' : cat;
+      const pct = ((it.totalWeight / stats.totalWeight) * 100).toFixed(1);
+
+      // Rank
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText(`${i + 1}`, cols.rank, y);
+
+      // Name
+      ctx.fillStyle = '#e2e8f0';
+      ctx.fillText(displayName, cols.name, y);
+
+      // Category with color
+      ctx.fillStyle = getColorForCategory(cat);
+      ctx.beginPath();
+      ctx.arc(cols.cat - 12, y - 4, 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText(displayCat, cols.cat, y);
+
+      // Weight
+      ctx.fillStyle = '#e2e8f0';
+      ctx.textAlign = 'right';
+      ctx.fillText(`${it.totalWeight} g`, cols.weight, y);
+
+      // Percentage with bar
+      ctx.fillStyle = '#64748b';
+      ctx.fillText(`${pct}%`, cols.pct, y);
+
+      // Mini bar
+      const barWidth = (it.totalWeight / topItems[0].totalWeight) * 80;
+      ctx.fillStyle = 'rgba(59, 130, 246, 0.3)';
+      ctx.fillRect(cols.pct + 15, y - 10, barWidth, 14);
+
+      ctx.textAlign = 'left';
+    });
+
+    // Show more indicator if needed
+    if (topItems.length > maxItems) {
+      ctx.fillStyle = '#64748b';
+      ctx.font = '12px system-ui, sans-serif';
+      ctx.fillText(`+ ${topItems.length - maxItems} ${currentLang === 'ja' ? 'アイテム' : 'more items'}...`, cols.name, tableY + 35 + maxItems * rowHeight);
+    }
+  }
+
+  // Main draw function
+  function drawGraphImage() {
+    switch (currentGraphView) {
+      case 'pie': drawPieView(); break;
+      case 'radar': drawRadarView(); break;
+      case 'items': drawItemsView(); break;
+      default: drawPieView();
+    }
   }
 
   function openGraphModal() {
     graphModal.classList.add('active');
+    currentGraphView = 'pie';
+    graphTabs.forEach(tab => tab.classList.toggle('active', tab.dataset.view === 'pie'));
     drawGraphImage();
   }
 
   function closeGraphModal() {
     graphModal.classList.remove('active');
   }
+
+  // Tab switching
+  graphTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      currentGraphView = tab.dataset.view;
+      graphTabs.forEach(t => t.classList.toggle('active', t === tab));
+      drawGraphImage();
+    });
+  });
 
   graphBtn.addEventListener('click', openGraphModal);
   graphCloseBtn.addEventListener('click', closeGraphModal);

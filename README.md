@@ -77,11 +77,11 @@ hub: true
 >![ペネトレーションテスターの装備品](assets/screenshot.png)
 >*ペネトレーションテスターの装備品*
 
->![ブラッシュクラフト（ミニマル）の装備品](assets/screenshot.png)
+>![ブラッシュクラフト（ミニマル）の装備品](assets/screenshot2.png)
 >*ブラッシュクラフト（ミニマル）の装備品*
 
->![画像の表示](assets/screenshot.png)
->*共有画像の表示*
+>![装備品重要のグラフ表示](assets/screenshot3.png)
+>*装備品重要のグラフ表示*
 
 ---
 
@@ -125,12 +125,12 @@ hub: true
 ## ✨ 主な機能
 
 ### 1. プリセット管理
-- **ビルトインプリセット**：18種類のシナリオ別プリセット
+- **ビルトインプリセット**：20種類のシナリオ別プリセット
   - 脱出・回避系：大使館脱出、SERE
   - 日常携行系：都市個人型
   - 救助・消防系：消防隊携行型、SAR（捜索救助）
   - 警備・防犯系：警備員携行型、鍵師型
-  - 災害対応系：災害避難型、プレッパー（長期備蓄）型
+  - 災害対応系：災害避難型、プレッパー（長期備蓄）型、ブッシュクラフト（ミニマル/スタンダード/拡張）
   - ハッカー・IT系：デジタルノマド型、ペンテスター型、ネットワークエンジニア型、デジタルフォレンジック調査員型、ハードウェア開発者型、SysAdmin型、データリカバリー専門家型、無線通信技術者型
 - **カスタムプリセット**：自分で作成したチェックリストをプリセットとして保存・再利用可能（localStorage）
   - ✏️ **名前変更機能**：カスタムプリセット選択時に名前変更ボタンでプリセット名を編集可能
@@ -159,6 +159,28 @@ hub: true
 - **PDF**：日本語対応（html2canvas使用）、チェックボックス状態を表示、タグ表示
 - **CSV**：スプレッドシート互換形式
 - **JSON**：完全なデータ構造を保持
+
+### 6. グラフ表示機能
+- **3種類のビュー**：円グラフ、レーダーチャート、主要アイテム一覧をタブで切り替え
+- **共通統計表示**：アイテム数、合計重量、体積を各ビューに表示
+- **画像ダウンロード**：表示中のグラフをPNG形式でダウンロード可能
+- **共有機能**：グラフ画像を共有（Web Share API対応環境）
+
+### 7. 多言語対応（i18n）
+- **日本語/英語切り替え**：右上の言語ボタンで即座に切り替え
+- **設定保存**：選択した言語はlocalStorageに保存
+- **完全対応**：UI要素、メッセージ、動的テキストすべて対応
+
+### 8. 重量目標プリセット
+- **UL（ウルトラライト）**：ミニマリスト向け軽量構成（例：1.8kg）
+- **STD（スタンダード）**：バランス重視の標準構成（例：3.2kg）
+- **HVY（ヘビー）**：フル装備の本格構成（例：5.5kg）
+- **ブッシュクラフト対応**：bushcraft_minimal/standard/extendedの3段階プリセット
+
+### 9. プリセット遅延読込み
+- **オンデマンド読込み**：選択時に初めてJSONファイルをfetch
+- **キャッシュ管理**：一度読み込んだプリセットはメモリにキャッシュ
+- **初期読込み高速化**：起動時のデータ転送量を最小化
 
 ---
 
@@ -356,6 +378,12 @@ hub: true
   携帯浄水器（長期使用型）、長期保存食（30日分）、サバイバルナイフ、ポータブルソーラーパネル、大容量バッテリーバンク、総合工具セット、釣り具・罠キット、種子セット等。
   出典：長期サバイバル準備ガイド、自給自足型備蓄マニュアル。
 
+- **Bushcraft（ブッシュクラフト・3段階）**
+  - **ミニマル（UL）**：モーラナイフ、ファイヤースチール、タープ、パラコード、水筒等（~1.8kg）
+  - **スタンダード（STD）**：上記+ハンモック、ソーチェーン、ククサ、調理セット等（~3.2kg）
+  - **拡張（HVY）**：上記+ウールブランケット、鉈、折りたたみノコギリ、防寒具等（~5.5kg）
+  出典：ブッシュクラフト入門書籍、北欧アウトドア文化資料。
+
 ### ハッカー・IT系（Hacker/IT）
 - **Digital Nomad（デジタルノマド型）**
   ノートPC、マルチ電源アダプター、VPNルーター、予備SIM×3、ポータブルSSD、USB-Cハブ等。
@@ -387,47 +415,89 @@ hub: true
 
 ## 🗂️ データモデル（JSON スキーマ）
 
+### プリセットファイル構造
+
 ```json
 {
-  "checklist_id":"cl-20251009-001",
-  "name":"Embassy-Escape Light",
-  "scenario":"urban",
-  "created_by":"<user>",
-  "items":[
-    {
-      "id":"item-001",
-      "name":"Emergency Cash (USD)",
-      "category":"Evasion/Urban",
-      "weight_g":100,
-      "volume_cm3":25,
-      "quantity":1,
-      "recommended_quantity":1,
-      "packed_by_default":true,
-      "category_tags":["evasion-urban","financial"],
-      "repack_frequency":"never",
-      "purpose_short":"短期の現地通貨不足対策",
-      "hazard_flag":false,
-      "dual_use":false,
-      "legality_notes":{"US":"一般可","JP":"一般可"},
-      "concealability":"高",
-      "recommended_location_on_body":"wallet/inner-pocket",
-      "sources":[{"title":"Embassy Guidance 2018","url":"https://..."}],
-      "scores":{"survivability":2,"signalability":0,"exfiltration_support":1,"legality_penalty":0}
-    }
-  ],
-  "totals":{"weight_g":1250,"volume_cm3":980},
-  "status":"draft",
-  "history":[]
+  "category": "disaster",
+  "name_ja": "ブッシュクラフト型（ミニマル）",
+  "name_en": "Bushcraft Minimal",
+  "items": [...]
 }
 ```
 
-### 新規パッキングフィールド
+### アイテムスキーマ（多言語対応）
 
-- **quantity** (number): 現在の数量（デフォルト: 1）
-- **recommended_quantity** (number): 推奨数量（デフォルト: 1）
-- **packed_by_default** (boolean): デフォルトでパック済みとするか（デフォルト: false）
-- **category_tags** (array): 柔軟なカテゴリ分類用タグ配列（デフォルト: categoryから自動生成）
-- **repack_frequency** (string): 入替頻度 - `daily` / `weekly` / `monthly` / `never`（デフォルト: never）
+```json
+{
+  "id": "bc_batoning_knife",
+  "weight_g": 350,
+  "volume_cm3": 200,
+  "quantity": 1,
+  "recommended_quantity": 1,
+  "packed_by_default": false,
+  "category_tags": ["tools", "bushcraft"],
+  "repack_frequency": "never",
+  "dual_use": true,
+  "hazard_flag": true,
+  "concealability": "low",
+
+  "name_ja": "バトニングナイフ（フルタング・厚刃）",
+  "name_en": "Batoning Knife (Full Tang, Thick Blade)",
+  "category_ja": "工具",
+  "category_en": "Tools",
+  "purpose_short_ja": "薪割り・木材加工・シェルター構築",
+  "purpose_short_en": "Wood splitting, carving, shelter building",
+  "description_ja": "バトニング（薪割り）に適した厚刃のフルタングナイフ。",
+  "description_en": "Full-tang thick blade knife suitable for batoning.",
+  "legality_notes_ja": {
+    "JP": "刃物所持規制対象、正当理由必要",
+    "US": "州により規制あり"
+  },
+  "legality_notes_en": {
+    "JP": "Subject to blade possession regulations",
+    "US": "Regulations vary by state"
+  },
+
+  "sources": [{"title": "Bushcraft 101 - Dave Canterbury"}],
+  "scores": {
+    "survivability": 5,
+    "signalability": 0,
+    "exfiltration_support": 1,
+    "concealability": 1,
+    "legality_penalty": 3
+  }
+}
+```
+
+### フィールド説明
+
+#### 基本フィールド
+| フィールド | 型 | 説明 |
+|:---|:---|:---|
+| `id` | string | 一意識別子 |
+| `weight_g` | number | 重量（グラム） |
+| `volume_cm3` | number | 体積（立方センチメートル） |
+| `dual_use` | boolean | 軍民両用フラグ |
+| `hazard_flag` | boolean | 危険物フラグ |
+
+#### 多言語フィールド（`_ja` / `_en` サフィックス）
+| フィールド | 説明 |
+|:---|:---|
+| `name_ja` / `name_en` | アイテム名 |
+| `category_ja` / `category_en` | カテゴリー名 |
+| `purpose_short_ja` / `purpose_short_en` | 用途（簡潔） |
+| `description_ja` / `description_en` | 詳細説明 |
+| `legality_notes_ja` / `legality_notes_en` | 国別法的注意事項 |
+
+#### パッキングフィールド
+| フィールド | 型 | デフォルト | 説明 |
+|:---|:---|:---|:---|
+| `quantity` | number | 1 | 現在の数量 |
+| `recommended_quantity` | number | 1 | 推奨数量 |
+| `packed_by_default` | boolean | false | デフォルトでパック済み |
+| `category_tags` | array | [] | カテゴリタグ配列 |
+| `repack_frequency` | string | "never" | 入替頻度（daily/weekly/monthly/never） |
 
 ---
 
@@ -435,7 +505,7 @@ hub: true
 
 ### 防災備蓄管理ツール（RollingStock Planner）との使い分け
 
-OpsLoadoutと[防災備蓄管理ツール](https://ipusiron.github.io/rollingstock-planner/)は、災害対応における異なる段階と目的をカバーする**相補的なツール**です：
+OpsLoadoutと[防災備蓄管理ツール](https://ipusiron.github.io/rollingstock-planner/)は、災害対応における異なる段階と目的をカバーする**相補的なツール**です。
 
 #### 📦 RollingStock Planner（備蓄管理）
 **用途**: 自宅・拠点での長期滞在型備蓄（在宅避難）
@@ -614,7 +684,7 @@ OpsLoadoutと[防災備蓄管理ツール](https://ipusiron.github.io/rollingsto
 - 🔒 **Cookie不使用**: Cookieは一切設定されません
 - 🔒 **外部通信なし**: データは外部サーバーに送信されません
 
-詳細は [SECURITY.md](SECURITY.md) を参照してください。
+詳細は [docs/SECURITY.md](docs/SECURITY.md) を参照してください。
 
 ---
 
@@ -622,18 +692,62 @@ OpsLoadoutと[防災備蓄管理ツール](https://ipusiron.github.io/rollingsto
 
 ```
 ops-loadout/
-├── index.html          # メインHTML（UI構造）
-├── app.js              # アプリケーションロジック（18種類のPRESETS含む）
-├── style.css           # カスタムスタイル
+├── index.html          # メインHTML（UI構造、CSPヘッダー）
+├── app.js              # アプリケーションロジック（遅延読込み対応）
+├── i18n.js             # 多言語対応（日本語/英語切り替え）
+├── css/                # モジュール化されたスタイルシート
+│   ├── main.css        # エントリポイント（@import）
+│   ├── base.css        # 基本スタイル
+│   ├── layout.css      # レイアウト
+│   ├── controls.css    # コントロール部品
+│   ├── buttons.css     # ボタン
+│   ├── forms.css       # フォーム
+│   ├── badges.css      # バッジ（dual_use/hazard）
+│   ├── modals.css      # モーダル・グラフ表示
+│   ├── table.css       # テーブル
+│   ├── filters.css     # フィルター
+│   ├── saved.css       # 保存チェックリスト
+│   └── print.css       # 印刷用
+├── presets/            # プリセットデータ（JSON、遅延読込み）
+│   ├── index.json      # プリセット一覧・メタデータ
+│   ├── evasion/        # 脱出・回避系
+│   │   ├── embassy.json
+│   │   └── sere.json
+│   ├── edc/            # 日常携行系
+│   │   └── urban.json
+│   ├── rescue/         # 救助・消防系
+│   │   ├── firefighter.json
+│   │   └── sar.json
+│   ├── security/       # 警備・防犯系
+│   │   ├── security_guard.json
+│   │   └── locksmith.json
+│   ├── disaster/       # 災害対応系
+│   │   ├── disaster.json
+│   │   ├── prepper.json
+│   │   ├── bushcraft_minimal.json
+│   │   ├── bushcraft_standard.json
+│   │   └── bushcraft_extended.json
+│   └── hacker/         # ハッカー・IT系
+│       ├── hacker.json
+│       ├── pentest.json
+│       ├── neteng.json
+│       ├── forensic.json
+│       ├── hwdev.json
+│       ├── sysadmin.json
+│       ├── datarecovery.json
+│       └── rftech.json
+├── docs/               # ドキュメント
+│   ├── DEVELOPMENT.md  # 開発者向け技術詳細
+│   └── SECURITY.md     # セキュリティポリシー
+├── assets/             # 画像リソース
+│   ├── screenshot.png
+│   ├── screenshot2.png
+│   └── screenshot3.png
 ├── README.md           # プロジェクト説明（本ファイル）
-├── DEVELOPMENT.md      # 開発者向け技術詳細（アーキテクチャ、実装詳細）
-├── SECURITY.md         # セキュリティポリシー（XSS対策、データプライバシー）
 ├── CLAUDE.md           # 開発ガイド（Claude Code用）
 ├── LICENSE             # MITライセンス
 ├── .gitignore          # Git除外ファイル設定
-├── .nojekyll           # GitHub Pages設定（Jekyllビルド無効化）
-└── assets/             # 画像リソース
-    └── screenshot.png  # アプリケーションのスクリーンショット
+└── .nojekyll           # GitHub Pages設定
 ```
 
 ### 技術スタック

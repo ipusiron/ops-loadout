@@ -3,14 +3,21 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!--
+    Content Security Policy:
+    - script-src: No unsafe-inline (all scripts are external files)
+    - style-src: unsafe-inline required by Tailwind CSS CDN JIT compiler
+    - img-src: self + data: for canvas export
+    - connect-src: self + cdnjs for source maps
+    - frame-ancestors: Not supported in meta tag (HTTP header only)
+  -->
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
-    script-src 'self' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com 'unsafe-inline';
-    style-src 'self' 'unsafe-inline';
-    img-src 'self' data: https:;
+    script-src 'self' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com;
+    style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com;
+    img-src 'self' data:;
     font-src 'self';
-    connect-src 'self';
-    frame-ancestors 'none';
+    connect-src 'self' https://cdnjs.cloudflare.com;
     base-uri 'self';
     form-action 'self';
   " />
@@ -35,7 +42,7 @@
           referrerpolicy="no-referrer"></script>
 
   <!-- Custom styles -->
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="css/main.css" />
 </head>
 <body>
 
@@ -359,12 +366,12 @@
   </div>
   <!-- Help Modal -->
   <div id="helpModal" class="modal-backdrop">
-    <div class="modal-content max-w-lg">
+    <div class="modal-content max-w-lg md:max-w-2xl lg:max-w-3xl">
       <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-semibold" data-i18n="help.title">使い方</h3>
+        <h3 class="text-lg md:text-xl font-semibold" data-i18n="help.title">使い方</h3>
         <button id="helpCloseBtn" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
       </div>
-      <div class="help-content text-sm text-gray-700 space-y-4">
+      <div class="help-content text-sm md:text-base text-gray-700 space-y-4 md:space-y-5 max-h-[50vh] md:max-h-[60vh] lg:max-h-[70vh] overflow-y-auto pr-2">
         <section>
           <h4 class="font-semibold text-gray-900 mb-1" data-i18n="help.gettingStarted">はじめに</h4>
           <p data-i18n="help.gettingStartedDesc">プリセットを選択するか、「新規」ボタンで空のチェックリストを作成します。</p>
@@ -374,8 +381,24 @@
           <p data-i18n="help.addingItemsDesc">「＋ アイテム追加」ボタンでアイテムを追加できます。カテゴリー、重量、数量などを入力してください。</p>
         </section>
         <section>
+          <h4 class="font-semibold text-gray-900 mb-1" data-i18n="help.customPresets">カスタムプリセット</h4>
+          <p data-i18n="help.customPresetsDesc">保存時に「プリセット化」にチェックを入れると、カスタムプリセットとして再利用できます。名前変更・削除も可能です。</p>
+        </section>
+        <section>
+          <h4 class="font-semibold text-gray-900 mb-1" data-i18n="help.weightTarget">重量目標</h4>
+          <p data-i18n="help.weightTargetDesc">目標重量を設定すると、プログレスバーで達成度を確認できます。グラフボタンで詳細な可視化も可能です。</p>
+        </section>
+        <section>
+          <h4 class="font-semibold text-gray-900 mb-1" data-i18n="help.graphView">グラフ表示</h4>
+          <p data-i18n="help.graphViewDesc">グラフボタンで円グラフ・レーダーチャート・主要アイテム一覧を切り替え表示。画像のダウンロードやコピーも可能です。</p>
+        </section>
+        <section>
           <h4 class="font-semibold text-gray-900 mb-1" data-i18n="help.savingExporting">保存とエクスポート</h4>
           <p data-i18n="help.savingExportingDesc">「保存」でローカルストレージに保存されます。JSON/CSV/PDF形式でエクスポートも可能です。</p>
+        </section>
+        <section>
+          <h4 class="font-semibold text-gray-900 mb-1" data-i18n="help.language">言語切り替え</h4>
+          <p data-i18n="help.languageDesc">右上の言語ボタン（JA/EN）で日本語と英語を切り替えられます。設定は保存されます。</p>
         </section>
         <section>
           <h4 class="font-semibold text-gray-900 mb-1" data-i18n="help.badges">バッジについて</h4>
@@ -400,9 +423,15 @@
   <!-- Graph Modal -->
   <div id="graphModal" class="modal-backdrop">
     <div class="modal-content graph-modal-content">
-      <div class="flex justify-between items-center mb-4">
+      <div class="flex justify-between items-center mb-3">
         <h3 class="text-lg font-semibold" data-i18n="graph.title">グラフ</h3>
         <button id="graphCloseBtn" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+      </div>
+      <!-- Tab buttons -->
+      <div class="graph-tabs">
+        <button class="graph-tab active" data-view="pie" data-i18n="graph.pie">円グラフ</button>
+        <button class="graph-tab" data-view="radar" data-i18n="graph.radar">レーダー</button>
+        <button class="graph-tab" data-view="items" data-i18n="graph.items">主要アイテム</button>
       </div>
       <div class="graph-canvas-wrapper">
         <canvas id="graphCanvas" width="1200" height="675"></canvas>

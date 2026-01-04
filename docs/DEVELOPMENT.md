@@ -8,13 +8,16 @@ OpsLoadout - 開発者向け技術詳細
 
 1. [アーキテクチャ概要](#アーキテクチャ概要)
 2. [状態管理システム](#状態管理システム)
-3. [カスタムプリセット管理](#カスタムプリセット管理)
-4. [チェックリスト保存ロジック](#チェックリスト保存ロジック)
-5. [PDFエクスポート実装](#pdfエクスポート実装)
-6. [セキュリティ対策](#セキュリティ対策)
-7. [カテゴリフィルタリング](#カテゴリフィルタリング)
-8. [モーダルシステム](#モーダルシステム)
-9. [パフォーマンス最適化](#パフォーマンス最適化)
+3. [プリセット遅延読み込み](#プリセット遅延読み込み)
+4. [多言語対応（i18n）](#多言語対応i18n)
+5. [グラフ表示機能](#グラフ表示機能)
+6. [カスタムプリセット管理](#カスタムプリセット管理)
+7. [チェックリスト保存ロジック](#チェックリスト保存ロジック)
+8. [PDFエクスポート実装](#pdfエクスポート実装)
+9. [セキュリティ対策](#セキュリティ対策)
+10. [カテゴリフィルタリング](#カテゴリフィルタリング)
+11. [モーダルシステム](#モーダルシステム)
+12. [パフォーマンス最適化](#パフォーマンス最適化)
 
 ---
 
@@ -29,14 +32,48 @@ OpsLoadout - 開発者向け技術詳細
 ### 主要コンポーネント
 
 ```
-app.js (143KB)
-├── PRESETS (18種類のビルトインプリセット定義) - Lines 7-360
-├── State Management (in-memoryステート) - Lines 38-45
-├── localStorage Persistence - Lines 445-492
-├── Rendering Pipeline - Lines 704-906
-├── Event Handlers - Lines 1087-1258
-├── Export Functions (PDF/CSV/JSON) - Lines 993-1084
-└── Modal System - Lines 907-992
+ops-loadout/
+├── index.html          # UI構造、CSPヘッダー、CDNスクリプト読み込み
+├── app.js              # コアロジック（プリセット遅延読み込み、レンダリング、グラフ）
+├── i18n.js             # 多言語対応（日本語/英語リソース、切り替えロジック）
+├── css/                # モジュール化されたスタイルシート
+│   ├── main.css        # エントリポイント（@import）
+│   ├── base.css        # 基本スタイル・変数
+│   ├── layout.css      # レイアウト構造
+│   ├── controls.css    # コントロール部品
+│   ├── buttons.css     # ボタンスタイル
+│   ├── forms.css       # フォーム要素
+│   ├── badges.css      # dual_use/hazardバッジ
+│   ├── modals.css      # モーダル・グラフタブ
+│   ├── table.css       # テーブル表示
+│   ├── filters.css     # フィルターボタン
+│   ├── saved.css       # 保存チェックリスト
+│   └── print.css       # 印刷用スタイル
+└── presets/            # プリセットデータ（JSON、遅延読み込み）
+    ├── index.json      # メタデータ一覧
+    ├── evasion/        # 脱出・回避系
+    ├── edc/            # 日常携行系
+    ├── rescue/         # 救助・消防系
+    ├── security/       # 警備・防犯系
+    ├── disaster/       # 災害対応系（ブッシュクラフト含む）
+    └── hacker/         # ハッカー・IT系
+```
+
+### app.jsの構成
+
+```
+app.js
+├── PRESETS_META / PRESETS  # プリセットメタデータ・キャッシュ
+├── State Management        # シングルステートオブジェクト
+├── DOM Element References  # 頻繁アクセス要素のキャッシュ
+├── Utility Functions       # escapeHtml, normalizeItem, uid等
+├── localStorage Helpers    # 保存・読み込み・エラーハンドリング
+├── Preset Loading          # 遅延読み込みロジック
+├── Rendering Pipeline      # renderAll, renderList, renderDetail, renderTotals
+├── Graph Visualization     # drawPieView, drawRadarView, drawItemsView
+├── Modal System            # アイテム編集、保存オプション、グラフ表示
+├── Export Functions        # PDF/CSV/JSON生成
+└── Event Listeners         # ユーザーインタラクション、i18n更新
 ```
 
 ---
@@ -45,17 +82,19 @@ app.js (143KB)
 
 ### シングルステートオブジェクト
 
-**app.js:38-45**
-
 ```javascript
-const state = {
-  checklistName: string,
-  scenario: string,
-  items: Array<Item>,
-  viewMode: string,
-  selectedItemId: string | null
+let state = {
+  checklistName: '',      // 現在のチェックリスト名
+  items: [],              // アイテム配列
+  selectedItemId: null,   // 選択中のアイテムID（詳細表示用）
+  isDirty: false          // 未保存変更フラグ
 };
 ```
+
+**localStorage Keys**:
+- `ekc_saved_checklists`: 保存済みチェックリスト一覧
+- `ekc_custom_presets`: カスタムプリセット一覧
+- `ops_lang`: 言語設定（`ja` または `en`）
 
 **特徴**:
 - **単一責任**: 1つのグローバルステートで全体を管理
@@ -63,8 +102,6 @@ const state = {
 - **renderAll()による強制再描画**: ステート変更後に必ず`renderAll()`を呼び出し
 
 ### アイテム正規化
-
-**app.js:434-443**
 
 ```javascript
 function normalizeItem(it) {
@@ -83,6 +120,201 @@ function normalizeItem(it) {
 - 古いプリセットとの後方互換性
 - デフォルト値の統一
 - `undefined`/`null`によるエラー防止
+
+---
+
+## プリセット遅延読み込み
+
+### 概要
+
+プリセットデータは`presets/`フォルダに分割されており、選択時に初めて読み込まれます。
+
+```
+presets/
+├── index.json              # メタデータ（名前、カテゴリ、ファイルパス）
+├── evasion/embassy.json    # 個別プリセットデータ
+├── evasion/sere.json
+├── disaster/bushcraft_minimal.json
+└── ...
+```
+
+### データ構造
+
+**index.json（メタデータ）**:
+```json
+{
+  "embassy": {
+    "name": "Embassy-Escape（大使館脱出型）",
+    "category": "evasion",
+    "file": "evasion/embassy.json"
+  },
+  "bushcraft_minimal": {
+    "name": "Bushcraft-Minimal（ブッシュクラフト・ミニマル）",
+    "category": "disaster",
+    "file": "disaster/bushcraft_minimal.json",
+    "weight_class": "UL"
+  }
+}
+```
+
+**個別プリセットJSON**:
+```json
+{
+  "name": "Bushcraft-Minimal",
+  "items": [
+    {
+      "id": "bc_knife",
+      "name": "モーラナイフ",
+      "category": "工具",
+      "weight_g": 120,
+      ...
+    }
+  ]
+}
+```
+
+### 読み込みフロー
+
+```javascript
+// 1. 起動時にメタデータを読み込み
+async function loadPresetsMeta() {
+  const response = await fetch('presets/index.json');
+  PRESETS_META = await response.json();
+}
+
+// 2. プリセット選択時に実データを遅延読み込み
+async function loadPresetData(key) {
+  if (PRESETS[key]) return PRESETS[key];  // キャッシュヒット
+
+  const meta = PRESETS_META[key];
+  const response = await fetch(`presets/${meta.file}`);
+  const data = await response.json();
+  PRESETS[key] = data;  // キャッシュに保存
+  return data;
+}
+```
+
+**利点**:
+- 初期読み込み高速化（index.jsonのみ）
+- 必要なプリセットのみダウンロード
+- メモリ効率向上
+
+---
+
+## 多言語対応（i18n）
+
+### 概要
+
+`i18n.js`が日本語/英語の切り替えを管理します。
+
+### 言語リソース構造
+
+```javascript
+const I18N = {
+  en: {
+    "app.subtitle": "Mission-ready checklist tool...",
+    "button.save": "Save",
+    "th.name": "Name",
+    "graph.pie": "Pie Chart",
+    ...
+  },
+  ja: {
+    "app.subtitle": "装備構成を計画・編集・エクスポートする...",
+    "button.save": "保存",
+    "th.name": "名称",
+    "graph.pie": "円グラフ",
+    ...
+  }
+};
+```
+
+### 使用方法
+
+**静的テキスト（HTML属性）**:
+```html
+<button data-i18n="button.save">保存</button>
+<input data-i18n-placeholder="placeholder.search">
+```
+
+**動的テキスト（JavaScript）**:
+```javascript
+modalTitle.textContent = t('modal.addItem');
+```
+
+### 言語切り替え
+
+```javascript
+let currentLang = localStorage.getItem('ops_lang') || 'ja';
+
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('ops_lang', lang);
+  updateUI();
+}
+
+function updateUI() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    el.textContent = t(el.dataset.i18n);
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    el.placeholder = t(el.dataset.i18nPlaceholder);
+  });
+}
+```
+
+---
+
+## グラフ表示機能
+
+### 概要
+
+3種類のビジュアライゼーションをタブで切り替え表示します。
+
+### ビュー種類
+
+1. **円グラフ（Pie）**: カテゴリ別重量分布
+2. **レーダーチャート（Radar）**: 5軸評価（重量、体積、アイテム数、dual_use、hazard）
+3. **主要アイテム（Items）**: 重量順トップアイテム一覧
+
+### 実装
+
+```javascript
+let currentGraphView = 'pie';  // pie | radar | items
+
+function drawGraphImage() {
+  switch (currentGraphView) {
+    case 'pie': drawPieView(); break;
+    case 'radar': drawRadarView(); break;
+    case 'items': drawItemsView(); break;
+  }
+}
+
+// 共通ヘッダー（全ビューで表示）
+function drawGraphHeader(ctx, W, H, stats) {
+  // チェックリスト名、アイテム数、合計重量、体積を描画
+}
+```
+
+### タブ切り替え
+
+```javascript
+graphTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    currentGraphView = tab.dataset.view;
+    graphTabs.forEach(t => t.classList.toggle('active', t === tab));
+    drawGraphImage();
+  });
+});
+```
+
+### Canvas設定
+
+```javascript
+const canvas = document.getElementById('graphCanvas');
+const W = 1200, H = 630;  // OGP推奨サイズ
+canvas.width = W;
+canvas.height = H;
+```
 
 ---
 
@@ -107,8 +339,6 @@ function normalizeItem(it) {
 
 #### 1. getAllCustomPresets()
 
-**app.js:471-479**
-
 ```javascript
 function getAllCustomPresets() {
   try {
@@ -126,8 +356,6 @@ function getAllCustomPresets() {
 - コンソールエラーログで開発者に通知
 
 #### 2. saveAsCustomPreset()
-
-**app.js:494-505**
 
 ```javascript
 function saveAsCustomPreset() {
@@ -150,8 +378,6 @@ function saveAsCustomPreset() {
 - **ISO 8601タイムスタンプ**: 国際標準形式で保存
 
 #### 3. renameCustomPreset()
-
-**app.js:515-534**
 
 ```javascript
 function renameCustomPreset(id) {
@@ -205,8 +431,6 @@ currentChecklistId が存在？
 
 #### 実装
 
-**app.js:1174-1211**
-
 ```javascript
 saveBtn.addEventListener('click', ()=>{
   const checklists = getAllChecklists();
@@ -239,8 +463,6 @@ saveBtn.addEventListener('click', ()=>{
 
 ### QuotaExceededError対策
 
-**app.js:456-467**
-
 ```javascript
 function saveAllChecklists(checklists) {
   try {
@@ -265,8 +487,6 @@ function saveAllChecklists(checklists) {
 ## PDFエクスポート実装
 
 ### html2canvas + jsPDF
-
-**app.js:1028-1084**
 
 #### ステップバイステップ
 
@@ -328,8 +548,6 @@ async function exportPDF() {
 
 ### 日本語対応
 
-**index.html:14-23**
-
 ```html
 <!-- jsPDF for PDF export -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
@@ -353,8 +571,6 @@ async function exportPDF() {
 
 ### XSS対策
 
-**app.js:700-702**
-
 ```javascript
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, function(m){
@@ -377,8 +593,6 @@ function escapeHtml(s) {
 
 ### localStorage検証
 
-**app.js:471-479, 446-454**
-
 ```javascript
 try {
   const data = localStorage.getItem('ekc_custom_presets');
@@ -400,22 +614,18 @@ try {
 
 ### presetsByCategoryマッピング
 
-**app.js:1259-1268**
-
 ```javascript
 const presetsByCategory = {
   evasion: ['embassy', 'sere'],
   edc: ['urban'],
   rescue: ['firefighter', 'sar'],
   security: ['security_guard', 'locksmith'],
-  disaster: ['disaster', 'prepper'],
+  disaster: ['disaster', 'prepper', 'bushcraft_minimal', 'bushcraft_standard', 'bushcraft_extended'],
   hacker: ['hacker', 'pentest', 'neteng', 'forensic', 'hwdev', 'sysadmin', 'datarecovery', 'rftech']
 };
 ```
 
 ### 動的フィルタリング
-
-**app.js:1289-1337**
 
 ```javascript
 if (category === 'all') {
@@ -456,8 +666,6 @@ if (category === 'all') {
 
 ### 汎用モーダル構造
 
-**index.html:199-272**
-
 ```html
 <div id="modalBackdrop" class="modal-backdrop">
   <div class="modal-content">
@@ -470,8 +678,6 @@ if (category === 'all') {
 ```
 
 ### モーダル制御
-
-**app.js:907-992**
 
 ```javascript
 function openItemModal(mode, item = null) {
@@ -530,8 +736,6 @@ function saveAsCustomPreset() {
 
 ### 3. イベント委譲
 
-**app.js:739-759**
-
 ```javascript
 // Event delegation for dynamic table rows
 itemTable.addEventListener('click', (e) => {
@@ -551,8 +755,6 @@ itemTable.addEventListener('click', (e) => {
 
 ### UID生成
 
-**app.js:420**
-
 ```javascript
 function uid(prefix='id') {
   return prefix + '-' + Math.random().toString(36).slice(2,9);
@@ -564,8 +766,6 @@ function uid(prefix='id') {
 - **衝突確率**: 約1/78億（36^7）で実用上問題なし
 
 ### タイムスタンプ生成
-
-**app.js:422-432**
 
 ```javascript
 function getTimestamp() {

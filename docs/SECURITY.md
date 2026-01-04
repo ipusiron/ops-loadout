@@ -28,14 +28,27 @@ This is a client-side application with no backend. All data is stored locally in
 - Integrity checks for jsPDF and html2canvas libraries
 
 ### 4. Content Security Policy (CSP)
-- CSP meta tag configured with restrictive policy:
-  - `default-src 'self'` - Only same-origin resources by default
-  - `script-src` - Limited to self, Tailwind CDN, and cdnjs.cloudflare.com
-  - `frame-ancestors 'none'` - Prevents clickjacking
-  - `base-uri 'self'` - Prevents base tag hijacking
+
+CSP meta tag configured with restrictive policy:
+
+| Directive | Value | Purpose |
+|:---|:---|:---|
+| `default-src` | `'self'` | Only same-origin resources by default |
+| `script-src` | `'self'` + CDN hosts | No `unsafe-inline` - all scripts are external files |
+| `style-src` | `'self' 'unsafe-inline'` + Tailwind | Required by Tailwind CSS CDN JIT compiler |
+| `img-src` | `'self' data:` | Canvas export support, no external https: |
+| `connect-src` | `'self'` | Only same-origin fetch requests |
+| `frame-ancestors` | `'none'` | Prevents clickjacking |
+| `base-uri` | `'self'` | Prevents base tag hijacking |
+| `form-action` | `'self'` | Forms submit only to same-origin |
+
+Additional measures:
 - External link targets use `rel="noopener noreferrer"` to prevent tabnabbing
 - Referrer-Policy set to `strict-origin-when-cross-origin`
-- **Note**: Some security headers (X-Frame-Options, X-Content-Type-Options) require HTTP server configuration. GitHub Pages does not support custom HTTP headers.
+
+**Known Limitations**:
+- `style-src 'unsafe-inline'` is required by Tailwind CSS CDN's JIT compiler
+- GitHub Pages does not support custom HTTP headers (X-Frame-Options, X-Content-Type-Options)
 
 ## Reporting a Vulnerability
 
