@@ -43,368 +43,10 @@
   //   - legality_notes: 法的注意事項（国別）
   //   - sources: 出典情報
   //   - scores: 各種スコア
-  const PRESETS = {
-    "embassy": {
-      name: "大使館脱出型",
-      category: "evasion",
-      items: [
-        { id: "em_cash", name: "緊急現金（現地通貨+USD）", category: "都市型回避", weight_g: 50, volume_cm3: 20, purpose_short: "短期の現地通貨不足対策", dual_use: false, hazard_flag: false, legality_notes: {US:"許可",JP:"許可"}, sources: [{title:"米国務省 Go Bagガイダンス"}], scores: {survivability:1, signalability:0, exfiltration_support:2, concealability:3, legality_penalty:0} },
-        { id: "em_water_tab", name: "浄水タブレット", category: "サバイバル", weight_g: 15, volume_cm3: 6, purpose_short: "少量の飲料水の処理", dual_use: false, hazard_flag: false, legality_notes: {US:"許可",JP:"許可"}, sources: [{title:"AF SERE ハンドブック"}], scores:{survivability:3,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id: "em_whistle", name: "ホイッスル", category: "信号発信", weight_g: 10, volume_cm3: 4, purpose_short: "注意を引く音響信号", dual_use:false, hazard_flag:false, legality_notes:{US:"許可",JP:"許可"}, sources:[{title:"AF SERE 事例"}], scores:{survivability:1,signalability:2,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id: "em_mirror", name: "シグナルミラー（ポケット型）", category: "信号発信", weight_g:20, volume_cm3:10, purpose_short:"遠距離視覚信号", dual_use:false, hazard_flag:false, legality_notes:{US:"許可"}, sources:[{title:"MARSOC SERE 装備リスト"}], scores:{survivability:1,signalability:3,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id: "em_blanket", name: "マイラーサバイバルブランケット", category: "サバイバル", weight_g:120, volume_cm3:40, purpose_short:"体温保持、軽量シェルター補助", dual_use:false, hazard_flag:false, legality_notes:{US:"許可",JP:"許可"}, sources:[{title:"AF SERE ハンドブック"}], scores:{survivability:3,signalability:0,exfiltration_support:0,concealability:1,legality_penalty:0} },
-        { id: "em_firstaid", name: "小型救急セット（基本）", category: "医療", weight_g:150, volume_cm3:80, purpose_short:"基本的な創傷処置と包帯", dual_use:false, hazard_flag:false, legality_notes:{US:"許可",JP:"許可"}, sources:[{title:"赤十字 サバイバルキットガイド"}], scores:{survivability:3,signalability:0,exfiltration_support:0,concealability:1,legality_penalty:0} },
-        { id: "em_led", name: "ケミカルライト / LED（信号用）", category: "信号発信", weight_g:30, volume_cm3:12, purpose_short:"暗所での信号発信・照明", dual_use:false, hazard_flag:false, legality_notes:{US:"許可",JP:"許可"}, sources:[{title:"CIA博物館 E&Eキット事例"}], scores:{survivability:1,signalability:2,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id: "em_multitool", name: "小型マルチツール（ハサミ、缶切り、プライヤー）", category: "工具", weight_g:80, volume_cm3:30, purpose_short:"汎用工具作業（非破壊的）", dual_use:true, hazard_flag:false, legality_notes:{US:"航空機内で制限される場合あり",JP:"制限される場合あり"}, sources:[{title:"CIA博物館 E&Eキット マルチツール事例"}], scores:{survivability:2,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:1} },
-        { id: "em_compass", name: "小型コンパス（ボタン型）", category: "ナビゲーション", weight_g:20, volume_cm3:8, purpose_short:"基本的な方向確認", dual_use:false, hazard_flag:false, legality_notes:{US:"許可"}, sources:[{title:"MARSOC SERE 装備リスト"}], scores:{survivability:2,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id: "em_map", name: "現地地図（小型、防水スリーブ）", category: "ナビゲーション", weight_g:40, volume_cm3:20, purpose_short:"現地ルートと安全地点の記載地図", dual_use:false, hazard_flag:false, legality_notes:{US:"許可"}, sources:[{title:"米国大使館 PREP ガイド"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:2,legality_penalty:0} },
-        { id: "em_contacts", name: "緊急連絡先リスト（ラミネート加工）", category: "書類", weight_g:20, volume_cm3:10, purpose_short:"重要な電話番号と大使館連絡先", dual_use:false, hazard_flag:false, legality_notes:{US:"許可"}, sources:[{title:"国務省 Go Bag ガイド"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:3,legality_penalty:0} },
-        { id: "em_sim", name: "予備SIM / 現地SIM + 小型アダプター", category: "通信", weight_g:5, volume_cm3:2, purpose_short:"現地モバイル接続のバックアップ", dual_use:false, hazard_flag:false, legality_notes:{US:"許可",JP:"許可"}, sources:[{title:"大使館 Go Bag ガイダンス（通信）"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:3,legality_penalty:0} },
-        { id: "em_powerbank", name: "モバイルバッテリー", category: "その他", weight_g:200, volume_cm3:70, purpose_short:"モバイル機器充電、通信維持", dual_use:false, hazard_flag:true, legality_notes:{US:"航空輸送制限（バッテリー容量）",JP:"航空輸送制限"}, sources:[{title:"Ready.gov キット構築ガイド"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:2,legality_penalty:1} },
-        { id: "em_energy_bars", name: "軽量エナジーバー（3〜5本）", category: "サバイバル", weight_g:300, volume_cm3:200, purpose_short:"短期高エネルギー配給", dual_use:false, hazard_flag:false, legality_notes:{US:"許可"}, sources:[{title:"Ready.gov 食料・水ガイダンス"}], scores:{survivability:2,signalability:0,exfiltration_support:1,concealability:1,legality_penalty:0} },
-        { id: "em_duct_tape", name: "ダクトテープ（小型ロール）", category: "工具", weight_g:60, volume_cm3:40, purpose_short:"修理・応急処置", dual_use:false, hazard_flag:false, legality_notes:{US:"許可"}, sources:[{title:"汎用サバイバルキット推奨品"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id: "em_paracord", name: "パラコード（3〜5m）", category: "工具", weight_g:70, volume_cm3:30, purpose_short:"シェルター・修理用コード", dual_use:false, hazard_flag:false, legality_notes:{US:"許可"}, sources:[{title:"Backpacker SERE ガイダンス"}], scores:{survivability:2,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id: "em_sewing_kit", name: "裁縫セット（針、糸）", category: "工具", weight_g:25, volume_cm3:10, purpose_short:"衣服修理と小規模補修", dual_use:false, hazard_flag:false, legality_notes:{US:"許可"}, sources:[{title:"大使館 Go Bag 推奨品"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:3,legality_penalty:0} },
-        { id: "em_water_bottle", name: "折りたたみ水筒", category: "サバイバル", weight_g:80, volume_cm3:150, purpose_short:"水の運搬、可能な限り補充", dual_use:false, hazard_flag:false, legality_notes:{US:"許可"}, sources:[{title:"Ready.gov 水ガイダンス"}], scores:{survivability:3,signalability:0,exfiltration_support:1,concealability:1,legality_penalty:0} },
-        { id: "em_notebook", name: "防水ノート＆ペン", category: "書類", weight_g:40, volume_cm3:20, purpose_short:"メモ、連絡先、短文メッセージ", dual_use:false, hazard_flag:false, legality_notes:{US:"許可"}, sources:[{title:"大使館 PREP 個人緊急行動計画"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:3,legality_penalty:0} },
-        { id: "em_waterproof_bags", name: "防水袋（小型ジップロック）", category: "その他", weight_g:10, volume_cm3:5, purpose_short:"書類・電子機器の防湿保護", dual_use:false, hazard_flag:false, legality_notes:{US:"許可"}, sources:[{title:"汎用緊急キット推奨品"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:3,legality_penalty:0} }
-      ]
-    },
-    "sere": {
-      name: "SERE航空兵型",
-      category: "evasion",
-      items: [
-        { id:"s_blanket", name:"マイラーサバイバルブランケット", category:"サバイバル", weight_g:120, volume_cm3:40, purpose_short:"保温", dual_use:false, hazard_flag:false, legality_notes:{US:"許可"}, sources:[{title:"AF SERE ハンドブック"}], scores:{survivability:3,signalability:0,exfiltration_support:0,concealability:1,legality_penalty:0} },
-        { id:"s_mirror", name:"シグナルミラー", category:"信号発信", weight_g:20, volume_cm3:10, purpose_short:"視覚信号", dual_use:false, hazard_flag:false, legality_notes:{US:"許可"}, sources:[{title:"AF SERE"}], scores:{survivability:1,signalability:3,exfiltration_support:0,concealability:1,legality_penalty:0} },
-        { id:"s_whistle", name:"ホイッスル", category:"信号発信", weight_g:10, volume_cm3:4, purpose_short:"音響信号", dual_use:false, hazard_flag:false, legality_notes:{US:"許可"}, sources:[{title:"AF SERE 事例"}], scores:{survivability:1,signalability:2,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"s_water_tab", name:"浄水タブレット", category:"サバイバル", weight_g:15, volume_cm3:6, purpose_short:"少量の飲料水処理", dual_use:false, hazard_flag:false, legality_notes:{US:"許可"}, sources:[{title:"AF SERE ハンドブック"}], scores:{survivability:3,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"s_compass", name:"小型コンパス", category:"ナビゲーション", weight_g:20, volume_cm3:8, purpose_short:"基本的な方向確認", dual_use:false, hazard_flag:false, legality_notes:{US:"許可"}, sources:[{title:"MARSOC SERE 装備リスト"}], scores:{survivability:2,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"s_firstaid", name:"小型救急セット", category:"医療", weight_g:150, volume_cm3:80, purpose_short:"基本的な創傷処置", dual_use:false, hazard_flag:false, legality_notes:{US:"許可"}, sources:[{title:"SERE 医療キット"}], scores:{survivability:3,signalability:0,exfiltration_support:0,concealability:1,legality_penalty:0} },
-        { id:"s_fire_starter", name:"防水マッチ / ファイヤースターター", category:"サバイバル", weight_g:30, volume_cm3:15, purpose_short:"火起こし", dual_use:false, hazard_flag:false, legality_notes:{US:"許可"}, sources:[{title:"AF SERE"}], scores:{survivability:3,signalability:1,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"s_knife", name:"小型ナイフ", category:"工具", weight_g:60, volume_cm3:20, purpose_short:"汎用作業", dual_use:true, hazard_flag:true, legality_notes:{US:"地域・空港制限の対象",JP:"地域制限の対象"}, sources:[{title:"AF SERE"}], scores:{survivability:2,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:2} },
-        { id:"s_paracord", name:"パラコード", category:"工具", weight_g:70, volume_cm3:30, purpose_short:"シェルター・修理用", dual_use:false, hazard_flag:false, legality_notes:{US:"許可"}, sources:[{title:"SERE ガイダンス"}], scores:{survivability:2,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"s_signal_panel", name:"反射パネル / 信号布", category:"信号発信", weight_g:40, volume_cm3:30, purpose_short:"航空機・遠距離発見用大型視覚信号", dual_use:false, hazard_flag:false, legality_notes:{US:"許可"}, sources:[{title:"SERE 信号装備事例"}], scores:{survivability:1,signalability:3,exfiltration_support:0,concealability:1,legality_penalty:0} }
-      ]
-    },
-    "urban": {
-      name: "都市個人型",
-      category: "edc",
-      items: [
-        { id:"u_cash", name:"少額緊急現金", category:"都市型回避", weight_g:30, volume_cm3:10, purpose_short:"短期の購入用", dual_use:false, hazard_flag:false, legality_notes:{US:"許可",JP:"許可"}, sources:[{title:"個人緊急対応計画"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:3,legality_penalty:0} },
-        { id:"u_powerbank", name:"モバイルバッテリー", category:"その他", weight_g:200, volume_cm3:70, purpose_short:"モバイル機器充電", dual_use:false, hazard_flag:true, legality_notes:{US:"航空輸送制限",JP:"航空輸送制限"}, sources:[{title:"Ready.gov"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:1} },
-        { id:"u_bandage", name:"小型包帯セット", category:"医療", weight_g:50, volume_cm3:30, purpose_short:"基本的な創傷処置", dual_use:false, hazard_flag:false, legality_notes:{US:"許可",JP:"許可"}, sources:[{title:"応急処置ガイド"}], scores:{survivability:2,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"u_water_bottle", name:"折りたたみ水筒", category:"サバイバル", weight_g:80, volume_cm3:150, purpose_short:"水の運搬", dual_use:false, hazard_flag:false, legality_notes:{US:"許可",JP:"許可"}, sources:[{title:"Ready.gov"}], scores:{survivability:3,signalability:0,exfiltration_support:1,concealability:1,legality_penalty:0} },
-        { id:"u_mask", name:"マスク（サージカル / N95）", category:"医療", weight_g:10, volume_cm3:8, purpose_short:"混雑・大気汚染環境での呼吸保護", dual_use:false, hazard_flag:false, legality_notes:{US:"許可"}, sources:[{title:"CDC Pack Smart ガイダンス"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"u_sanitizer", name:"小型ハンドサニタイザー", category:"医療", weight_g:30, volume_cm3:30, purpose_short:"衛生管理と感染対策", dual_use:false, hazard_flag:true, legality_notes:{US:"航空輸送アルコール含有量制限"}, sources:[{title:"CDC Pack Smart"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"u_whistle", name:"ホイッスル", category:"信号発信", weight_g:10, volume_cm3:4, purpose_short:"注意を引く", dual_use:false, hazard_flag:false, legality_notes:{US:"許可",JP:"許可"}, sources:[{title:"個人安全装備"}], scores:{survivability:1,signalability:2,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"u_led", name:"小型LEDライト", category:"信号発信", weight_g:25, volume_cm3:10, purpose_short:"照明", dual_use:false, hazard_flag:false, legality_notes:{US:"許可",JP:"許可"}, sources:[{title:"緊急キット推奨品"}], scores:{survivability:1,signalability:1,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"u_multitool", name:"小型マルチツール", category:"工具", weight_g:60, volume_cm3:25, purpose_short:"汎用作業", dual_use:true, hazard_flag:false, legality_notes:{US:"航空機内で制限",JP:"制限あり"}, sources:[{title:"EDCガイド"}], scores:{survivability:2,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:1} },
-        { id:"u_notebook", name:"小型ノート＆ペン", category:"書類", weight_g:30, volume_cm3:15, purpose_short:"メモ、連絡先記録", dual_use:false, hazard_flag:false, legality_notes:{US:"許可",JP:"許可"}, sources:[{title:"個人準備"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:3,legality_penalty:0} }
-      ]
-    },
-    "firefighter": {
-      name: "消防隊携行型",
-      category: "rescue",
-      items: [
-        { id:"ff_radio", name:"業務用無線機", category:"通信", weight_g:350, volume_cm3:200, purpose_short:"指令室・隊員間通信", dual_use:false, hazard_flag:false, legality_notes:{JP:"業務用途のみ"}, sources:[{title:"消防装備基準"}], scores:{survivability:2,signalability:3,exfiltration_support:0,concealability:1,legality_penalty:0} },
-        { id:"ff_flashlight", name:"防爆ライト", category:"工具", weight_g:200, volume_cm3:150, purpose_short:"暗所・煙中での視界確保", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"消防装備基準"}], scores:{survivability:3,signalability:1,exfiltration_support:0,concealability:1,legality_penalty:0} },
-        { id:"ff_gloves", name:"耐熱手袋", category:"その他", weight_g:250, volume_cm3:300, purpose_short:"高温物への接触保護", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"消防防護服基準"}], scores:{survivability:3,signalability:0,exfiltration_support:0,concealability:1,legality_penalty:0} },
-        { id:"ff_axe", name:"消防斧", category:"工具", weight_g:1200, volume_cm3:800, purpose_short:"破壊進入・障害物除去", dual_use:true, hazard_flag:true, legality_notes:{JP:"業務用途のみ、一般携帯は銃刀法違反の可能性"}, sources:[{title:"消防装備基準"}], scores:{survivability:2,signalability:0,exfiltration_support:2,concealability:0,legality_penalty:3} },
-        { id:"ff_rope", name:"救助ロープ（10m）", category:"工具", weight_g:800, volume_cm3:600, purpose_short:"要救助者の救出・降下", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"消防技術基準"}], scores:{survivability:2,signalability:0,exfiltration_support:3,concealability:0,legality_penalty:0} },
-        { id:"ff_mask_spare", name:"予備空気ボンベバルブ", category:"その他", weight_g:150, volume_cm3:100, purpose_short:"SCBA予備部品", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"空気呼吸器保守基準"}], scores:{survivability:3,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"ff_water_bottle", name:"携帯水筒（1L）", category:"サバイバル", weight_g:150, volume_cm3:1000, purpose_short:"脱水防止・長時間活動", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"消防活動指針"}], scores:{survivability:3,signalability:0,exfiltration_support:0,concealability:1,legality_penalty:0} },
-        { id:"ff_thermal_camera", name:"携帯型熱画像カメラ", category:"工具", weight_g:500, volume_cm3:300, purpose_short:"火点探知・要救助者発見", dual_use:true, hazard_flag:false, legality_notes:{JP:"業務用途推奨"}, sources:[{title:"消防技術"}], scores:{survivability:2,signalability:0,exfiltration_support:3,concealability:1,legality_penalty:1} },
-        { id:"ff_marker", name:"マーキングチョーク", category:"その他", weight_g:50, volume_cm3:30, purpose_short:"捜索済み表示", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"USAR標準"}], scores:{survivability:1,signalability:2,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"ff_multitool", name:"消防用マルチツール", category:"工具", weight_g:200, volume_cm3:80, purpose_short:"配管・バルブ操作", dual_use:true, hazard_flag:false, legality_notes:{JP:"業務用途のみ"}, sources:[{title:"消防装備"}], scores:{survivability:2,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:1} }
-      ]
-    },
-    "sar": {
-      name: "SAR（捜索救助）型",
-      category: "rescue",
-      items: [
-        { id:"sar_gps", name:"GPS端末", category:"ナビゲーション", weight_g:200, volume_cm3:120, purpose_short:"位置情報・捜索エリア管理", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"山岳救助マニュアル"}], scores:{survivability:2,signalability:0,exfiltration_support:3,concealability:2,legality_penalty:0} },
-        { id:"sar_radio", name:"業務用無線機（防水）", category:"通信", weight_g:300, volume_cm3:180, purpose_short:"隊員間・ベースキャンプとの通信", dual_use:false, hazard_flag:false, legality_notes:{JP:"業務用途のみ"}, sources:[{title:"救助活動基準"}], scores:{survivability:2,signalability:3,exfiltration_support:0,concealability:1,legality_penalty:0} },
-        { id:"sar_firstaid", name:"大型救急セット", category:"医療", weight_g:1500, volume_cm3:2000, purpose_short:"外傷処置・応急手当", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"救急救命士法"}], scores:{survivability:3,signalability:0,exfiltration_support:0,concealability:0,legality_penalty:0} },
-        { id:"sar_stretcher", name:"折りたたみ担架", category:"工具", weight_g:3000, volume_cm3:5000, purpose_short:"要救助者搬送", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"救助活動基準"}], scores:{survivability:1,signalability:0,exfiltration_support:3,concealability:0,legality_penalty:0} },
-        { id:"sar_rope", name:"ザイル・カラビナセット", category:"工具", weight_g:1200, volume_cm3:800, purpose_short:"懸垂下降・救出", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"山岳救助技術"}], scores:{survivability:2,signalability:0,exfiltration_support:3,concealability:0,legality_penalty:0} },
-        { id:"sar_helmet", name:"ヘルメット（ヘッドランプ付）", category:"その他", weight_g:400, volume_cm3:4000, purpose_short:"頭部保護・照明", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"救助装備基準"}], scores:{survivability:3,signalability:1,exfiltration_support:0,concealability:0,legality_penalty:0} },
-        { id:"sar_whistle", name:"大音量ホイッスル", category:"信号発信", weight_g:20, volume_cm3:10, purpose_short:"緊急信号・位置通知", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"山岳救助事例"}], scores:{survivability:1,signalability:3,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"sar_blanket", name:"サバイバルブランケット（3枚）", category:"サバイバル", weight_g:360, volume_cm3:120, purpose_short:"要救助者の保温・ショック対策", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"救急処置ガイドライン"}], scores:{survivability:3,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"sar_water", name:"携帯浄水器", category:"サバイバル", weight_g:200, volume_cm3:150, purpose_short:"長時間活動時の飲料水確保", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"長期捜索活動基準"}], scores:{survivability:3,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"sar_marker", name:"捜索マーキングテープ", category:"その他", weight_g:100, volume_cm3:80, purpose_short:"捜索済みエリア表示", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"USAR標準"}], scores:{survivability:1,signalability:2,exfiltration_support:0,concealability:2,legality_penalty:0} }
-      ]
-    },
-    "security_guard": {
-      name: "警備員携行型",
-      category: "security",
-      items: [
-        { id:"sg_radio", name:"業務用無線機", category:"通信", weight_g:250, volume_cm3:150, purpose_short:"警備本部・隊員間通信", dual_use:false, hazard_flag:false, legality_notes:{JP:"業務用途のみ"}, sources:[{title:"警備業法"}], scores:{survivability:1,signalability:2,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"sg_flashlight", name:"警備用懐中電灯", category:"工具", weight_g:300, volume_cm3:200, purpose_short:"夜間巡回・照明", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"警備実務"}], scores:{survivability:2,signalability:1,exfiltration_support:0,concealability:1,legality_penalty:0} },
-        { id:"sg_baton", name:"警棒", category:"工具", weight_g:400, volume_cm3:300, purpose_short:"護身・威嚇", dual_use:true, hazard_flag:true, legality_notes:{JP:"警備業法による制限、正当防衛の範囲内"}, sources:[{title:"警備業法"}], scores:{survivability:2,signalability:0,exfiltration_support:0,concealability:1,legality_penalty:2} },
-        { id:"sg_whistle", name:"警笛", category:"信号発信", weight_g:15, volume_cm3:8, purpose_short:"緊急通報・注意喚起", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"警備実務"}], scores:{survivability:1,signalability:3,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"sg_notebook", name:"巡回記録帳・ペン", category:"書類", weight_g:150, volume_cm3:100, purpose_short:"巡回記録・報告書作成", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"警備業法"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"sg_firstaid", name:"救急セット", category:"医療", weight_g:200, volume_cm3:120, purpose_short:"応急手当", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"警備実務マニュアル"}], scores:{survivability:2,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"sg_gloves", name:"作業用手袋", category:"その他", weight_g:80, volume_cm3:120, purpose_short:"施錠確認・作業保護", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"警備実務"}], scores:{survivability:2,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"sg_raincoat", name:"レインコート", category:"その他", weight_g:250, volume_cm3:200, purpose_short:"雨天時の巡回", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"警備実務"}], scores:{survivability:2,signalability:0,exfiltration_support:0,concealability:1,legality_penalty:0} },
-        { id:"sg_water", name:"携帯水筒", category:"サバイバル", weight_g:120, volume_cm3:600, purpose_short:"長時間勤務の水分補給", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"労働安全"}], scores:{survivability:2,signalability:0,exfiltration_support:0,concealability:1,legality_penalty:0} },
-        { id:"sg_multitool", name:"小型マルチツール", category:"工具", weight_g:100, volume_cm3:50, purpose_short:"簡易作業", dual_use:true, hazard_flag:false, legality_notes:{JP:"業務用途のみ"}, sources:[{title:"警備実務"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:1} }
-      ]
-    },
-    "disaster": {
-      name: "災害避難型（1人分・1日）",
-      category: "disaster",
-      items: [
-        { id:"d_water", name:"飲料水（ペットボトル 2L）", category:"サバイバル", weight_g:2000, volume_cm3:2000, purpose_short:"1日分の飲料水確保", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"内閣府防災情報"}], scores:{survivability:3,signalability:0,exfiltration_support:0,concealability:1,legality_penalty:0} },
-        { id:"d_food", name:"非常食（アルファ米3食分）", category:"サバイバル", weight_g:300, volume_cm3:600, purpose_short:"1日分の食料", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"東京都防災ホームページ"}], scores:{survivability:3,signalability:0,exfiltration_support:0,concealability:1,legality_penalty:0} },
-        { id:"d_flashlight", name:"懐中電灯・ヘッドランプ", category:"信号発信", weight_g:100, volume_cm3:150, purpose_short:"停電時の照明", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"消防庁 防災マニュアル"}], scores:{survivability:2,signalability:1,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"d_radio", name:"ラジオ（手回し充電式）", category:"通信", weight_g:200, volume_cm3:300, purpose_short:"災害情報の収集", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"総務省 災害時の情報収集"}], scores:{survivability:2,signalability:0,exfiltration_support:1,concealability:1,legality_penalty:0} },
-        { id:"d_firstaid", name:"救急セット", category:"医療", weight_g:150, volume_cm3:80, purpose_short:"応急手当用", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"日本赤十字社 備蓄リスト"}], scores:{survivability:3,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"d_mask", name:"マスク（不織布マスク10枚）", category:"医療", weight_g:20, volume_cm3:50, purpose_short:"粉塵・感染症対策", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"厚生労働省 感染症対策"}], scores:{survivability:2,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"d_powerbank", name:"モバイルバッテリー", category:"通信", weight_g:200, volume_cm3:70, purpose_short:"携帯電話の充電", dual_use:false, hazard_flag:true, legality_notes:{JP:"航空輸送制限"}, sources:[{title:"東京都防災ホームページ"}], scores:{survivability:2,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"d_cash", name:"現金（小銭含む10,000円）", category:"その他", weight_g:100, volume_cm3:50, purpose_short:"停電時の買い物", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"内閣府防災情報"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:3,legality_penalty:0} },
-        { id:"d_id_copy", name:"身分証明書のコピー", category:"書類", weight_g:20, volume_cm3:10, purpose_short:"身元確認用", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"東京都防災ホームページ"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:3,legality_penalty:0} },
-        { id:"d_medicine", name:"常備薬（持病薬・痛み止め）", category:"医療", weight_g:50, volume_cm3:30, purpose_short:"持病の管理と応急処置", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"日本赤十字社"}], scores:{survivability:3,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"d_towel", name:"タオル（2枚）", category:"その他", weight_g:200, volume_cm3:400, purpose_short:"清拭、保温、止血補助", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"消防庁 防災マニュアル"}], scores:{survivability:2,signalability:0,exfiltration_support:0,concealability:1,legality_penalty:0} },
-        { id:"d_tissue", name:"ティッシュペーパー", category:"その他", weight_g:100, volume_cm3:200, purpose_short:"衛生管理", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"内閣府防災情報"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"d_wet_tissue", name:"ウェットティッシュ", category:"その他", weight_g:150, volume_cm3:200, purpose_short:"清拭、手指消毒", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"東京都防災ホームページ"}], scores:{survivability:2,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"d_whistle", name:"ホイッスル", category:"信号発信", weight_g:10, volume_cm3:4, purpose_short:"救助要請の音響信号", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"消防庁 防災マニュアル"}], scores:{survivability:1,signalability:3,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"d_gloves", name:"軍手（作業用手袋）", category:"工具", weight_g:60, volume_cm3:100, purpose_short:"がれき処理、作業時の手の保護", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"内閣府防災情報"}], scores:{survivability:2,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"d_vinyl_bags", name:"ビニール袋（10枚）", category:"その他", weight_g:50, volume_cm3:100, purpose_short:"荷物の防水、ゴミ袋", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"東京都防災ホームページ"}], scores:{survivability:2,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"d_notebook", name:"筆記用具（ノート・ペン）", category:"書類", weight_g:40, volume_cm3:20, purpose_short:"メモ、伝言、記録", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"消防庁 防災マニュアル"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:3,legality_penalty:0} },
-        { id:"d_portable_toilet", name:"携帯トイレ（5回分）", category:"その他", weight_g:200, volume_cm3:300, purpose_short:"トイレが使えない時の衛生対策", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"内閣府防災情報"}], scores:{survivability:3,signalability:0,exfiltration_support:0,concealability:1,legality_penalty:0} },
-        { id:"d_blanket", name:"ブランケット（防寒用）", category:"サバイバル", weight_g:300, volume_cm3:400, purpose_short:"体温保持、防寒", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"日本赤十字社"}], scores:{survivability:3,signalability:0,exfiltration_support:0,concealability:1,legality_penalty:0} },
-        { id:"d_rope", name:"ロープ（5m）", category:"工具", weight_g:100, volume_cm3:150, purpose_short:"荷物の固定、救助補助", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"消防庁 防災マニュアル"}], scores:{survivability:2,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} }
-      ]
-    },
-    "hacker": {
-      name: "デジタルノマド型",
-      category: "hacker",
-      items: [
-        { id:"h_laptop", name:"ノートPC（軽量・高性能）", category:"デジタル機器", weight_g:1200, volume_cm3:2000, purpose_short:"開発・通信・データアクセス", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"デジタルノマド装備ガイド"}], scores:{survivability:2,signalability:0,exfiltration_support:3,concealability:2,legality_penalty:0} },
-        { id:"h_powerbank_large", name:"モバイルバッテリー（大容量30000mAh）", category:"デジタル機器", weight_g:500, volume_cm3:150, purpose_short:"長時間稼働の電源確保", dual_use:false, hazard_flag:true, legality_notes:{JP:"航空輸送制限あり（容量確認必須）"}, sources:[{title:"航空機リチウム電池ガイドライン"}], scores:{survivability:3,signalability:0,exfiltration_support:2,concealability:2,legality_penalty:1} },
-        { id:"h_usb_cables", name:"USB充電ケーブルセット（USB-C/Lightning/Micro）", category:"デジタル機器", weight_g:100, volume_cm3:50, purpose_short:"各種デバイス充電", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"デジタル装備ベストプラクティス"}], scores:{survivability:2,signalability:0,exfiltration_support:1,concealability:3,legality_penalty:0} },
-        { id:"h_portable_ssd", name:"ポータブルSSD（暗号化対応・1TB）", category:"デジタル機器", weight_g:50, volume_cm3:30, purpose_short:"重要データのバックアップと持ち運び", dual_use:true, hazard_flag:false, legality_notes:{JP:"暗号化データの国境越え時は注意",US:"暗号化製品の輸出規制に注意"}, sources:[{title:"データセキュリティガイド"}], scores:{survivability:1,signalability:0,exfiltration_support:3,concealability:3,legality_penalty:1} },
-        { id:"h_vpn_router", name:"ポケットWi-Fi / VPNルーター", category:"通信", weight_g:150, volume_cm3:80, purpose_short:"セキュアなインターネット接続", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可",US:"VPN使用制限国あり"}, sources:[{title:"セキュア通信ガイド"}], scores:{survivability:2,signalability:0,exfiltration_support:3,concealability:2,legality_penalty:0} },
-        { id:"h_usb_adapter", name:"多機能USBアダプター（HDMI/LAN/USB-A）", category:"デジタル機器", weight_g:80, volume_cm3:40, purpose_short:"外部ディスプレイ接続・有線LAN接続", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"デジタルノマド必携品"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:3,legality_penalty:0} },
-        { id:"h_security_key", name:"セキュリティキー（YubiKey等）", category:"デジタル機器", weight_g:10, volume_cm3:5, purpose_short:"2要素認証・アカウント保護", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"アカウントセキュリティベストプラクティス"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:3,legality_penalty:0} },
-        { id:"h_backup_sim", name:"予備SIM / eSIM（複数キャリア）", category:"通信", weight_g:5, volume_cm3:2, purpose_short:"通信手段のバックアップ", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"グローバル通信ガイド"}], scores:{survivability:2,signalability:0,exfiltration_support:3,concealability:3,legality_penalty:0} },
-        { id:"h_headset", name:"ノイズキャンセリングヘッドセット", category:"デジタル機器", weight_g:250, volume_cm3:300, purpose_short:"オンライン会議・集中作業", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"リモートワーク装備"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"h_lan_cable", name:"LANケーブル（3m・カテゴリ6）", category:"通信", weight_g:80, volume_cm3:100, purpose_short:"有線接続（Wi-Fi障害時）", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"ネットワーク機器ガイド"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:2,legality_penalty:0} },
-        { id:"h_multi_charger", name:"マルチポート充電器（USB-C PD対応）", category:"デジタル機器", weight_g:150, volume_cm3:80, purpose_short:"複数デバイス同時充電", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"電源管理ガイド"}], scores:{survivability:2,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"h_repair_kit", name:"電子機器修理キット（精密ドライバーセット）", category:"工具", weight_g:100, volume_cm3:50, purpose_short:"デバイスの簡易修理・分解", dual_use:true, hazard_flag:false, legality_notes:{JP:"航空機内持ち込み制限の可能性"}, sources:[{title:"DIY修理ガイド"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:1} },
-        { id:"h_backup_hdd", name:"外付けHDD（耐衝撃・2TB）", category:"デジタル機器", weight_g:200, volume_cm3:120, purpose_short:"大容量データバックアップ", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"データバックアップガイド"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:2,legality_penalty:0} },
-        { id:"h_screen_cleaner", name:"液晶クリーナー・マイクロファイバークロス", category:"その他", weight_g:30, volume_cm3:20, purpose_short:"画面・機器のメンテナンス", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"デジタル機器メンテナンス"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"h_cable_organizer", name:"ケーブルオーガナイザー", category:"その他", weight_g:50, volume_cm3:30, purpose_short:"配線整理・絡まり防止", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"パッキング効率化ガイド"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:0} }
-      ]
-    },
-    "pentest": {
-      name: "ペネトレーションテスター型",
-      category: "hacker",
-      items: [
-        { id:"pt_laptop", name:"診断用ノートPC（Kali Linux等）", category:"デジタル機器", weight_g:1700, volume_cm3:2500, purpose_short:"脆弱性診断・侵入テスト（認可された環境のみ）", dual_use:true, hazard_flag:false, legality_notes:{JP:"業務用途・認可された環境のみ使用可",US:"認可なき診断は違法"}, sources:[{title:"Penetration Testing Framework"}], scores:{survivability:2,signalability:0,exfiltration_support:3,concealability:1,legality_penalty:2} },
-        { id:"pt_wifi_adapter", name:"外付けWi-Fiアダプター（モニターモード対応）", category:"通信", weight_g:50, volume_cm3:30, purpose_short:"無線LAN診断（認可環境のみ）", dual_use:true, hazard_flag:false, legality_notes:{JP:"電波法遵守、認可された診断のみ",US:"FCC規制対象、認可必須"}, sources:[{title:"Wireless Security Assessment"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:3,legality_penalty:2} },
-        { id:"pt_usb_boot", name:"USBブートメディア（診断OS）", category:"デジタル機器", weight_g:30, volume_cm3:10, purpose_short:"診断環境の起動", dual_use:true, hazard_flag:false, legality_notes:{JP:"認可された環境のみ",US:"認可された環境のみ"}, sources:[{title:"Offensive Security Tools"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:3,legality_penalty:2} },
-        { id:"pt_lan_tap", name:"ネットワークタップ", category:"通信", weight_g:200, volume_cm3:150, purpose_short:"パケットキャプチャ（認可環境のみ）", dual_use:true, hazard_flag:false, legality_notes:{JP:"業務用途・認可された診断のみ",US:"認可なき使用は違法"}, sources:[{title:"Network Security Assessment"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:2,legality_penalty:3} },
-        { id:"pt_rfid_reader", name:"RFIDリーダー", category:"デジタル機器", weight_g:100, volume_cm3:80, purpose_short:"物理セキュリティ診断（認可環境のみ）", dual_use:true, hazard_flag:false, legality_notes:{JP:"業務用途のみ、不正利用は犯罪",US:"認可された診断のみ"}, sources:[{title:"Physical Security Testing"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:3} },
-        { id:"pt_precision_tools", name:"精密工具セット", category:"工具", weight_g:300, volume_cm3:200, purpose_short:"物理アクセステスト（認可環境のみ）", dual_use:true, hazard_flag:true, legality_notes:{JP:"業務用途のみ、航空機持ち込み制限",US:"認可された診断のみ"}, sources:[{title:"Physical Penetration Testing"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:1,legality_penalty:3} },
-        { id:"pt_cable_tester", name:"ネットワークケーブルテスター", category:"通信", weight_g:150, volume_cm3:100, purpose_short:"配線診断・検証", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Network Infrastructure Testing"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"pt_portable_router", name:"ポータブルルーター（診断用）", category:"通信", weight_g:200, volume_cm3:120, purpose_short:"隔離ネットワーク構築", dual_use:true, hazard_flag:false, legality_notes:{JP:"業務用途推奨",US:"認可された環境のみ"}, sources:[{title:"Network Segmentation Testing"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:2,legality_penalty:1} },
-        { id:"pt_multimeter", name:"デジタルマルチメーター", category:"工具", weight_g:250, volume_cm3:150, purpose_short:"電気系統診断", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Hardware Security Testing"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"pt_camera", name:"ドキュメント用カメラ", category:"デジタル機器", weight_g:150, volume_cm3:100, purpose_short:"診断結果の記録", dual_use:false, hazard_flag:false, legality_notes:{JP:"撮影許可取得必須",US:"撮影許可取得必須"}, sources:[{title:"Pentest Reporting Standards"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:1} },
-        { id:"pt_notebook", name:"診断記録ノート・ペン", category:"書類", weight_g:100, volume_cm3:80, purpose_short:"手書きメモ・スケッチ", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Pentest Documentation"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:3,legality_penalty:0} },
-        { id:"pt_powerbank", name:"大容量モバイルバッテリー", category:"デジタル機器", weight_g:400, volume_cm3:200, purpose_short:"長時間診断時の電源確保", dual_use:false, hazard_flag:true, legality_notes:{JP:"航空輸送制限",US:"航空輸送制限"}, sources:[{title:"Field Ops Power Management"}], scores:{survivability:2,signalability:0,exfiltration_support:1,concealability:1,legality_penalty:1} },
-        { id:"pt_encrypted_usb", name:"暗号化USBドライブ", category:"デジタル機器", weight_g:50, volume_cm3:20, purpose_short:"診断データの安全な保管", dual_use:true, hazard_flag:false, legality_notes:{JP:"暗号化データの取り扱い注意",US:"輸出規制対象の可能性"}, sources:[{title:"Data Protection in Security Assessments"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:3,legality_penalty:1} },
-        { id:"pt_auth_tokens", name:"認証トークンセット（YubiKey等）", category:"デジタル機器", weight_g:20, volume_cm3:10, purpose_short:"多要素認証テスト", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Authentication Testing"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:3,legality_penalty:0} },
-        { id:"pt_adapter_set", name:"各種アダプター・変換コネクタセット", category:"デジタル機器", weight_g:150, volume_cm3:100, purpose_short:"様々なインターフェイス接続", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Hardware Interface Testing"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} }
-      ]
-    },
-    "locksmith": {
-      name: "ロックスミス（鍵専門家）型",
-      category: "security",
-      items: [
-        { id:"ls_pick_set", name:"ピックセット（業務用・研究用）", category:"工具", weight_g:150, volume_cm3:100, purpose_short:"施錠機構の研究・正当な解錠業務", dual_use:true, hazard_flag:true, legality_notes:{JP:"業務用途・研究目的のみ。不正使用は特殊開錠用具所持禁止法違反",US:"正当な業務・研究目的のみ"}, sources:[{title:"Locksmithing Professional Standards"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:2,legality_penalty:5} },
-        { id:"ls_tension_wrench", name:"テンションレンチセット", category:"工具", weight_g:80, volume_cm3:50, purpose_short:"ロック機構調査・業務用", dual_use:true, hazard_flag:true, legality_notes:{JP:"業務用途・研究目的のみ。不正使用は違法",US:"正当な業務・研究目的のみ"}, sources:[{title:"Lock Technology Research"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:3,legality_penalty:5} },
-        { id:"ls_practice_locks", name:"練習用透明錠前", category:"工具", weight_g:200, volume_cm3:150, purpose_short:"教育・研修用", dual_use:false, hazard_flag:false, legality_notes:{JP:"教育目的推奨"}, sources:[{title:"Locksmith Training Materials"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"ls_key_decoder", name:"鍵番号解読ツール", category:"工具", weight_g:100, volume_cm3:80, purpose_short:"キーコード調査・複製業務", dual_use:true, hazard_flag:false, legality_notes:{JP:"業務用途のみ",US:"正当な業務のみ"}, sources:[{title:"Key Duplication Standards"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:2,legality_penalty:3} },
-        { id:"ls_pinning_kit", name:"ピンニングキット", category:"工具", weight_g:300, volume_cm3:200, purpose_short:"錠前のピン交換・マスターキーシステム構築", dual_use:true, hazard_flag:false, legality_notes:{JP:"業務用途のみ"}, sources:[{title:"Master Key Systems"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:2} },
-        { id:"ls_key_machine", name:"携帯型鍵複製機", category:"工具", weight_g:2000, volume_cm3:3000, purpose_short:"現場での鍵複製業務", dual_use:true, hazard_flag:false, legality_notes:{JP:"業務登録者のみ使用可"}, sources:[{title:"Mobile Locksmith Equipment"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:0,legality_penalty:3} },
-        { id:"ls_shim_set", name:"シムセット", category:"工具", weight_g:50, volume_cm3:30, purpose_short:"南京錠解析・研究", dual_use:true, hazard_flag:true, legality_notes:{JP:"業務・研究目的のみ、不正使用は違法",US:"正当な業務・研究目的のみ"}, sources:[{title:"Padlock Security Research"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:3,legality_penalty:4} },
-        { id:"ls_extractor", name:"折れ鍵抜き取りツール", category:"工具", weight_g:80, volume_cm3:40, purpose_short:"錠前内の破損鍵除去", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Lock Repair Standards"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:3,legality_penalty:0} },
-        { id:"ls_plug_spinner", name:"プラグスピナー", category:"工具", weight_g:120, volume_cm3:80, purpose_short:"シリンダー回転調整", dual_use:true, hazard_flag:false, legality_notes:{JP:"業務用途のみ"}, sources:[{title:"Cylinder Mechanisms"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:3} },
-        { id:"ls_scope", name:"ロックスコープ（内部観察用）", category:"工具", weight_g:150, volume_cm3:100, purpose_short:"錠前内部機構の調査", dual_use:true, hazard_flag:false, legality_notes:{JP:"研究・業務用途のみ"}, sources:[{title:"Lock Forensics"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:2} },
-        { id:"ls_impressioning_kit", name:"インプレッション工具セット", category:"工具", weight_g:200, volume_cm3:120, purpose_short:"鍵の型取り・複製研究", dual_use:true, hazard_flag:true, legality_notes:{JP:"業務・研究目的のみ、不正使用は違法",US:"正当な業務・研究目的のみ"}, sources:[{title:"Key Impressioning Techniques"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:2,legality_penalty:4} },
-        { id:"ls_bypass_tools", name:"バイパスツールセット", category:"工具", weight_g:100, volume_cm3:60, purpose_short:"補助錠の脆弱性調査", dual_use:true, hazard_flag:true, legality_notes:{JP:"研究・業務目的のみ、不正使用は違法",US:"正当な業務・研究目的のみ"}, sources:[{title:"Lock Security Assessment"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:3,legality_penalty:4} },
-        { id:"ls_reference_book", name:"錠前技術参考書", category:"書類", weight_g:500, volume_cm3:1000, purpose_short:"各種錠前の構造・解錠技術の学習", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Professional Locksmith Library"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:1,legality_penalty:0} },
-        { id:"ls_gloves", name:"作業用手袋（指紋防止）", category:"その他", weight_g:50, volume_cm3:80, purpose_short:"精密作業・証拠保全", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Forensic Locksmithing"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:3,legality_penalty:0} },
-        { id:"ls_magnifier", name:"拡大鏡・ルーペ", category:"工具", weight_g:80, volume_cm3:60, purpose_short:"微細な機構観察", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Precision Lock Analysis"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"ls_camera", name:"マクロ撮影カメラ", category:"デジタル機器", weight_g:300, volume_cm3:200, purpose_short:"研究記録・論文執筆用", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Security Research Documentation"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"ls_measurement_tools", name:"精密測定器具", category:"工具", weight_g:150, volume_cm3:100, purpose_short:"鍵・ピンの寸法測定", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Key Manufacturing Standards"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"ls_notebook", name:"研究ノート・スケッチブック", category:"書類", weight_g:200, volume_cm3:150, purpose_short:"実験記録・論文執筆", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Academic Research Standards"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"ls_license", name:"鍵師業務許可証・身分証明書", category:"書類", weight_g:20, volume_cm3:10, purpose_short:"業務資格の証明", dual_use:false, hazard_flag:false, legality_notes:{JP:"業務時必携"}, sources:[{title:"Locksmith Licensing Requirements"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:3,legality_penalty:0} },
-        { id:"ls_safe_tools", name:"金庫解錠工具セット", category:"工具", weight_g:800, volume_cm3:600, purpose_short:"金庫の正当な開錠業務", dual_use:true, hazard_flag:true, legality_notes:{JP:"業務登録者のみ使用可、不正使用は違法",US:"正当な業務のみ"}, sources:[{title:"Safe & Vault Technology"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:1,legality_penalty:5} },
-        { id:"ls_drill", name:"破錠ドリル", category:"工具", weight_g:1200, volume_cm3:800, purpose_short:"シリンダー破壊による解錠（最終手段）", dual_use:true, hazard_flag:true, legality_notes:{JP:"業務登録者のみ使用可、不正使用は違法",US:"正当な業務のみ"}, sources:[{title:"ラジオライフ", url:"https://radiolife.com/security/key/9063699/"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:0,legality_penalty:4} },
-        { id:"ls_car_pick", name:"クルマ用ピック（L字型）", category:"工具", weight_g:100, volume_cm3:60, purpose_short:"自動車錠の業務用解錠", dual_use:true, hazard_flag:true, legality_notes:{JP:"業務登録者のみ使用可、不正使用は違法",US:"正当な業務のみ"}, sources:[{title:"ラジオライフ", url:"https://radiolife.com/security/key/9063699/"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:2,legality_penalty:5} },
-        { id:"ls_shot_driver", name:"ショットドライバー", category:"工具", weight_g:200, volume_cm3:120, purpose_short:"シリンダーを逆回転させる衝撃工具", dual_use:true, hazard_flag:false, legality_notes:{JP:"業務用途のみ",US:"正当な業務のみ"}, sources:[{title:"ラジオライフ", url:"https://radiolife.com/security/key/9063699/"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:3} },
-        { id:"ls_electric_pick", name:"電動ピック", category:"工具", weight_g:250, volume_cm3:150, purpose_short:"振動によるピンタンブラー解錠", dual_use:true, hazard_flag:true, legality_notes:{JP:"業務・研究目的のみ、不正使用は違法",US:"正当な業務・研究目的のみ"}, sources:[{title:"ラジオライフ", url:"https://radiolife.com/security/key/9063699/"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:2,legality_penalty:5} },
-        { id:"ls_pick_gun", name:"ピックガン", category:"工具", weight_g:300, volume_cm3:200, purpose_short:"悪い体勢での解錠作業に適する", dual_use:true, hazard_flag:true, legality_notes:{JP:"業務・研究目的のみ、不正使用は違法",US:"正当な業務・研究目的のみ"}, sources:[{title:"ラジオライフ", url:"https://radiolife.com/security/key/9063699/"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:1,legality_penalty:5} },
-        { id:"ls_sliding_door_tool", name:"引き戸錠解錠ツール", category:"工具", weight_g:150, volume_cm3:100, purpose_short:"回転式アーム・突起部でスライド式引き戸に対応", dual_use:true, hazard_flag:true, legality_notes:{JP:"業務登録者のみ使用可、不正使用は違法",US:"正当な業務のみ"}, sources:[{title:"ラジオライフ", url:"https://radiolife.com/security/key/9063699/"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:2,legality_penalty:4} },
-        { id:"ls_dial_pick", name:"数字合わせピック", category:"工具", weight_g:80, volume_cm3:40, purpose_short:"ダイヤル錠の隙間から深さで正解を探る", dual_use:true, hazard_flag:true, legality_notes:{JP:"業務・研究目的のみ、不正使用は違法",US:"正当な業務・研究目的のみ"}, sources:[{title:"ラジオライフ", url:"https://radiolife.com/security/key/9063699/"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:3,legality_penalty:4} },
-        { id:"ls_safe_massager", name:"金庫用電動マッサージ機（THRIVE製推奨）", category:"工具", weight_g:400, volume_cm3:300, purpose_short:"振動でダイヤル錠の座を回転させる", dual_use:true, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"ラジオライフ", url:"https://radiolife.com/security/key/9063699/"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:1,legality_penalty:4} },
-      ]
-    },
-    "neteng": {
-      name: "ネットワークエンジニア型",
-      category: "hacker",
-      items: [
-        { id:"ne_cable_tester", name:"LANケーブルテスター", category:"通信", weight_g:200, volume_cm3:150, purpose_short:"配線診断・断線箇所特定", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Network Infrastructure Standards"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"ne_tone_generator", name:"トーンジェネレーター＆プローブ", category:"通信", weight_g:250, volume_cm3:180, purpose_short:"ケーブル追跡・識別", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Cable Management Guide"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"ne_crimping_tool", name:"圧着工具セット（RJ45/RJ11）", category:"工具", weight_g:300, volume_cm3:200, purpose_short:"LANケーブル自作・修理", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Structured Cabling Standards"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"ne_punchdown_tool", name:"パンチダウンツール", category:"工具", weight_g:150, volume_cm3:100, purpose_short:"配線盤への結線作業", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Wiring Closet Best Practices"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"ne_portable_switch", name:"ポータブルスイッチ（5-8ポート）", category:"通信", weight_g:400, volume_cm3:300, purpose_short:"一時的なネットワーク構築", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Field Network Deployment"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:1,legality_penalty:0} },
-        { id:"ne_fiber_tester", name:"光ファイバーテスター", category:"通信", weight_g:300, volume_cm3:200, purpose_short:"光回線の損失測定", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Fiber Optic Testing Standards"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"ne_wifi_analyzer", name:"Wi-Fiアナライザー（業務用）", category:"通信", weight_g:200, volume_cm3:120, purpose_short:"無線LAN環境調査", dual_use:false, hazard_flag:false, legality_notes:{JP:"電波法遵守"}, sources:[{title:"Wireless Site Survey Guide"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"ne_console_cable", name:"シリアルコンソールケーブルセット", category:"通信", weight_g:100, volume_cm3:80, purpose_short:"ネットワーク機器の初期設定", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Cisco Device Configuration"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:3,legality_penalty:0} },
-        { id:"ne_cable_stripper", name:"ケーブルストリッパー", category:"工具", weight_g:120, volume_cm3:80, purpose_short:"被覆剥き作業", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Cable Preparation Tools"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"ne_rj45_connectors", name:"RJ45コネクタ（50個入り）", category:"その他", weight_g:100, volume_cm3:50, purpose_short:"LANケーブル作成用", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Network Cabling Supplies"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"ne_patch_cables", name:"パッチケーブルセット（各種長さ）", category:"通信", weight_g:300, volume_cm3:200, purpose_short:"機器間接続", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Network Equipment Setup"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"ne_label_maker", name:"ラベルプリンター", category:"その他", weight_g:200, volume_cm3:150, purpose_short:"ケーブル・ポートのラベリング", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Network Documentation"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"ne_flashlight", name:"LEDヘッドライト", category:"工具", weight_g:100, volume_cm3:80, purpose_short:"暗所での配線作業", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Field Work Safety"}], scores:{survivability:2,signalability:1,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"ne_screwdriver_set", name:"精密ドライバーセット", category:"工具", weight_g:200, volume_cm3:120, purpose_short:"機器の開閉・設置", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"IT Toolkit Essentials"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"ne_notebook", name:"作業記録ノート", category:"書類", weight_g:150, volume_cm3:100, purpose_short:"設定メモ・トラブル記録", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Network Operations Documentation"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:3,legality_penalty:0} }
-      ]
-    },
-    "forensic": {
-      name: "デジタルフォレンジック調査員型",
-      category: "hacker",
-      items: [
-        { id:"df_write_blocker", name:"書き込み防止装置（Write Blocker）", category:"デジタル機器", weight_g:200, volume_cm3:150, purpose_short:"証拠ディスクの改変防止", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Digital Forensics Best Practices"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:2,legality_penalty:0} },
-        { id:"df_imaging_device", name:"ディスクイメージング装置", category:"デジタル機器", weight_g:500, volume_cm3:300, purpose_short:"証拠の完全複製", dual_use:true, hazard_flag:false, legality_notes:{JP:"業務用途・法的手続き遵守",US:"適切な認可必須"}, sources:[{title:"Computer Forensic Investigation"}], scores:{survivability:1,signalability:0,exfiltration_support:3,concealability:1,legality_penalty:2} },
-        { id:"df_hash_calculator", name:"ハッシュ値計算ツール", category:"デジタル機器", weight_g:100, volume_cm3:80, purpose_short:"証拠の完全性検証", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Evidence Integrity Verification"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:3,legality_penalty:0} },
-        { id:"df_evidence_bags", name:"防湿証拠保全バッグ（10枚）", category:"その他", weight_g:100, volume_cm3:200, purpose_short:"デジタル証拠の保護", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Evidence Collection Standards"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"df_tamper_seals", name:"改ざん防止シール", category:"その他", weight_g:50, volume_cm3:30, purpose_short:"証拠の封印", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Chain of Custody Protocol"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:3,legality_penalty:0} },
-        { id:"df_adapter_kit", name:"各種ストレージアダプターキット", category:"デジタル機器", weight_g:300, volume_cm3:200, purpose_short:"各種HDD/SSD接続", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Forensic Hardware Tools"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:2,legality_penalty:0} },
-        { id:"df_usb_forensic", name:"フォレンジック用USBキット", category:"デジタル機器", weight_g:150, volume_cm3:100, purpose_short:"ライブシステム調査", dual_use:true, hazard_flag:false, legality_notes:{JP:"業務用途のみ",US:"適切な認可必須"}, sources:[{title:"Live Forensic Analysis"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:3,legality_penalty:1} },
-        { id:"df_camera", name:"証拠撮影用デジタルカメラ", category:"デジタル機器", weight_g:400, volume_cm3:300, purpose_short:"現場記録・証拠撮影", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Crime Scene Documentation"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"df_anti_static", name:"静電気防止リストストラップ", category:"その他", weight_g:50, volume_cm3:40, purpose_short:"機器保護", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Electronics Safety"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"df_chain_custody", name:"証拠管理台帳フォーム", category:"書類", weight_g:100, volume_cm3:50, purpose_short:"Chain of Custody記録", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Legal Evidence Standards"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:3,legality_penalty:0} },
-        { id:"df_gloves", name:"ニトリル手袋（50組）", category:"その他", weight_g:200, volume_cm3:150, purpose_short:"証拠汚染防止", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Forensic Procedures"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"df_tools", name:"フォレンジックツールキット", category:"工具", weight_g:400, volume_cm3:300, purpose_short:"機器分解・証拠取得", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Digital Evidence Extraction"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"df_labels", name:"証拠ラベルシール", category:"その他", weight_g:30, volume_cm3:20, purpose_short:"証拠品の識別", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Evidence Tracking"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:3,legality_penalty:0} },
-        { id:"df_report_template", name:"調査報告書テンプレート", category:"書類", weight_g:50, volume_cm3:30, purpose_short:"標準化された報告作成", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Forensic Reporting Standards"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:3,legality_penalty:0} },
-        { id:"df_laptop", name:"フォレンジック解析用ノートPC", category:"デジタル機器", weight_g:1800, volume_cm3:2500, purpose_short:"証拠解析・報告書作成", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Forensic Workstation Setup"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:1,legality_penalty:0} }
-      ]
-    },
-    "hwdev": {
-      name: "ハードウェア開発者型（IoT/組み込み）",
-      category: "hacker",
-      items: [
-        { id:"hw_oscilloscope", name:"ポータブルオシロスコープ", category:"工具", weight_g:600, volume_cm3:400, purpose_short:"信号波形観測", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Embedded Systems Development"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:1,legality_penalty:0} },
-        { id:"hw_logic_analyzer", name:"ロジックアナライザー", category:"工具", weight_g:300, volume_cm3:200, purpose_short:"デジタル信号解析", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Digital Circuit Debugging"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"hw_soldering_iron", name:"温度調整はんだごてセット", category:"工具", weight_g:400, volume_cm3:300, purpose_short:"電子部品実装", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"PCB Assembly Guide"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"hw_multimeter", name:"デジタルマルチメーター", category:"工具", weight_g:250, volume_cm3:150, purpose_short:"電圧・電流測定", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Electronics Testing"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"hw_programmer", name:"マイコン書き込み器（各種対応）", category:"デジタル機器", weight_g:200, volume_cm3:120, purpose_short:"ファームウェア書き込み", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Microcontroller Programming"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"hw_debugger", name:"JTAG/SWDデバッガ", category:"デジタル機器", weight_g:150, volume_cm3:100, purpose_short:"組み込みデバッグ", dual_use:true, hazard_flag:false, legality_notes:{JP:"許可",US:"一部製品は輸出規制対象"}, sources:[{title:"Embedded Debugging Tools"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:3,legality_penalty:1} },
-        { id:"hw_breadboard", name:"ブレッドボード＆ジャンパー線", category:"その他", weight_g:150, volume_cm3:200, purpose_short:"プロトタイピング", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Circuit Prototyping"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"hw_components", name:"基本電子部品セット", category:"その他", weight_g:200, volume_cm3:150, purpose_short:"抵抗・コンデンサ・IC等", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Electronics Components Inventory"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"hw_power_supply", name:"可変電源装置", category:"工具", weight_g:800, volume_cm3:600, purpose_short:"電源供給（0-30V）", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Lab Power Supply Guide"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:1,legality_penalty:0} },
-        { id:"hw_magnifier", name:"拡大鏡スタンド", category:"工具", weight_g:300, volume_cm3:250, purpose_short:"微細作業の視認性向上", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"SMD Soldering Techniques"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"hw_tweezers", name:"精密ピンセットセット", category:"工具", weight_g:80, volume_cm3:50, purpose_short:"小型部品操作", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Electronics Assembly Tools"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"hw_dev_boards", name:"各種開発ボード（Arduino/ESP32等）", category:"デジタル機器", weight_g:200, volume_cm3:150, purpose_short:"プロトタイプ開発", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"IoT Development Platforms"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"hw_solder", name:"はんだ・フラックス", category:"その他", weight_g:100, volume_cm3:80, purpose_short:"接合材料", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Soldering Materials"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"hw_wire_stripper", name:"ワイヤーストリッパー", category:"工具", weight_g:150, volume_cm3:100, purpose_short:"配線被覆剥き", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Wiring Tools"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"hw_esd_mat", name:"静電気対策マット", category:"その他", weight_g:300, volume_cm3:200, purpose_short:"作業環境の静電気防止", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"ESD Protection"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:1,legality_penalty:0} }
-      ]
-    },
-    "sysadmin": {
-      name: "SysAdmin（システム管理者）型",
-      category: "hacker",
-      items: [
-        { id:"sa_console_cable", name:"シリアルコンソールケーブルセット", category:"通信", weight_g:150, volume_cm3:100, purpose_short:"サーバー直接接続", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Server Management Guide"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:3,legality_penalty:0} },
-        { id:"sa_kvm_switch", name:"ポータブルKVMスイッチ", category:"デジタル機器", weight_g:300, volume_cm3:200, purpose_short:"複数サーバー管理", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Data Center Operations"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"sa_usb_boot", name:"各種ブート用USBメディア", category:"デジタル機器", weight_g:100, volume_cm3:50, purpose_short:"緊急起動・リカバリー", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"System Recovery Procedures"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:3,legality_penalty:0} },
-        { id:"sa_backup_drive", name:"ポータブルバックアップドライブ（2TB）", category:"デジタル機器", weight_g:200, volume_cm3:150, purpose_short:"緊急バックアップ", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Backup Best Practices"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:2,legality_penalty:0} },
-        { id:"sa_thermal_paste", name:"サーマルグリス", category:"その他", weight_g:50, volume_cm3:30, purpose_short:"CPU冷却メンテナンス", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Hardware Maintenance"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"sa_screwdriver", name:"精密ドライバーセット", category:"工具", weight_g:200, volume_cm3:120, purpose_short:"サーバー開閉作業", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Server Hardware Guide"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"sa_flashlight", name:"LEDヘッドライト", category:"工具", weight_g:100, volume_cm3:80, purpose_short:"サーバールーム作業", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Data Center Safety"}], scores:{survivability:2,signalability:1,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"sa_cable_ties", name:"ケーブルタイ・マジックテープ", category:"その他", weight_g:100, volume_cm3:80, purpose_short:"配線整理", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Cable Management"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"sa_label_maker", name:"ラベルプリンター", category:"その他", weight_g:200, volume_cm3:150, purpose_short:"機器・ケーブル識別", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"IT Asset Management"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"sa_cleaning_kit", name:"PC清掃キット", category:"その他", weight_g:150, volume_cm3:100, purpose_short:"機器メンテナンス", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Equipment Maintenance"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"sa_multimeter", name:"デジタルマルチメーター", category:"工具", weight_g:250, volume_cm3:150, purpose_short:"電源・配線診断", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Electrical Troubleshooting"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"sa_notebook", name:"運用記録ノート", category:"書類", weight_g:150, volume_cm3:100, purpose_short:"障害対応記録", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"IT Operations Documentation"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:3,legality_penalty:0} },
-        { id:"sa_adapter_kit", name:"各種変換アダプターキット", category:"デジタル機器", weight_g:200, volume_cm3:120, purpose_short:"レガシー機器対応", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Legacy System Support"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"sa_portable_monitor", name:"携帯モニター（USB接続）", category:"デジタル機器", weight_g:700, volume_cm3:500, purpose_short:"現場での表示確認", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Field Service Tools"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:1,legality_penalty:0} },
-        { id:"sa_emergency_docs", name:"緊急対応手順書", category:"書類", weight_g:100, volume_cm3:80, purpose_short:"災害復旧プラン", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Disaster Recovery Planning"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:3,legality_penalty:0} }
-      ]
-    },
-    "datarecovery": {
-      name: "データリカバリー専門家型",
-      category: "hacker",
-      items: [
-        { id:"dr_interface_adapter", name:"各種インターフェイスアダプター", category:"デジタル機器", weight_g:300, volume_cm3:200, purpose_short:"IDE/SATA/NVMe対応", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Data Recovery Equipment"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:2,legality_penalty:0} },
-        { id:"dr_cloning_dock", name:"ディスククローニングドック", category:"デジタル機器", weight_g:500, volume_cm3:350, purpose_short:"ディスク複製", dual_use:true, hazard_flag:false, legality_notes:{JP:"業務用途推奨",US:"適切な認可必須"}, sources:[{title:"Disk Imaging Procedures"}], scores:{survivability:1,signalability:0,exfiltration_support:3,concealability:1,legality_penalty:1} },
-        { id:"dr_diagnostic_tools", name:"ディスク診断ツールセット", category:"デジタル機器", weight_g:200, volume_cm3:150, purpose_short:"故障診断", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"HDD Diagnostics"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"dr_clean_room_tools", name:"クリーンルーム用工具セット", category:"工具", weight_g:400, volume_cm3:300, purpose_short:"HDD物理修復", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Hard Drive Repair"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"dr_spare_parts", name:"交換用部品セット（ヘッド等）", category:"その他", weight_g:200, volume_cm3:150, purpose_short:"故障部品交換", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"HDD Component Replacement"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"dr_firmware_tools", name:"ファームウェア修復ツール", category:"デジタル機器", weight_g:150, volume_cm3:100, purpose_short:"ファームウェア障害対応", dual_use:true, hazard_flag:false, legality_notes:{JP:"業務用途のみ"}, sources:[{title:"Firmware Recovery"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:3,legality_penalty:1} },
-        { id:"dr_anti_static", name:"静電気対策用品セット", category:"その他", weight_g:100, volume_cm3:80, purpose_short:"静電破壊防止", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"ESD Protection"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"dr_magnifier", name:"拡大鏡", category:"工具", weight_g:100, volume_cm3:80, purpose_short:"基板検査", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"PCB Inspection"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"dr_recovery_software", name:"データ復旧ソフトウェアUSB", category:"デジタル機器", weight_g:30, volume_cm3:10, purpose_short:"論理障害復旧", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Logical Data Recovery"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:3,legality_penalty:0} },
-        { id:"dr_hex_editor", name:"バイナリ解析ツール", category:"デジタル機器", weight_g:50, volume_cm3:30, purpose_short:"ファイルシステム修復", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"File System Repair"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:3,legality_penalty:0} },
-        { id:"dr_cleanroom_wipes", name:"クリーンルーム用ワイパー", category:"その他", weight_g:50, volume_cm3:40, purpose_short:"プラッター清掃", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Clean Room Procedures"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"dr_laptop", name:"解析用高性能ノートPC", category:"デジタル機器", weight_g:2000, volume_cm3:3000, purpose_short:"データ復旧解析", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Recovery Workstation"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:1,legality_penalty:0} },
-        { id:"dr_case_docs", name:"復旧作業記録フォーム", category:"書類", weight_g:100, volume_cm3:50, purpose_short:"作業履歴管理", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Recovery Documentation"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:3,legality_penalty:0} },
-        { id:"dr_storage", name:"大容量外付けストレージ（4TB）", category:"デジタル機器", weight_g:300, volume_cm3:200, purpose_short:"復旧データ保存", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Recovered Data Storage"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:2,legality_penalty:0} },
-        { id:"dr_microscope", name:"デジタル顕微鏡", category:"工具", weight_g:400, volume_cm3:300, purpose_short:"基板・チップ詳細検査", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Component Level Repair"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:1,legality_penalty:0} }
-      ]
-    },
-    "rftech": {
-      name: "無線通信技術者型",
-      category: "hacker",
-      items: [
-        { id:"rf_sdr_dongle", name:"SDRドングル（RTL-SDR等）", category:"通信", weight_g:50, volume_cm3:30, purpose_short:"無線信号受信・解析", dual_use:true, hazard_flag:false, legality_notes:{JP:"電波法遵守、受信のみ",US:"FCC規制遵守"}, sources:[{title:"Software Defined Radio"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:3,legality_penalty:2} },
-        { id:"rf_spectrum_analyzer", name:"ポータブルスペクトラムアナライザー", category:"通信", weight_g:800, volume_cm3:600, purpose_short:"周波数スペクトル解析", dual_use:false, hazard_flag:false, legality_notes:{JP:"電波法遵守"}, sources:[{title:"RF Signal Analysis"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:1,legality_penalty:0} },
-        { id:"rf_antennas", name:"各種アンテナセット", category:"通信", weight_g:300, volume_cm3:400, purpose_short:"HF/VHF/UHF対応", dual_use:false, hazard_flag:false, legality_notes:{JP:"受信用途"}, sources:[{title:"Antenna Design Guide"}], scores:{survivability:1,signalability:2,exfiltration_support:1,concealability:1,legality_penalty:0} },
-        { id:"rf_vna", name:"ベクトルネットワークアナライザー", category:"通信", weight_g:500, volume_cm3:350, purpose_short:"インピーダンス測定", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"RF Circuit Design"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:1,legality_penalty:0} },
-        { id:"rf_field_strength", name:"電界強度計", category:"通信", weight_g:200, volume_cm3:150, purpose_short:"電波強度測定", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"EMC Testing"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"rf_coax_tools", name:"同軸ケーブル加工工具", category:"工具", weight_g:300, volume_cm3:200, purpose_short:"コネクタ取付", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Coaxial Cable Assembly"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"rf_attenuator", name:"可変減衰器セット", category:"通信", weight_g:150, volume_cm3:100, purpose_short:"信号レベル調整", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"RF Test Equipment"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"rf_cables", name:"各種同軸ケーブル", category:"通信", weight_g:400, volume_cm3:300, purpose_short:"機器間接続", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"RF System Setup"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"rf_dummy_load", name:"ダミーロード", category:"通信", weight_g:200, volume_cm3:120, purpose_short:"送信機テスト", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Transmitter Testing"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"rf_power_meter", name:"RFパワーメーター", category:"通信", weight_g:250, volume_cm3:150, purpose_short:"送信出力測定", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Power Measurement"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"rf_frequency_counter", name:"周波数カウンター", category:"通信", weight_g:150, volume_cm3:100, purpose_short:"周波数精密測定", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Frequency Calibration"}], scores:{survivability:1,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"rf_laptop", name:"RF解析用ノートPC", category:"デジタル機器", weight_g:1500, volume_cm3:2500, purpose_short:"信号処理・解析", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"SDR Software"}], scores:{survivability:1,signalability:0,exfiltration_support:2,concealability:1,legality_penalty:0} },
-        { id:"rf_license", name:"無線従事者免許証", category:"書類", weight_g:20, volume_cm3:10, purpose_short:"業務資格証明", dual_use:false, hazard_flag:false, legality_notes:{JP:"業務時必携"}, sources:[{title:"Radio Operator License"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:3,legality_penalty:0} },
-        { id:"rf_reference", name:"周波数割当表・技術資料", category:"書類", weight_g:200, volume_cm3:150, purpose_short:"周波数帯域情報", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Frequency Allocation"}], scores:{survivability:1,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"rf_handheld_radio", name:"ハンディ無線機（業務用）", category:"通信", weight_g:300, volume_cm3:200, purpose_short:"現場通信", dual_use:false, hazard_flag:false, legality_notes:{JP:"免許・業務用途必須",US:"FCC認証必須"}, sources:[{title:"Professional Radio Equipment"}], scores:{survivability:2,signalability:3,exfiltration_support:0,concealability:2,legality_penalty:1} }
-      ]
-    },
-    "prepper": {
-      name: "プレッパー（長期備蓄）型",
-      category: "disaster",
-      items: [
-        { id:"pp_water_filter", name:"携帯浄水器（長期使用型）", category:"サバイバル", weight_g:300, volume_cm3:200, purpose_short:"飲料水確保（数千リットル対応）", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Long-term Survival Water Purification"}], scores:{survivability:5,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"pp_fire_starter", name:"火起こし道具セット（防水マッチ・ファイヤースターター）", category:"サバイバル", weight_g:150, volume_cm3:100, purpose_short:"着火・暖房・調理", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Wilderness Survival Fire Starting"}], scores:{survivability:5,signalability:1,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"pp_multitool", name:"高機能マルチツール（プライヤー・ナイフ・ドライバー）", category:"工具", weight_g:250, volume_cm3:120, purpose_short:"汎用作業・修理", dual_use:true, hazard_flag:true, legality_notes:{JP:"刃物所持規制対象、正当理由必要",US:"一部地域で制限"}, sources:[{title:"Survival Multi-Tool Guide"}], scores:{survivability:4,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:2} },
-        { id:"pp_medical_kit", name:"包括的応急医療キット", category:"医療", weight_g:800, volume_cm3:600, purpose_short:"長期的な医療対応", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Wilderness First Aid"}], scores:{survivability:5,signalability:0,exfiltration_support:0,concealability:1,legality_penalty:0} },
-        { id:"pp_emergency_food", name:"長期保存食（30日分）", category:"サバイバル", weight_g:10000, volume_cm3:15000, purpose_short:"フリーズドライ・レトルト食品", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Emergency Food Storage"}], scores:{survivability:5,signalability:0,exfiltration_support:0,concealability:0,legality_penalty:0} },
-        { id:"pp_radio", name:"多機能ラジオ（手回し・ソーラー・AM/FM/短波）", category:"通信", weight_g:400, volume_cm3:300, purpose_short:"情報収集・緊急警報受信", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Emergency Communication"}], scores:{survivability:3,signalability:0,exfiltration_support:2,concealability:2,legality_penalty:0} },
-        { id:"pp_paracord", name:"パラコード（30m）", category:"工具", weight_g:500, volume_cm3:300, purpose_short:"シェルター構築・修理", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Paracord Applications"}], scores:{survivability:4,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"pp_tarp", name:"防水タープ（3m×3m）", category:"サバイバル", weight_g:600, volume_cm3:400, purpose_short:"シェルター・雨除け", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Shelter Building"}], scores:{survivability:4,signalability:0,exfiltration_support:0,concealability:1,legality_penalty:0} },
-        { id:"pp_survival_knife", name:"サバイバルナイフ（固定刃・シース付）", category:"工具", weight_g:300, volume_cm3:250, purpose_short:"調理・加工・防御", dual_use:true, hazard_flag:true, legality_notes:{JP:"銃刀法規制対象、正当理由なき携帯禁止",US:"一部地域で制限"}, sources:[{title:"Survival Knife Selection"}], scores:{survivability:4,signalability:0,exfiltration_support:1,concealability:1,legality_penalty:3} },
-        { id:"pp_sleeping_bag", name:"耐寒シュラフ（-10℃対応）", category:"サバイバル", weight_g:1500, volume_cm3:3000, purpose_short:"体温保持・睡眠確保", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Cold Weather Survival"}], scores:{survivability:5,signalability:0,exfiltration_support:0,concealability:0,legality_penalty:0} },
-        { id:"pp_solar_panel", name:"ポータブルソーラーパネル（50W）", category:"その他", weight_g:1200, volume_cm3:1500, purpose_short:"電力確保", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Off-Grid Power"}], scores:{survivability:3,signalability:0,exfiltration_support:1,concealability:0,legality_penalty:0} },
-        { id:"pp_battery_bank", name:"大容量バッテリーバンク（100000mAh）", category:"その他", weight_g:800, volume_cm3:500, purpose_short:"電力貯蔵", dual_use:false, hazard_flag:true, legality_notes:{JP:"航空輸送制限",US:"航空輸送制限"}, sources:[{title:"Energy Storage Solutions"}], scores:{survivability:3,signalability:0,exfiltration_support:1,concealability:1,legality_penalty:1} },
-        { id:"pp_tool_kit", name:"総合工具セット", category:"工具", weight_g:2000, volume_cm3:2000, purpose_short:"修理・建築作業", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Self-Sufficiency Tools"}], scores:{survivability:4,signalability:0,exfiltration_support:0,concealability:0,legality_penalty:0} },
-        { id:"pp_fishing_kit", name:"釣り具・罠キット", category:"サバイバル", weight_g:400, volume_cm3:300, purpose_short:"食料調達", dual_use:false, hazard_flag:false, legality_notes:{JP:"漁業権・狩猟免許遵守"}, sources:[{title:"Survival Fishing & Trapping"}], scores:{survivability:4,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:1} },
-        { id:"pp_seeds", name:"食用作物の種子セット（非遺伝子組換）", category:"サバイバル", weight_g:200, volume_cm3:150, purpose_short:"長期自給自足", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Survival Gardening"}], scores:{survivability:5,signalability:0,exfiltration_support:0,concealability:3,legality_penalty:0} },
-        { id:"pp_cash_precious", name:"現金・貴金属（小額）", category:"その他", weight_g:100, volume_cm3:50, purpose_short:"通貨代替・物々交換", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可（申告義務遵守）"}, sources:[{title:"Economic Collapse Preparedness"}], scores:{survivability:2,signalability:0,exfiltration_support:2,concealability:3,legality_penalty:0} },
-        { id:"pp_water_storage", name:"折りたたみ給水タンク（20L）", category:"サバイバル", weight_g:300, volume_cm3:200, purpose_short:"大量水運搬・貯蔵", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Water Storage Solutions"}], scores:{survivability:5,signalability:0,exfiltration_support:0,concealability:1,legality_penalty:0} },
-        { id:"pp_manual", name:"サバイバルマニュアル（防水版）", category:"書類", weight_g:300, volume_cm3:200, purpose_short:"生存技術・知識", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"US Army Survival Manual"}], scores:{survivability:4,signalability:0,exfiltration_support:1,concealability:2,legality_penalty:0} },
-        { id:"pp_hygiene_kit", name:"衛生キット（石鹸・歯ブラシ等）", category:"医療", weight_g:500, volume_cm3:400, purpose_short:"衛生管理・感染予防", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Hygiene in Emergency Situations"}], scores:{survivability:3,signalability:0,exfiltration_support:0,concealability:2,legality_penalty:0} },
-        { id:"pp_compass_map", name:"コンパス＆地形図", category:"ナビゲーション", weight_g:150, volume_cm3:100, purpose_short:"方向確認・経路計画", dual_use:false, hazard_flag:false, legality_notes:{JP:"許可"}, sources:[{title:"Land Navigation"}], scores:{survivability:3,signalability:0,exfiltration_support:2,concealability:3,legality_penalty:0} }
-      ]
-    }
-  };
+  let PRESETS = {};
+
+  // PRESETSは presets.json から動的に読み込まれます
+  // fetch()でロード後、initApp()を呼び出してアプリケーションを初期化
 
   // ============================================================
   // アプリケーションステート (In-Memory State Management)
@@ -414,8 +56,8 @@
   // - items: アイテム配列（Deep Copyで参照を切断）
   // - selectedItemId: 選択中のアイテムID（詳細表示用）
   let state = {
-    checklistName: PRESETS.embassy.name,
-    items: JSON.parse(JSON.stringify(PRESETS.embassy.items)).map(it => normalizeItem(it)), // deep copy with normalization
+    checklistName: '',
+    items: [],
     selectedItemId: null
   };
 
@@ -444,6 +86,8 @@
   const f_dual = document.getElementById('f_dual');
   const f_hazard = document.getElementById('f_hazard');
   const f_legality = document.getElementById('f_legality');
+  const f_description = document.getElementById('f_description');
+  const f_sources = document.getElementById('f_sources');
   const modalCancel = document.getElementById('modalCancel');
   const modalSave = document.getElementById('modalSave');
   const exportJsonBtn = document.getElementById('exportJson');
@@ -509,7 +153,8 @@
       recommended_quantity: it.recommended_quantity ?? 1,
       packed_by_default: it.packed_by_default ?? (!!it.checked) ?? false,
       category_tags: it.category_tags ?? (it.category ? [it.category.toLowerCase().replace(/\s+/g, '-')] : []),
-      repack_frequency: it.repack_frequency ?? 'never' // values: daily, weekly, monthly, never
+      repack_frequency: it.repack_frequency ?? 'never', // values: daily, weekly, monthly, never
+      description: it.description ?? '' // 詳細メモ（Markdown可）
     };
   }
 
@@ -961,7 +606,13 @@
           </dd>
         </div>
         <div><dt class="font-medium text-xs text-gray-500">法的注意事項</dt><dd class="mt-0.5"><pre class="text-xs bg-gray-50 p-2 rounded overflow-x-auto">${escapeHtml(legalityHtml)}</pre></dd></div>
-        <div><dt class="font-medium text-xs text-gray-500">出典</dt><dd class="mt-0.5">${(it.sources||[]).map(s=>escapeHtml(s.title)).join('<br/>')}</dd></div>
+        ${it.description ? `<div><dt class="font-medium text-xs text-gray-500">詳細メモ</dt><dd class="mt-0.5 whitespace-pre-wrap text-sm">${escapeHtml(it.description)}</dd></div>` : ''}
+        <div><dt class="font-medium text-xs text-gray-500">出典</dt><dd class="mt-0.5">${(it.sources||[]).map(s => {
+          if (s.url) {
+            return `<a href="${escapeHtml(s.url)}" target="_blank" class="text-blue-600 hover:underline">${escapeHtml(s.title)}</a>`;
+          }
+          return escapeHtml(s.title);
+        }).join('<br/>')}</dd></div>
       </dl>
       <div class="mt-4">
         <button id="detailEdit" class="btn btn-primary btn-sm">編集</button>
@@ -1007,6 +658,11 @@
       f_dual.checked = !!item.dual_use;
       f_hazard.checked = !!item.hazard_flag;
       f_legality.value = JSON.stringify(item.legality_notes || {});
+      f_description.value = item.description || '';
+      // sources配列を「タイトル URL」形式の複数行に変換
+      f_sources.value = (item.sources || []).map(s => {
+        return s.url ? `${s.title} ${s.url}` : s.title;
+      }).join('\n');
     } else {
       modalTitle.textContent = 'アイテム追加';
       editingId = null;
@@ -1015,6 +671,8 @@
       f_recommended_quantity.value = 1;
       f_repack_frequency.value = 'never';
       f_legality.value = '{"US":"許可"}';
+      f_description.value = '';
+      f_sources.value = '';
     }
   }
 
@@ -1032,6 +690,20 @@
     // gather
     let legalityObj = {};
     try { legalityObj = JSON.parse(f_legality.value || '{}'); } catch(err){ alert('法的注意事項は有効なJSON形式である必要があります'); return; }
+
+    // sources: 「タイトル URL」形式の複数行から配列に変換
+    const sourcesArr = f_sources.value.trim().split('\n')
+      .filter(line => line.trim())
+      .map(line => {
+        const parts = line.trim().split(/\s+/);
+        const urlMatch = parts.find(p => p.startsWith('http://') || p.startsWith('https://'));
+        if (urlMatch) {
+          const title = parts.filter(p => p !== urlMatch).join(' ');
+          return { title: title || urlMatch, url: urlMatch };
+        }
+        return { title: line.trim() };
+      });
+
     const payload = normalizeItem({
       id: editingId || uid('item'),
       name: f_name.value.trim() || '名称未設定',
@@ -1042,10 +714,11 @@
       recommended_quantity: Number(f_recommended_quantity.value || 1),
       repack_frequency: f_repack_frequency.value || 'never',
       purpose_short: f_purpose.value || '',
+      description: f_description.value || '',
       dual_use: !!f_dual.checked,
       hazard_flag: !!f_hazard.checked,
       legality_notes: legalityObj,
-      sources: [],
+      sources: sourcesArr,
       scores: {survivability:1,signalability:0,exfiltration_support:0,concealability:2,legality_penalty: (f_dual.checked?1:0)}
     });
     if (editingId) {
@@ -1454,15 +1127,45 @@
     });
   });
 
-  // init load: load default preset
-  (function init() {
-    state.checklistName = PRESETS.embassy.name;
-    state.items = JSON.parse(JSON.stringify(PRESETS.embassy.items)).map(normalizeItem);
+  // ============================================================
+  // アプリケーション初期化 (Application Initialization)
+  // ============================================================
+  // presets.jsonからPRESETSを読み込み、アプリケーションを初期化
+
+  async function loadPresets() {
+    try {
+      const response = await fetch('presets.json');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      PRESETS = await response.json();
+      initApp();
+    } catch (error) {
+      console.error('Failed to load presets:', error);
+      // Fallback: 空のプリセットで初期化
+      PRESETS = {
+        empty: {
+          name: "空のチェックリスト",
+          category: "edc",
+          items: []
+        }
+      };
+      initApp();
+    }
+  }
+
+  function initApp() {
+    const defaultPreset = PRESETS.embassy || Object.values(PRESETS)[0];
+    state.checklistName = defaultPreset.name;
+    state.items = JSON.parse(JSON.stringify(defaultPreset.items)).map(normalizeItem);
     renderPresetOptions('all');
-    presetSelectEl.value = 'embassy';
+    presetSelectEl.value = Object.keys(PRESETS).find(k => PRESETS[k] === defaultPreset) || Object.keys(PRESETS)[0];
     renderAll();
     renderSavedList();
     renderSavedListInline();
-  })();
+  }
+
+  // アプリケーション起動
+  loadPresets();
 
 })();

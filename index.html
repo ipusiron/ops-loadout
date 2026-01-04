@@ -255,6 +255,10 @@
           <label for="f_purpose" class="form-label">用途（簡潔に）</label>
           <input id="f_purpose" class="form-input" />
         </div>
+        <div>
+          <label for="f_description" class="form-label">詳細メモ（Markdown可）</label>
+          <textarea id="f_description" rows="4" class="form-input" placeholder="詳細な説明、使用方法、注意事項など"></textarea>
+        </div>
         <div class="flex items-center gap-4">
           <label class="flex items-center gap-2 cursor-pointer"><input id="f_dual" type="checkbox" class="form-checkbox" /> <span class="text-xs">軍民両用</span></label>
           <label class="flex items-center gap-2 cursor-pointer"><input id="f_hazard" type="checkbox" class="form-checkbox" /> <span class="text-xs">危険物</span></label>
@@ -262,6 +266,10 @@
         <div>
           <label for="f_legality" class="form-label">法的注意事項（JSON形式）</label>
           <textarea id="f_legality" rows="2" class="form-input" placeholder='{"US":"許可","JP":"許可"}'></textarea>
+        </div>
+        <div>
+          <label for="f_sources" class="form-label">出典（1行1件、タイトル URL形式）</label>
+          <textarea id="f_sources" rows="3" class="form-input" placeholder="米国務省ガイダンス https://example.gov&#10;AF SERE ハンドブック"></textarea>
         </div>
 
         <div class="flex flex-col sm:flex-row justify-end gap-2 pt-2">
