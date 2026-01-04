@@ -1,0 +1,519 @@
+{
+  "category": "disaster",
+  "name_ja": "ブッシュクラフト型（スタンダード）",
+  "name_en": "Bushcraft Standard",
+  "items": [
+    {
+      "id": "bc_batoning_knife",
+      "weight_g": 350,
+      "volume_cm3": 200,
+      "dual_use": true,
+      "hazard_flag": true,
+      "sources": [
+        {
+          "title": "Bushcraft 101 - Dave Canterbury"
+        }
+      ],
+      "scores": {
+        "survivability": 5,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 1,
+        "legality_penalty": 3
+      },
+      "name_ja": "バトニングナイフ（フルタング・厚刃）",
+      "name_en": "Batoning Knife (Full Tang, Thick Blade)",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "薪割り・木材加工・シェルター構築",
+      "purpose_short_en": "Wood splitting, carving, shelter building",
+      "legality_notes_ja": {
+        "JP": "刃物所持規制対象、正当理由必要",
+        "US": "州により規制あり"
+      },
+      "legality_notes_en": {
+        "JP": "Subject to blade possession regulations, lawful purpose required",
+        "US": "Regulations vary by state"
+      },
+      "description_ja": "バトニング（薪割り）に適した厚刃のフルタングナイフ。ブッシュクラフトの基本道具。",
+      "description_en": "Full-tang thick blade knife suitable for batoning. Essential bushcraft tool."
+    },
+    {
+      "id": "bc_ferro_rod",
+      "weight_g": 80,
+      "volume_cm3": 30,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Bushcraft Fire Starting Techniques"
+        }
+      ],
+      "scores": {
+        "survivability": 5,
+        "signalability": 1,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "ファイヤースチール（大型フェロセリウムロッド）",
+      "name_en": "Ferrocerium Rod (Large Fire Steel)",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "火起こし（数千回使用可能）",
+      "purpose_short_en": "Fire starting (thousands of strikes)",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "濡れても使用可能な火起こし道具。ナイフの背でストライクして火花を発生。",
+      "description_en": "Weatherproof fire starter. Strike with knife spine to produce sparks."
+    },
+    {
+      "id": "bc_folding_saw",
+      "weight_g": 200,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Bushcraft Woodcraft Tools"
+        }
+      ],
+      "scores": {
+        "survivability": 4,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "折りたたみノコギリ",
+      "name_en": "Folding Saw",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "薪の収集・シェルター材の切断",
+      "purpose_short_en": "Firewood collection, shelter material cutting",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "コンパクトに収納できる折りたたみ式ノコギリ。直径10cm程度の枝まで対応。",
+      "description_en": "Compact folding saw. Handles branches up to 10cm diameter."
+    },
+    {
+      "id": "bc_tarp",
+      "weight_g": 500,
+      "volume_cm3": 800,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Tarp Shelters - Mors Kochanski"
+        }
+      ],
+      "scores": {
+        "survivability": 5,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "シルナイロンタープ（3m×3m）",
+      "name_en": "Silnylon Tarp (3m x 3m)",
+      "category_ja": "シェルター",
+      "category_en": "Shelter",
+      "purpose_short_ja": "雨除け・日除け・シェルター構築",
+      "purpose_short_en": "Rain protection, shade, shelter construction",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "軽量で防水性の高いタープ。多様な張り方でシェルターを構築可能。",
+      "description_en": "Lightweight waterproof tarp. Versatile shelter configurations."
+    },
+    {
+      "id": "bc_paracord",
+      "weight_g": 150,
+      "volume_cm3": 100,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Paracord 550 Specifications"
+        }
+      ],
+      "scores": {
+        "survivability": 4,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "パラコード550（30m）",
+      "name_en": "Paracord 550 (30m)",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "タープ設営・罠・補修・緊急用",
+      "purpose_short_en": "Tarp rigging, traps, repairs, emergency use",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "破断強度250kgの汎用ロープ。内部の7本のストランドは別用途に使用可能。",
+      "description_en": "250kg breaking strength utility cord. Inner 7 strands usable separately."
+    },
+    {
+      "id": "bc_metal_pot",
+      "weight_g": 400,
+      "volume_cm3": 1000,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Bushcraft Cooking Equipment"
+        }
+      ],
+      "scores": {
+        "survivability": 4,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "ステンレスポット（直火対応・1L）",
+      "name_en": "Stainless Steel Pot (Fire-safe, 1L)",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "煮沸消毒・調理・湯沸かし",
+      "purpose_short_en": "Boiling water purification, cooking",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "焚き火で直接使用可能なステンレス製ポット。蓋付きで調理効率向上。",
+      "description_en": "Stainless pot for direct fire use. Lid included for cooking efficiency."
+    },
+    {
+      "id": "bc_metal_bottle",
+      "weight_g": 200,
+      "volume_cm3": 600,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Single-wall Metal Bottle Guide"
+        }
+      ],
+      "scores": {
+        "survivability": 4,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "シングルウォール金属水筒（直火可・1L）",
+      "name_en": "Single-wall Metal Bottle (Fire-safe, 1L)",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "水の運搬・煮沸消毒",
+      "purpose_short_en": "Water transport, boiling purification",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "焚き火に直接入れて水を煮沸できるシングルウォール水筒。",
+      "description_en": "Single-wall bottle that can be placed directly in fire to boil water."
+    },
+    {
+      "id": "bc_wool_blanket",
+      "weight_g": 1500,
+      "volume_cm3": 3000,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Wool Blanket for Bushcraft"
+        }
+      ],
+      "scores": {
+        "survivability": 4,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 0,
+        "legality_penalty": 0
+      },
+      "name_ja": "ウールブランケット（難燃性）",
+      "name_en": "Wool Blanket (Fire Resistant)",
+      "category_ja": "シェルター",
+      "category_en": "Shelter",
+      "purpose_short_ja": "保温・焚き火近くでの使用・地面敷き",
+      "purpose_short_en": "Warmth, fire-side use, ground cover",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "濡れても保温性を維持し、火の粉にも強いウール素材。焚き火の近くで安心して使用可能。",
+      "description_en": "Wool maintains warmth when wet and resists sparks. Safe to use near fire."
+    },
+    {
+      "id": "bc_leather_gloves",
+      "weight_g": 150,
+      "volume_cm3": 200,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Bushcraft Hand Protection"
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "革手袋（耐熱・作業用）",
+      "name_en": "Leather Gloves (Heat-resistant, Work)",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "焚き火作業・刃物作業の保護",
+      "purpose_short_en": "Fire handling, blade work protection",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "高温の鍋や薪を扱う際の保護。バトニング時の滑り止めにも。",
+      "description_en": "Protection for handling hot pots and firewood. Grip for batoning."
+    },
+    {
+      "id": "bc_tinder_kit",
+      "weight_g": 50,
+      "volume_cm3": 100,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Natural Fire Tinder Collection"
+        }
+      ],
+      "scores": {
+        "survivability": 4,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "火口キット（チャークロス・ファットウッド）",
+      "name_en": "Tinder Kit (Charcloth, Fatwood)",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "確実な着火のための火口",
+      "purpose_short_en": "Reliable fire starting tinder",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "チャークロス（炭化布）とファットウッド（松脂含有木片）のセット。悪条件でも着火可能。",
+      "description_en": "Charcloth and fatwood (resin-rich wood) set. Ignites even in poor conditions."
+    },
+    {
+      "id": "bc_headlamp",
+      "weight_g": 80,
+      "volume_cm3": 50,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Bushcraft Lighting"
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 2,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "ヘッドランプ（赤色LED付き）",
+      "name_en": "Headlamp (with Red LED)",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "夜間作業・暗視維持",
+      "purpose_short_en": "Night work, night vision preservation",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "両手が自由になるヘッドランプ。赤色LEDモードで暗視を維持。",
+      "description_en": "Hands-free headlamp. Red LED mode preserves night vision."
+    },
+    {
+      "id": "bc_first_aid",
+      "weight_g": 300,
+      "volume_cm3": 400,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Wilderness First Aid Kit"
+        }
+      ],
+      "scores": {
+        "survivability": 4,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "ウィルダネス救急キット",
+      "name_en": "Wilderness First Aid Kit",
+      "category_ja": "医療",
+      "category_en": "Medical",
+      "purpose_short_ja": "外傷処置・刃物傷・火傷対応",
+      "purpose_short_en": "Trauma care, cuts, burns treatment",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "ブッシュクラフト特有のリスク（刃物傷、火傷）に対応した救急キット。",
+      "description_en": "First aid kit for bushcraft risks: knife cuts, burns."
+    },
+    {
+      "id": "bc_compass",
+      "weight_g": 50,
+      "volume_cm3": 30,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Navigation with Map and Compass"
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "ベースプレートコンパス（ミラー付き）",
+      "name_en": "Baseplate Compass (with Mirror)",
+      "category_ja": "ナビゲーション",
+      "category_en": "Navigation",
+      "purpose_short_ja": "方位確認・地図読み・信号",
+      "purpose_short_en": "Direction finding, map reading, signaling",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "地図と併用できるベースプレート式コンパス。ミラーは信号にも使用可能。",
+      "description_en": "Baseplate compass for map use. Mirror doubles as signal device."
+    },
+    {
+      "id": "water_filter_sawyer_grayl",
+      "weight_g": 85,
+      "volume_cm3": 100,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Corporals Corner - Ultralight Kits"
+        },
+        {
+          "title": "Haze Outdoors - Best Bushcraft Camping Kit"
+        },
+        {
+          "title": "Coalcracker Bushcraft - Hybrid Bushcraft Kit"
+        },
+        {
+          "title": "I Suck At Hiking - Ultralight Backpacking"
+        }
+      ],
+      "scores": {
+        "survivability": 5,
+        "signalability": 0,
+        "exfiltration_support": 4,
+        "concealability": 4,
+        "legality_penalty": 0
+      },
+      "name_ja": "携帯浄水器 (ソーヤー/グレイル/カタダイン)",
+      "name_en": "Portable Water Filter (Sawyer/Grayl/Katadyn)",
+      "category_ja": "水・衛生",
+      "category_en": "Water & Hygiene",
+      "purpose_short_ja": "自然水の濾過・飲料水化",
+      "purpose_short_en": "Filtering natural water for drinking",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "川や池の水を安全な飲料水に変える装置。ウルトラライトからサバイバルまで必須装備。",
+      "description_en": "Device to turn river/pond water into safe drinking water. Essential for all styles."
+    },
+    {
+      "id": "misc_repair_kit_tape",
+      "weight_g": 50,
+      "volume_cm3": 40,
+      "dual_use": true,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Corporals Corner - Walmart Survival Kit"
+        },
+        {
+          "title": "Dave Dryden - Ultimate Bushcraft Daypack"
+        },
+        {
+          "title": "Joe Robinet - My Bushcraft Kit"
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 5,
+        "legality_penalty": 0
+      },
+      "name_ja": "ダクトテープ / ゴリラテープ",
+      "name_en": "Duct Tape / Gorilla Tape",
+      "category_ja": "修理・メンテナンス",
+      "category_en": "Repair & Maintenance",
+      "purpose_short_ja": "ギアの補修、着火剤、応急処置",
+      "purpose_short_en": "Gear repair, fire starter, first aid",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "強力な粘着テープ。テントの補修から、丸めて着火剤代わりにするなど、サバイバルでの用途は無限。",
+      "description_en": "Strong adhesive tape. Infinite uses in survival from gear repair to use as an improvised fire starter."
+    }
+  ]
+}

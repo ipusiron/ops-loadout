@@ -1,0 +1,174 @@
+{
+  "category": "disaster",
+  "name_ja": "ブッシュクラフト型（ミニマル）",
+  "name_en": "Bushcraft Minimal",
+  "items": [
+    {
+      "id": "bc_batoning_knife",
+      "weight_g": 350,
+      "volume_cm3": 200,
+      "dual_use": true,
+      "hazard_flag": true,
+      "sources": [
+        {
+          "title": "Bushcraft 101 - Dave Canterbury"
+        }
+      ],
+      "scores": {
+        "survivability": 5,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 1,
+        "legality_penalty": 3
+      },
+      "name_ja": "バトニングナイフ（フルタング・厚刃）",
+      "name_en": "Batoning Knife (Full Tang, Thick Blade)",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "薪割り・木材加工・シェルター構築",
+      "purpose_short_en": "Wood splitting, carving, shelter building",
+      "legality_notes_ja": {
+        "JP": "刃物所持規制対象、正当理由必要",
+        "US": "州により規制あり"
+      },
+      "legality_notes_en": {
+        "JP": "Subject to blade possession regulations, lawful purpose required",
+        "US": "Regulations vary by state"
+      },
+      "description_ja": "バトニング（薪割り）に適した厚刃のフルタングナイフ。ブッシュクラフトの基本道具。",
+      "description_en": "Full-tang thick blade knife suitable for batoning. Essential bushcraft tool."
+    },
+    {
+      "id": "bc_ferro_rod",
+      "weight_g": 80,
+      "volume_cm3": 30,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Bushcraft Fire Starting Techniques"
+        }
+      ],
+      "scores": {
+        "survivability": 5,
+        "signalability": 1,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "ファイヤースチール（大型フェロセリウムロッド）",
+      "name_en": "Ferrocerium Rod (Large Fire Steel)",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "火起こし（数千回使用可能）",
+      "purpose_short_en": "Fire starting (thousands of strikes)",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "濡れても使用可能な火起こし道具。ナイフの背でストライクして火花を発生。",
+      "description_en": "Weatherproof fire starter. Strike with knife spine to produce sparks."
+    },
+    {
+      "id": "bc_tarp",
+      "weight_g": 500,
+      "volume_cm3": 800,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Tarp Shelters - Mors Kochanski"
+        }
+      ],
+      "scores": {
+        "survivability": 5,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "シルナイロンタープ（3m×3m）",
+      "name_en": "Silnylon Tarp (3m x 3m)",
+      "category_ja": "シェルター",
+      "category_en": "Shelter",
+      "purpose_short_ja": "雨除け・日除け・シェルター構築",
+      "purpose_short_en": "Rain protection, shade, shelter construction",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "軽量で防水性の高いタープ。多様な張り方でシェルターを構築可能。",
+      "description_en": "Lightweight waterproof tarp. Versatile shelter configurations."
+    },
+    {
+      "id": "bc_paracord",
+      "weight_g": 150,
+      "volume_cm3": 100,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Paracord 550 Specifications"
+        }
+      ],
+      "scores": {
+        "survivability": 4,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "パラコード550（30m）",
+      "name_en": "Paracord 550 (30m)",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "タープ設営・罠・補修・緊急用",
+      "purpose_short_en": "Tarp rigging, traps, repairs, emergency use",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "破断強度250kgの汎用ロープ。内部の7本のストランドは別用途に使用可能。",
+      "description_en": "250kg breaking strength utility cord. Inner 7 strands usable separately."
+    },
+    {
+      "id": "bc_metal_bottle",
+      "weight_g": 200,
+      "volume_cm3": 600,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Single-wall Metal Bottle Guide"
+        }
+      ],
+      "scores": {
+        "survivability": 4,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "シングルウォール金属水筒（直火可・1L）",
+      "name_en": "Single-wall Metal Bottle (Fire-safe, 1L)",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "水の運搬・煮沸消毒",
+      "purpose_short_en": "Water transport, boiling purification",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "焚き火に直接入れて水を煮沸できるシングルウォール水筒。",
+      "description_en": "Single-wall bottle that can be placed directly in fire to boil water."
+    }
+  ]
+}

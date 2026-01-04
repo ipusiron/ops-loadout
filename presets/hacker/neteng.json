@@ -1,0 +1,502 @@
+{
+  "category": "hacker",
+  "items": [
+    {
+      "id": "ne_cable_tester",
+      "weight_g": 200,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Network Infrastructure Standards"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "LANケーブルテスター",
+      "name_en": "LAN Cable Tester",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "配線診断・断線箇所特定",
+      "purpose_short_en": "Wiring diagnosis, break location",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ne_tone_generator",
+      "weight_g": 250,
+      "volume_cm3": 180,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Cable Management Guide"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "トーンジェネレーター＆プローブ",
+      "name_en": "Tone Generator & Probe",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "ケーブル追跡・識別",
+      "purpose_short_en": "Cable tracing and identification",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ne_crimping_tool",
+      "weight_g": 300,
+      "volume_cm3": 200,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Structured Cabling Standards"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "圧着工具セット（RJ45/RJ11）",
+      "name_en": "Crimping Tool Set (RJ45/RJ11)",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "LANケーブル自作・修理",
+      "purpose_short_en": "LAN cable DIY and repair",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ne_punchdown_tool",
+      "weight_g": 150,
+      "volume_cm3": 100,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Wiring Closet Best Practices"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "パンチダウンツール",
+      "name_en": "Punch Down Tool",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "配線盤への結線作業",
+      "purpose_short_en": "Wiring panel termination",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ne_portable_switch",
+      "weight_g": 400,
+      "volume_cm3": 300,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Field Network Deployment"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "ポータブルスイッチ（5-8ポート）",
+      "name_en": "Portable Switch (5-8 Ports)",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "一時的なネットワーク構築",
+      "purpose_short_en": "Temporary network setup",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ne_fiber_tester",
+      "weight_g": 300,
+      "volume_cm3": 200,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Fiber Optic Testing Standards"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "光ファイバーテスター",
+      "name_en": "Fiber Optic Tester",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "光回線の損失測定",
+      "purpose_short_en": "Fiber optic loss measurement",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ne_wifi_analyzer",
+      "weight_g": 200,
+      "volume_cm3": 120,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Wireless Site Survey Guide"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "Wi-Fiアナライザー（業務用）",
+      "name_en": "Wi-Fi Analyzer (Professional)",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "無線LAN環境調査",
+      "purpose_short_en": "Wireless LAN environment survey",
+      "legality_notes_ja": {
+        "JP": "電波法遵守"
+      },
+      "legality_notes_en": {
+        "JP": "Radio law compliance required"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ne_console_cable",
+      "weight_g": 100,
+      "volume_cm3": 80,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Cisco Device Configuration"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "シリアルコンソールケーブルセット",
+      "name_en": "Serial Console Cable Set",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "ネットワーク機器の初期設定",
+      "purpose_short_en": "Network device initial configuration",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ne_cable_stripper",
+      "weight_g": 120,
+      "volume_cm3": 80,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Cable Preparation Tools"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "ケーブルストリッパー",
+      "name_en": "Cable Stripper",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "被覆剥き作業",
+      "purpose_short_en": "Wire stripping",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ne_rj45_connectors",
+      "weight_g": 100,
+      "volume_cm3": 50,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Network Cabling Supplies"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "RJ45コネクタ（50個入り）",
+      "name_en": "RJ45 Connectors (50 pcs)",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "LANケーブル作成用",
+      "purpose_short_en": "For LAN cable creation",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ne_patch_cables",
+      "weight_g": 300,
+      "volume_cm3": 200,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Network Equipment Setup"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "パッチケーブルセット（各種長さ）",
+      "name_en": "Patch Cable Set (Various Lengths)",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "機器間接続",
+      "purpose_short_en": "Inter-device connection",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ne_label_maker",
+      "weight_g": 200,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Network Documentation"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "ラベルプリンター",
+      "name_en": "Label Printer",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "ケーブル・ポートのラベリング",
+      "purpose_short_en": "Cable and port labeling",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ne_flashlight",
+      "weight_g": 100,
+      "volume_cm3": 80,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Field Work Safety"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 1,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "LEDヘッドライト",
+      "name_en": "LED Headlamp",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "暗所での配線作業",
+      "purpose_short_en": "Wiring work in dark environments",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ne_screwdriver_set",
+      "weight_g": 200,
+      "volume_cm3": 120,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "IT Toolkit Essentials"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "精密ドライバーセット",
+      "name_en": "Precision Screwdriver Set",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "機器の開閉・設置",
+      "purpose_short_en": "Equipment opening/closing and installation",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ne_notebook",
+      "weight_g": 150,
+      "volume_cm3": 100,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Network Operations Documentation"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "作業記録ノート",
+      "name_en": "Work Log Notebook",
+      "category_ja": "書類",
+      "category_en": "Documents",
+      "purpose_short_ja": "設定メモ・トラブル記録",
+      "purpose_short_en": "Configuration notes, trouble records",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    }
+  ],
+  "name_ja": "ネットワークエンジニア型",
+  "name_en": "Network Engineer"
+}

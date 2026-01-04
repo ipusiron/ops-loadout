@@ -1,0 +1,667 @@
+{
+  "category": "disaster",
+  "items": [
+    {
+      "id": "d_water",
+      "weight_g": 2000,
+      "volume_cm3": 2000,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "内閣府防災情報"
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "飲料水（ペットボトル 2L）",
+      "name_en": "Drinking Water (2L Bottle)",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "1日分の飲料水確保",
+      "purpose_short_en": "One day's drinking water supply",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "d_food",
+      "weight_g": 300,
+      "volume_cm3": 600,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "東京都防災ホームページ"
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "非常食（アルファ米3食分）",
+      "name_en": "Emergency Food (3 servings freeze-dried rice)",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "1日分の食料",
+      "purpose_short_en": "One day's food supply",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "d_flashlight",
+      "weight_g": 100,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "消防庁 防災マニュアル"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 1,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "懐中電灯・ヘッドランプ",
+      "name_en": "Flashlight / Headlamp",
+      "category_ja": "信号発信",
+      "category_en": "Signaling",
+      "purpose_short_ja": "停電時の照明",
+      "purpose_short_en": "Lighting during power outage",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "d_radio",
+      "weight_g": 200,
+      "volume_cm3": 300,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "総務省 災害時の情報収集"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "ラジオ（手回し充電式）",
+      "name_en": "Radio (Hand-crank)",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "災害情報の収集",
+      "purpose_short_en": "Disaster information gathering",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "d_firstaid",
+      "weight_g": 150,
+      "volume_cm3": 80,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "日本赤十字社 備蓄リスト"
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "救急セット",
+      "name_en": "First Aid Kit",
+      "category_ja": "医療",
+      "category_en": "Medical",
+      "purpose_short_ja": "応急手当用",
+      "purpose_short_en": "For first aid",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "d_mask",
+      "weight_g": 20,
+      "volume_cm3": 50,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "厚生労働省 感染症対策"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "マスク（不織布マスク10枚）",
+      "name_en": "Masks (Non-woven, 10 pcs)",
+      "category_ja": "医療",
+      "category_en": "Medical",
+      "purpose_short_ja": "粉塵・感染症対策",
+      "purpose_short_en": "Dust and infection prevention",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "d_powerbank",
+      "weight_g": 200,
+      "volume_cm3": 70,
+      "dual_use": false,
+      "hazard_flag": true,
+      "sources": [
+        {
+          "title": "東京都防災ホームページ"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "モバイルバッテリー",
+      "name_en": "Mobile Battery",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "携帯電話の充電",
+      "purpose_short_en": "Mobile phone charging",
+      "legality_notes_ja": {
+        "JP": "航空輸送制限"
+      },
+      "legality_notes_en": {
+        "JP": "Air transport restricted"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "d_cash",
+      "weight_g": 100,
+      "volume_cm3": 50,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "内閣府防災情報"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "現金（小銭含む10,000円）",
+      "name_en": "Cash (10,000 JPY incl. coins)",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "停電時の買い物",
+      "purpose_short_en": "Shopping during power outage",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "d_id_copy",
+      "weight_g": 20,
+      "volume_cm3": 10,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "東京都防災ホームページ"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "身分証明書のコピー",
+      "name_en": "ID Document Copy",
+      "category_ja": "書類",
+      "category_en": "Documents",
+      "purpose_short_ja": "身元確認用",
+      "purpose_short_en": "For identity verification",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "d_medicine",
+      "weight_g": 50,
+      "volume_cm3": 30,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "日本赤十字社"
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "常備薬（持病薬・痛み止め）",
+      "name_en": "Regular Medications (Prescriptions, Pain Relief)",
+      "category_ja": "医療",
+      "category_en": "Medical",
+      "purpose_short_ja": "持病の管理と応急処置",
+      "purpose_short_en": "Chronic condition management and first aid",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "d_towel",
+      "weight_g": 200,
+      "volume_cm3": 400,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "消防庁 防災マニュアル"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "タオル（2枚）",
+      "name_en": "Towels (2 pcs)",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "清拭、保温、止血補助",
+      "purpose_short_en": "Wiping, warming, bleeding control",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "d_tissue",
+      "weight_g": 100,
+      "volume_cm3": 200,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "内閣府防災情報"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "ティッシュペーパー",
+      "name_en": "Tissue Paper",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "衛生管理",
+      "purpose_short_en": "Hygiene management",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "d_wet_tissue",
+      "weight_g": 150,
+      "volume_cm3": 200,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "東京都防災ホームページ"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "ウェットティッシュ",
+      "name_en": "Wet Wipes",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "清拭、手指消毒",
+      "purpose_short_en": "Wiping and hand sanitization",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "d_whistle",
+      "weight_g": 10,
+      "volume_cm3": 4,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "消防庁 防災マニュアル"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 3,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "ホイッスル",
+      "name_en": "Whistle",
+      "category_ja": "信号発信",
+      "category_en": "Signaling",
+      "purpose_short_ja": "救助要請の音響信号",
+      "purpose_short_en": "Acoustic signal for rescue request",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "d_gloves",
+      "weight_g": 60,
+      "volume_cm3": 100,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "内閣府防災情報"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "軍手（作業用手袋）",
+      "name_en": "Cotton Work Gloves",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "がれき処理、作業時の手の保護",
+      "purpose_short_en": "Debris handling, hand protection during work",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "d_vinyl_bags",
+      "weight_g": 50,
+      "volume_cm3": 100,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "東京都防災ホームページ"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "ビニール袋（10枚）",
+      "name_en": "Plastic Bags (10 pcs)",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "荷物の防水、ゴミ袋",
+      "purpose_short_en": "Waterproof bags, trash bags",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "d_notebook",
+      "weight_g": 40,
+      "volume_cm3": 20,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "消防庁 防災マニュアル"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "筆記用具（ノート・ペン）",
+      "name_en": "Writing Materials (Notebook, Pen)",
+      "category_ja": "書類",
+      "category_en": "Documents",
+      "purpose_short_ja": "メモ、伝言、記録",
+      "purpose_short_en": "Notes, messages, records",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "d_portable_toilet",
+      "weight_g": 200,
+      "volume_cm3": 300,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "内閣府防災情報"
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "携帯トイレ（5回分）",
+      "name_en": "Portable Toilet (5 uses)",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "トイレが使えない時の衛生対策",
+      "purpose_short_en": "Sanitation when toilets unavailable",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "d_blanket",
+      "weight_g": 300,
+      "volume_cm3": 400,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "日本赤十字社"
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "ブランケット（防寒用）",
+      "name_en": "Blanket (Cold Weather)",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "体温保持、防寒",
+      "purpose_short_en": "Body heat retention, cold protection",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "d_rope",
+      "weight_g": 100,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "消防庁 防災マニュアル"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "ロープ（5m）",
+      "name_en": "Rope (5m)",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "荷物の固定、救助補助",
+      "purpose_short_en": "Cargo securing, rescue assistance",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    }
+  ],
+  "name_ja": "災害対応型",
+  "name_en": "Disaster Preparedness"
+}

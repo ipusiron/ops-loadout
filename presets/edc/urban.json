@@ -1,0 +1,353 @@
+{
+  "category": "edc",
+  "items": [
+    {
+      "id": "u_cash",
+      "weight_g": 30,
+      "volume_cm3": 10,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "個人緊急対応計画"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "少額緊急現金",
+      "name_en": "Emergency Cash (Small Amount)",
+      "category_ja": "都市型回避",
+      "category_en": "Urban Evasion",
+      "purpose_short_ja": "短期の購入用",
+      "purpose_short_en": "For short-term purchases",
+      "legality_notes_ja": {
+        "US": "許可",
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "US": "Allowed",
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "u_powerbank",
+      "weight_g": 200,
+      "volume_cm3": 70,
+      "dual_use": false,
+      "hazard_flag": true,
+      "sources": [
+        {
+          "title": "Ready.gov"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 1
+      },
+      "name_ja": "モバイルバッテリー",
+      "name_en": "Mobile Battery",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "モバイル機器充電",
+      "purpose_short_en": "Mobile device charging",
+      "legality_notes_ja": {
+        "US": "航空輸送制限",
+        "JP": "航空輸送制限"
+      },
+      "legality_notes_en": {
+        "US": "Air transport restricted",
+        "JP": "Air transport restricted"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "u_bandage",
+      "weight_g": 50,
+      "volume_cm3": 30,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "応急処置ガイド"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "小型包帯セット",
+      "name_en": "Compact Bandage Set",
+      "category_ja": "医療",
+      "category_en": "Medical",
+      "purpose_short_ja": "基本的な創傷処置",
+      "purpose_short_en": "Basic wound treatment",
+      "legality_notes_ja": {
+        "US": "許可",
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "US": "Allowed",
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "u_water_bottle",
+      "weight_g": 80,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Ready.gov"
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "折りたたみ水筒",
+      "name_en": "Collapsible Water Bottle",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "水の運搬",
+      "purpose_short_en": "Water transport",
+      "legality_notes_ja": {
+        "US": "許可",
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "US": "Allowed",
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "u_mask",
+      "weight_g": 10,
+      "volume_cm3": 8,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "CDC Pack Smart ガイダンス"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "マスク（サージカル / N95）",
+      "name_en": "Mask (Surgical / N95)",
+      "category_ja": "医療",
+      "category_en": "Medical",
+      "purpose_short_ja": "混雑・大気汚染環境での呼吸保護",
+      "purpose_short_en": "Respiratory protection in crowded/polluted environments",
+      "legality_notes_ja": {
+        "US": "許可"
+      },
+      "legality_notes_en": {
+        "US": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "u_sanitizer",
+      "weight_g": 30,
+      "volume_cm3": 30,
+      "dual_use": false,
+      "hazard_flag": true,
+      "sources": [
+        {
+          "title": "CDC Pack Smart"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "小型ハンドサニタイザー",
+      "name_en": "Compact Hand Sanitizer",
+      "category_ja": "医療",
+      "category_en": "Medical",
+      "purpose_short_ja": "衛生管理と感染対策",
+      "purpose_short_en": "Hygiene and infection control",
+      "legality_notes_ja": {
+        "US": "航空輸送アルコール含有量制限"
+      },
+      "legality_notes_en": {
+        "US": "Air transport alcohol content restrictions"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "u_whistle",
+      "weight_g": 10,
+      "volume_cm3": 4,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "個人安全装備"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 2,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "ホイッスル",
+      "name_en": "Whistle",
+      "category_ja": "信号発信",
+      "category_en": "Signaling",
+      "purpose_short_ja": "注意を引く",
+      "purpose_short_en": "Attract attention",
+      "legality_notes_ja": {
+        "US": "許可",
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "US": "Allowed",
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "u_led",
+      "weight_g": 25,
+      "volume_cm3": 10,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "緊急キット推奨品"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 1,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "小型LEDライト",
+      "name_en": "Compact LED Light",
+      "category_ja": "信号発信",
+      "category_en": "Signaling",
+      "purpose_short_ja": "照明",
+      "purpose_short_en": "Illumination",
+      "legality_notes_ja": {
+        "US": "許可",
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "US": "Allowed",
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "u_multitool",
+      "weight_g": 60,
+      "volume_cm3": 25,
+      "dual_use": true,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "EDCガイド"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 1
+      },
+      "name_ja": "小型マルチツール",
+      "name_en": "Small Multi-tool",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "汎用作業",
+      "purpose_short_en": "General purpose work",
+      "legality_notes_ja": {
+        "US": "航空機内で制限",
+        "JP": "制限あり"
+      },
+      "legality_notes_en": {
+        "US": "Restricted on aircraft",
+        "JP": "Restricted"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "u_notebook",
+      "weight_g": 30,
+      "volume_cm3": 15,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "個人準備"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "小型ノート＆ペン",
+      "name_en": "Compact Notebook & Pen",
+      "category_ja": "書類",
+      "category_en": "Documents",
+      "purpose_short_ja": "メモ、連絡先記録",
+      "purpose_short_en": "Notes and contact records",
+      "legality_notes_ja": {
+        "US": "許可",
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "US": "Allowed",
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    }
+  ],
+  "name_ja": "都市潜入型",
+  "name_en": "Urban Evasion"
+}

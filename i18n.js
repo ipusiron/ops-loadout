@@ -44,6 +44,8 @@ const I18N = {
     "button.overwrite": "Overwrite",
     "button.saveAsNew": "Save as New",
     "button.rename": "Rename",
+    "button.checkAll": "Check All",
+    "button.uncheckAll": "Uncheck All",
 
     // Checklist display
     "checklist.title": "Checklist",
@@ -129,6 +131,10 @@ const I18N = {
     "detail.sources": "Sources",
     "detail.none": "None",
     "detail.unknown": "Unknown",
+    "detail.section.basic": "Basic Info",
+    "detail.section.packing": "Packing Info",
+    "detail.section.legal": "Legal & Safety",
+    "detail.section.sources": "Sources & Notes",
 
     // Messages
     "msg.noItems": "No items. Use 'Add Item' or load a preset.",
@@ -147,6 +153,7 @@ const I18N = {
     "msg.saveFailed": "Failed to save checklist.",
     "msg.presetStorageQuotaExceeded": "Storage quota exceeded. Please delete custom presets.",
     "msg.presetSaveFailed": "Failed to save custom preset.",
+    "msg.presetLoadFailed": "Failed to load preset.",
     "msg.pdfLibNotLoaded": "PDF library not loaded. Please reload the page.",
     "msg.html2canvasNotLoaded": "html2canvas library not loaded. Please reload the page.",
     "msg.pdfError": "Error generating PDF: ",
@@ -229,6 +236,8 @@ const I18N = {
     "button.overwrite": "上書き保存",
     "button.saveAsNew": "別名で保存（新規作成）",
     "button.rename": "名前を変更",
+    "button.checkAll": "全選択",
+    "button.uncheckAll": "全解除",
 
     // Checklist display
     "checklist.title": "チェックリスト",
@@ -314,6 +323,10 @@ const I18N = {
     "detail.sources": "出典",
     "detail.none": "なし",
     "detail.unknown": "不明",
+    "detail.section.basic": "基本情報",
+    "detail.section.packing": "パッキング情報",
+    "detail.section.legal": "法的・安全情報",
+    "detail.section.sources": "出典・メモ",
 
     // Messages
     "msg.noItems": "アイテムがありません。「アイテム追加」を使うか、プリセットを読み込んでください。",
@@ -332,6 +345,7 @@ const I18N = {
     "msg.saveFailed": "チェックリストの保存に失敗しました。",
     "msg.presetStorageQuotaExceeded": "保存容量が不足しています。カスタムプリセットを削除してください。",
     "msg.presetSaveFailed": "カスタムプリセットの保存に失敗しました。",
+    "msg.presetLoadFailed": "プリセットの読み込みに失敗しました。",
     "msg.pdfLibNotLoaded": "PDFライブラリが読み込まれていません。ページを再読み込みしてください。",
     "msg.html2canvasNotLoaded": "html2canvasライブラリが読み込まれていません。ページを再読み込みしてください。",
     "msg.pdfError": "PDF生成中にエラーが発生しました: ",

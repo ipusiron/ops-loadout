@@ -1,0 +1,673 @@
+{
+  "category": "disaster",
+  "items": [
+    {
+      "id": "pp_water_filter",
+      "weight_g": 300,
+      "volume_cm3": 200,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Long-term Survival Water Purification"
+        }
+      ],
+      "scores": {
+        "survivability": 5,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "携帯浄水器（長期使用型）",
+      "name_en": "Portable Water Filter (Long-term)",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "飲料水確保（数千リットル対応）",
+      "purpose_short_en": "Drinking water supply (thousands of liters)",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "pp_fire_starter",
+      "weight_g": 150,
+      "volume_cm3": 100,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Wilderness Survival Fire Starting"
+        }
+      ],
+      "scores": {
+        "survivability": 5,
+        "signalability": 1,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "火起こし道具セット（防水マッチ・ファイヤースターター）",
+      "name_en": "Fire Starting Kit (Waterproof Matches, Fire Starter)",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "着火・暖房・調理",
+      "purpose_short_en": "Ignition, heating, cooking",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "pp_multitool",
+      "weight_g": 250,
+      "volume_cm3": 120,
+      "dual_use": true,
+      "hazard_flag": true,
+      "sources": [
+        {
+          "title": "Survival Multi-Tool Guide"
+        }
+      ],
+      "scores": {
+        "survivability": 4,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 2
+      },
+      "name_ja": "高機能マルチツール（プライヤー・ナイフ・ドライバー）",
+      "name_en": "High-function Multitool (Pliers, Knife, Screwdriver)",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "汎用作業・修理",
+      "purpose_short_en": "General work and repairs",
+      "legality_notes_ja": {
+        "JP": "刃物所持規制対象、正当理由必要",
+        "US": "一部地域で制限"
+      },
+      "legality_notes_en": {
+        "JP": "Subject to blade possession regulations, lawful purpose required",
+        "US": "Restricted in some regions"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "pp_medical_kit",
+      "weight_g": 800,
+      "volume_cm3": 600,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Wilderness First Aid"
+        }
+      ],
+      "scores": {
+        "survivability": 5,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "包括的応急医療キット",
+      "name_en": "Comprehensive First Aid Kit",
+      "category_ja": "医療",
+      "category_en": "Medical",
+      "purpose_short_ja": "長期的な医療対応",
+      "purpose_short_en": "Long-term medical response",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "pp_emergency_food",
+      "weight_g": 10000,
+      "volume_cm3": 15000,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Emergency Food Storage"
+        }
+      ],
+      "scores": {
+        "survivability": 5,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 0,
+        "legality_penalty": 0
+      },
+      "name_ja": "長期保存食（30日分）",
+      "name_en": "Long-term Food Storage (30 days)",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "フリーズドライ・レトルト食品",
+      "purpose_short_en": "Freeze-dried and retort food",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "pp_radio",
+      "weight_g": 400,
+      "volume_cm3": 300,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Emergency Communication"
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "多機能ラジオ（手回し・ソーラー・AM/FM/短波）",
+      "name_en": "Multi-function Radio (Hand-crank/Solar/AM/FM/SW)",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "情報収集・緊急警報受信",
+      "purpose_short_en": "Information gathering, emergency alert reception",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "pp_paracord",
+      "weight_g": 500,
+      "volume_cm3": 300,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Paracord Applications"
+        }
+      ],
+      "scores": {
+        "survivability": 4,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "パラコード（30m）",
+      "name_en": "Paracord (30m)",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "シェルター構築・修理",
+      "purpose_short_en": "Shelter construction and repair",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "pp_tarp",
+      "weight_g": 600,
+      "volume_cm3": 400,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Shelter Building"
+        }
+      ],
+      "scores": {
+        "survivability": 4,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "防水タープ（3m×3m）",
+      "name_en": "Waterproof Tarp (3m x 3m)",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "シェルター・雨除け",
+      "purpose_short_en": "Shelter and rain protection",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "pp_survival_knife",
+      "weight_g": 300,
+      "volume_cm3": 250,
+      "dual_use": true,
+      "hazard_flag": true,
+      "sources": [
+        {
+          "title": "Survival Knife Selection"
+        }
+      ],
+      "scores": {
+        "survivability": 4,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 1,
+        "legality_penalty": 3
+      },
+      "name_ja": "サバイバルナイフ（固定刃・シース付）",
+      "name_en": "Survival Knife (Fixed Blade w/ Sheath)",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "調理・加工・防御",
+      "purpose_short_en": "Cooking, processing, defense",
+      "legality_notes_ja": {
+        "JP": "銃刀法規制対象、正当理由なき携帯禁止",
+        "US": "一部地域で制限"
+      },
+      "legality_notes_en": {
+        "JP": "Subject to weapons laws, carry without lawful purpose prohibited",
+        "US": "Restricted in some regions"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "pp_sleeping_bag",
+      "weight_g": 1500,
+      "volume_cm3": 3000,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Cold Weather Survival"
+        }
+      ],
+      "scores": {
+        "survivability": 5,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 0,
+        "legality_penalty": 0
+      },
+      "name_ja": "耐寒シュラフ（-10℃対応）",
+      "name_en": "Cold Weather Sleeping Bag (-10°C)",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "体温保持・睡眠確保",
+      "purpose_short_en": "Body heat retention, sleep assurance",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "pp_solar_panel",
+      "weight_g": 1200,
+      "volume_cm3": 1500,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Off-Grid Power"
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 0,
+        "legality_penalty": 0
+      },
+      "name_ja": "ポータブルソーラーパネル（50W）",
+      "name_en": "Portable Solar Panel (50W)",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "電力確保",
+      "purpose_short_en": "Power supply",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "pp_battery_bank",
+      "weight_g": 800,
+      "volume_cm3": 500,
+      "dual_use": false,
+      "hazard_flag": true,
+      "sources": [
+        {
+          "title": "Energy Storage Solutions"
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 1,
+        "legality_penalty": 1
+      },
+      "name_ja": "大容量バッテリーバンク（100000mAh）",
+      "name_en": "High Capacity Battery Bank (100000mAh)",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "電力貯蔵",
+      "purpose_short_en": "Power storage",
+      "legality_notes_ja": {
+        "JP": "航空輸送制限",
+        "US": "航空輸送制限"
+      },
+      "legality_notes_en": {
+        "JP": "Air transport restricted",
+        "US": "Air transport restricted"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "pp_tool_kit",
+      "weight_g": 2000,
+      "volume_cm3": 2000,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Self-Sufficiency Tools"
+        }
+      ],
+      "scores": {
+        "survivability": 4,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 0,
+        "legality_penalty": 0
+      },
+      "name_ja": "総合工具セット",
+      "name_en": "Comprehensive Tool Set",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "修理・建築作業",
+      "purpose_short_en": "Repair and construction work",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "pp_fishing_kit",
+      "weight_g": 400,
+      "volume_cm3": 300,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Survival Fishing & Trapping"
+        }
+      ],
+      "scores": {
+        "survivability": 4,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 1
+      },
+      "name_ja": "釣り具・罠キット",
+      "name_en": "Fishing & Trap Kit",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "食料調達",
+      "purpose_short_en": "Food procurement",
+      "legality_notes_ja": {
+        "JP": "漁業権・狩猟免許遵守"
+      },
+      "legality_notes_en": {
+        "JP": "Fishing/hunting license compliance required"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "pp_seeds",
+      "weight_g": 200,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Survival Gardening"
+        }
+      ],
+      "scores": {
+        "survivability": 5,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "食用作物の種子セット（非遺伝子組換）",
+      "name_en": "Edible Crop Seeds Set (Non-GMO)",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "長期自給自足",
+      "purpose_short_en": "Long-term self-sufficiency",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "pp_cash_precious",
+      "weight_g": 100,
+      "volume_cm3": 50,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Economic Collapse Preparedness"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "現金・貴金属（小額）",
+      "name_en": "Cash & Valuables (Small Amount)",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "通貨代替・物々交換",
+      "purpose_short_en": "Currency alternative, barter",
+      "legality_notes_ja": {
+        "JP": "許可（申告義務遵守）"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed (declaration requirements apply)"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "pp_water_storage",
+      "weight_g": 300,
+      "volume_cm3": 200,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Water Storage Solutions"
+        }
+      ],
+      "scores": {
+        "survivability": 5,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "折りたたみ給水タンク（20L）",
+      "name_en": "Collapsible Water Tank (20L)",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "大量水運搬・貯蔵",
+      "purpose_short_en": "Large volume water transport and storage",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "pp_manual",
+      "weight_g": 300,
+      "volume_cm3": 200,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "US Army Survival Manual"
+        }
+      ],
+      "scores": {
+        "survivability": 4,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "サバイバルマニュアル（防水版）",
+      "name_en": "Survival Manual (Waterproof)",
+      "category_ja": "書類",
+      "category_en": "Documents",
+      "purpose_short_ja": "生存技術・知識",
+      "purpose_short_en": "Survival techniques and knowledge",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "pp_hygiene_kit",
+      "weight_g": 500,
+      "volume_cm3": 400,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Hygiene in Emergency Situations"
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "衛生キット（石鹸・歯ブラシ等）",
+      "name_en": "Hygiene Kit (Soap, Toothbrush etc.)",
+      "category_ja": "医療",
+      "category_en": "Medical",
+      "purpose_short_ja": "衛生管理・感染予防",
+      "purpose_short_en": "Hygiene management, infection prevention",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "pp_compass_map",
+      "weight_g": 150,
+      "volume_cm3": 100,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Land Navigation"
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "コンパス＆地形図",
+      "name_en": "Compass & Topographic Map",
+      "category_ja": "ナビゲーション",
+      "category_en": "Navigation",
+      "purpose_short_ja": "方向確認・経路計画",
+      "purpose_short_en": "Direction finding and route planning",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    }
+  ],
+  "name_ja": "プレッパー型",
+  "name_en": "Prepper/Survivalist"
+}

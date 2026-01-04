@@ -1,0 +1,933 @@
+{
+  "category": "security",
+  "items": [
+    {
+      "id": "ls_pick_set",
+      "weight_g": 150,
+      "volume_cm3": 100,
+      "dual_use": true,
+      "hazard_flag": true,
+      "sources": [
+        {
+          "title": "Locksmithing Professional Standards"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 2,
+        "legality_penalty": 5
+      },
+      "name_ja": "ピックセット（業務用・研究用）",
+      "name_en": "Pick Set (Professional/Research)",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "施錠機構の研究・正当な解錠業務",
+      "purpose_short_en": "Lock mechanism research, legitimate unlocking",
+      "legality_notes_ja": {
+        "JP": "業務用途・研究目的のみ。不正使用は特殊開錠用具所持禁止法違反",
+        "US": "正当な業務・研究目的のみ"
+      },
+      "legality_notes_en": {
+        "JP": "Professional/research use only. Unauthorized use violates lock pick possession laws",
+        "US": "Legitimate professional/research use only"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ls_tension_wrench",
+      "weight_g": 80,
+      "volume_cm3": 50,
+      "dual_use": true,
+      "hazard_flag": true,
+      "sources": [
+        {
+          "title": "Lock Technology Research"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 5
+      },
+      "name_ja": "テンションレンチセット",
+      "name_en": "Tension Wrench Set",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "ロック機構調査・業務用",
+      "purpose_short_en": "Lock mechanism research, professional use",
+      "legality_notes_ja": {
+        "JP": "業務用途・研究目的のみ。不正使用は違法",
+        "US": "正当な業務・研究目的のみ"
+      },
+      "legality_notes_en": {
+        "JP": "Professional/research use only. Unauthorized use is illegal",
+        "US": "Legitimate professional/research use only"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ls_practice_locks",
+      "weight_g": 200,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Locksmith Training Materials"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "練習用透明錠前",
+      "name_en": "Clear Practice Lock",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "教育・研修用",
+      "purpose_short_en": "For education and training",
+      "legality_notes_ja": {
+        "JP": "教育目的推奨"
+      },
+      "legality_notes_en": {
+        "JP": "Educational purposes recommended"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ls_key_decoder",
+      "weight_g": 100,
+      "volume_cm3": 80,
+      "dual_use": true,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Key Duplication Standards"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 2,
+        "legality_penalty": 3
+      },
+      "name_ja": "鍵番号解読ツール",
+      "name_en": "Key Code Decoder",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "キーコード調査・複製業務",
+      "purpose_short_en": "Key code investigation and duplication",
+      "legality_notes_ja": {
+        "JP": "業務用途のみ",
+        "US": "正当な業務のみ"
+      },
+      "legality_notes_en": {
+        "JP": "Professional use only",
+        "US": "Legitimate professional use only"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ls_pinning_kit",
+      "weight_g": 300,
+      "volume_cm3": 200,
+      "dual_use": true,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Master Key Systems"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 2
+      },
+      "name_ja": "ピンニングキット",
+      "name_en": "Pinning Kit",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "錠前のピン交換・マスターキーシステム構築",
+      "purpose_short_en": "Lock pin replacement, master key system",
+      "legality_notes_ja": {
+        "JP": "業務用途のみ"
+      },
+      "legality_notes_en": {
+        "JP": "Professional use only"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ls_key_machine",
+      "weight_g": 2000,
+      "volume_cm3": 3000,
+      "dual_use": true,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Mobile Locksmith Equipment"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 0,
+        "legality_penalty": 3
+      },
+      "name_ja": "携帯型鍵複製機",
+      "name_en": "Portable Key Duplicator",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "現場での鍵複製業務",
+      "purpose_short_en": "On-site key duplication",
+      "legality_notes_ja": {
+        "JP": "業務登録者のみ使用可"
+      },
+      "legality_notes_en": {
+        "JP": "Licensed professionals only"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ls_shim_set",
+      "weight_g": 50,
+      "volume_cm3": 30,
+      "dual_use": true,
+      "hazard_flag": true,
+      "sources": [
+        {
+          "title": "Padlock Security Research"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 4
+      },
+      "name_ja": "シムセット",
+      "name_en": "Shim Set",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "南京錠解析・研究",
+      "purpose_short_en": "Padlock analysis and research",
+      "legality_notes_ja": {
+        "JP": "業務・研究目的のみ、不正使用は違法",
+        "US": "正当な業務・研究目的のみ"
+      },
+      "legality_notes_en": {
+        "JP": "Professional/research use only, unauthorized use is illegal",
+        "US": "Legitimate professional/research use only"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ls_extractor",
+      "weight_g": 80,
+      "volume_cm3": 40,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Lock Repair Standards"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "折れ鍵抜き取りツール",
+      "name_en": "Broken Key Extractor",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "錠前内の破損鍵除去",
+      "purpose_short_en": "Broken key removal from locks",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ls_plug_spinner",
+      "weight_g": 120,
+      "volume_cm3": 80,
+      "dual_use": true,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Cylinder Mechanisms"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 3
+      },
+      "name_ja": "プラグスピナー（別名：ショットドライバー）",
+      "name_en": "Plug Spinner",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "シリンダーを逆回転させる衝撃工具",
+      "purpose_short_en": "Impact tool for reverse cylinder rotation",
+      "legality_notes_ja": {
+        "JP": "業務用途のみ",
+        "US": "正当な業務のみ"
+      },
+      "legality_notes_en": {
+        "JP": "Professional use only",
+        "US": "Legitimate professional use only"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ls_scope",
+      "weight_g": 150,
+      "volume_cm3": 100,
+      "dual_use": true,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Lock Forensics"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 2
+      },
+      "name_ja": "ロックスコープ（内部観察用）",
+      "name_en": "Lock Scope (Internal View)",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "錠前内部機構の調査",
+      "purpose_short_en": "Lock internal mechanism investigation",
+      "legality_notes_ja": {
+        "JP": "研究・業務用途のみ"
+      },
+      "legality_notes_en": {
+        "JP": "Research/professional use only"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ls_impressioning_kit",
+      "weight_g": 200,
+      "volume_cm3": 120,
+      "dual_use": true,
+      "hazard_flag": true,
+      "sources": [
+        {
+          "title": "Key Impressioning Techniques"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 2,
+        "legality_penalty": 4
+      },
+      "name_ja": "インプレッション工具セット",
+      "name_en": "Impression Tool Set",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "鍵の型取り・複製研究",
+      "purpose_short_en": "Key impression and duplication research",
+      "legality_notes_ja": {
+        "JP": "業務・研究目的のみ、不正使用は違法",
+        "US": "正当な業務・研究目的のみ"
+      },
+      "legality_notes_en": {
+        "JP": "Professional/research use only, unauthorized use is illegal",
+        "US": "Legitimate professional/research use only"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ls_bypass_tools",
+      "weight_g": 100,
+      "volume_cm3": 60,
+      "dual_use": true,
+      "hazard_flag": true,
+      "sources": [
+        {
+          "title": "Lock Security Assessment"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 4
+      },
+      "name_ja": "バイパスツールセット",
+      "name_en": "Bypass Tool Set",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "補助錠の脆弱性調査",
+      "purpose_short_en": "Secondary lock vulnerability research",
+      "legality_notes_ja": {
+        "JP": "研究・業務目的のみ、不正使用は違法",
+        "US": "正当な業務・研究目的のみ"
+      },
+      "legality_notes_en": {
+        "JP": "Research/professional use only, unauthorized use is illegal",
+        "US": "Legitimate professional/research use only"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ls_reference_book",
+      "weight_g": 500,
+      "volume_cm3": 1000,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Professional Locksmith Library"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "錠前技術参考書",
+      "name_en": "Locksmithing Reference Book",
+      "category_ja": "書類",
+      "category_en": "Documents",
+      "purpose_short_ja": "各種錠前の構造・解錠技術の学習",
+      "purpose_short_en": "Learning lock structures and techniques",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ls_gloves",
+      "weight_g": 50,
+      "volume_cm3": 80,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Forensic Locksmithing"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "作業用手袋（指紋防止）",
+      "name_en": "Work Gloves (Fingerprint-proof)",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "精密作業・証拠保全",
+      "purpose_short_en": "Precision work, evidence preservation",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ls_magnifier",
+      "weight_g": 80,
+      "volume_cm3": 60,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Precision Lock Analysis"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "拡大鏡・ルーペ",
+      "name_en": "Magnifying Glass / Loupe",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "微細な機構観察",
+      "purpose_short_en": "Fine mechanism observation",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ls_camera",
+      "weight_g": 300,
+      "volume_cm3": 200,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Security Research Documentation"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "マクロ撮影カメラ",
+      "name_en": "Macro Camera",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "研究記録・論文執筆用",
+      "purpose_short_en": "Research notes and paper writing",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ls_measurement_tools",
+      "weight_g": 150,
+      "volume_cm3": 100,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Key Manufacturing Standards"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "精密測定器具",
+      "name_en": "Precision Measuring Instruments",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "鍵・ピンの寸法測定",
+      "purpose_short_en": "Key and pin dimension measurement",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ls_notebook",
+      "weight_g": 200,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Academic Research Standards"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "研究ノート・スケッチブック",
+      "name_en": "Research Notebook / Sketchbook",
+      "category_ja": "書類",
+      "category_en": "Documents",
+      "purpose_short_ja": "実験記録・論文執筆",
+      "purpose_short_en": "Experiment logging, paper writing",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ls_license",
+      "weight_g": 20,
+      "volume_cm3": 10,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Locksmith Licensing Requirements"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "鍵師業務許可証・身分証明書",
+      "name_en": "Locksmith License & ID",
+      "category_ja": "書類",
+      "category_en": "Documents",
+      "purpose_short_ja": "業務資格の証明",
+      "purpose_short_en": "Proof of professional qualification",
+      "legality_notes_ja": {
+        "JP": "業務時必携"
+      },
+      "legality_notes_en": {
+        "JP": "Required equipment for duty"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ls_safe_tools",
+      "weight_g": 800,
+      "volume_cm3": 600,
+      "dual_use": true,
+      "hazard_flag": true,
+      "sources": [
+        {
+          "title": "Safe & Vault Technology"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 1,
+        "legality_penalty": 5
+      },
+      "name_ja": "金庫解錠工具セット",
+      "name_en": "Safe Opening Tool Set",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "金庫の正当な開錠業務",
+      "purpose_short_en": "Legitimate safe opening services",
+      "legality_notes_ja": {
+        "JP": "業務登録者のみ使用可、不正使用は違法",
+        "US": "正当な業務のみ"
+      },
+      "legality_notes_en": {
+        "JP": "Licensed professionals only, unauthorized use is illegal",
+        "US": "Legitimate professional use only"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ls_drill",
+      "weight_g": 1200,
+      "volume_cm3": 800,
+      "dual_use": true,
+      "hazard_flag": true,
+      "sources": [
+        {
+          "title": "ラジオライフ",
+          "url": "https://radiolife.com/security/key/9063699/"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 0,
+        "legality_penalty": 4
+      },
+      "name_ja": "破錠ドリル",
+      "name_en": "Lock Drill",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "シリンダー破壊による解錠（最終手段）",
+      "purpose_short_en": "Lock opening by cylinder destruction (last resort)",
+      "legality_notes_ja": {
+        "JP": "業務登録者のみ使用可、不正使用は違法",
+        "US": "正当な業務のみ"
+      },
+      "legality_notes_en": {
+        "JP": "Licensed professionals only, unauthorized use is illegal",
+        "US": "Legitimate professional use only"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ls_car_pick",
+      "weight_g": 100,
+      "volume_cm3": 60,
+      "dual_use": true,
+      "hazard_flag": true,
+      "sources": [
+        {
+          "title": "ラジオライフ",
+          "url": "https://radiolife.com/security/key/9063699/"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 2,
+        "legality_penalty": 5
+      },
+      "name_ja": "クルマ用ピック（L字型）",
+      "name_en": "Auto Pick (L-shaped)",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "自動車錠の業務用解錠",
+      "purpose_short_en": "Professional automotive lock opening",
+      "legality_notes_ja": {
+        "JP": "業務登録者のみ使用可、不正使用は違法",
+        "US": "正当な業務のみ"
+      },
+      "legality_notes_en": {
+        "JP": "Licensed professionals only, unauthorized use is illegal",
+        "US": "Legitimate professional use only"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ls_electric_pick",
+      "weight_g": 250,
+      "volume_cm3": 150,
+      "dual_use": true,
+      "hazard_flag": true,
+      "sources": [
+        {
+          "title": "ラジオライフ",
+          "url": "https://radiolife.com/security/key/9063699/"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 2,
+        "legality_penalty": 5
+      },
+      "name_ja": "電動ピック",
+      "name_en": "Electric Pick",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "振動によるピンタンブラー解錠",
+      "purpose_short_en": "Pin tumbler unlocking by vibration",
+      "legality_notes_ja": {
+        "JP": "業務・研究目的のみ、不正使用は違法",
+        "US": "正当な業務・研究目的のみ"
+      },
+      "legality_notes_en": {
+        "JP": "Professional/research use only, unauthorized use is illegal",
+        "US": "Legitimate professional/research use only"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ls_pick_gun",
+      "weight_g": 300,
+      "volume_cm3": 200,
+      "dual_use": true,
+      "hazard_flag": true,
+      "sources": [
+        {
+          "title": "ラジオライフ",
+          "url": "https://radiolife.com/security/key/9063699/"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 1,
+        "legality_penalty": 5
+      },
+      "name_ja": "ピックガン",
+      "name_en": "Pick Gun",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "悪い体勢での解錠作業に適する",
+      "purpose_short_en": "Suitable for lock picking in awkward positions",
+      "legality_notes_ja": {
+        "JP": "業務・研究目的のみ、不正使用は違法",
+        "US": "正当な業務・研究目的のみ"
+      },
+      "legality_notes_en": {
+        "JP": "Professional/research use only, unauthorized use is illegal",
+        "US": "Legitimate professional/research use only"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ls_sliding_door_tool",
+      "weight_g": 150,
+      "volume_cm3": 100,
+      "dual_use": true,
+      "hazard_flag": true,
+      "sources": [
+        {
+          "title": "ラジオライフ",
+          "url": "https://radiolife.com/security/key/9063699/"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 2,
+        "legality_penalty": 4
+      },
+      "name_ja": "引き戸錠解錠ツール",
+      "name_en": "Sliding Door Lock Tool",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "回転式アーム・突起部でスライド式引き戸に対応",
+      "purpose_short_en": "Handles sliding doors with rotating arm",
+      "legality_notes_ja": {
+        "JP": "業務登録者のみ使用可、不正使用は違法",
+        "US": "正当な業務のみ"
+      },
+      "legality_notes_en": {
+        "JP": "Licensed professionals only, unauthorized use is illegal",
+        "US": "Legitimate professional use only"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ls_dial_pick",
+      "weight_g": 80,
+      "volume_cm3": 40,
+      "dual_use": true,
+      "hazard_flag": true,
+      "sources": [
+        {
+          "title": "ラジオライフ",
+          "url": "https://radiolife.com/security/key/9063699/"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 4
+      },
+      "name_ja": "数字合わせピック",
+      "name_en": "Combination Lock Pick",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "ダイヤル錠の隙間から深さで正解を探る",
+      "purpose_short_en": "Finding combination by depth through dial gap",
+      "legality_notes_ja": {
+        "JP": "業務・研究目的のみ、不正使用は違法",
+        "US": "正当な業務・研究目的のみ"
+      },
+      "legality_notes_en": {
+        "JP": "Professional/research use only, unauthorized use is illegal",
+        "US": "Legitimate professional/research use only"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "ls_safe_massager",
+      "weight_g": 400,
+      "volume_cm3": 300,
+      "dual_use": true,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "ラジオライフ",
+          "url": "https://radiolife.com/security/key/9063699/"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 1,
+        "legality_penalty": 4
+      },
+      "name_ja": "金庫用電動マッサージ機",
+      "name_en": "Safe Manipulation Tool",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "振動でダイヤル錠の座を回転させる",
+      "purpose_short_en": "Rotating dial seat by vibration",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "THRIVE製推奨",
+      "description_en": "THRIVE製推奨"
+    }
+  ],
+  "name_ja": "錠前師型",
+  "name_en": "Locksmith"
+}

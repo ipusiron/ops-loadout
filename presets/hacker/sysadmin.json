@@ -1,0 +1,502 @@
+{
+  "category": "hacker",
+  "items": [
+    {
+      "id": "sa_console_cable",
+      "weight_g": 150,
+      "volume_cm3": 100,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Server Management Guide"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "シリアルコンソールケーブルセット",
+      "name_en": "Serial Console Cable Set",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "サーバー直接接続",
+      "purpose_short_en": "Direct server connection",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sa_kvm_switch",
+      "weight_g": 300,
+      "volume_cm3": 200,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Data Center Operations"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "ポータブルKVMスイッチ",
+      "name_en": "Portable KVM Switch",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "複数サーバー管理",
+      "purpose_short_en": "Multiple server management",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sa_usb_boot",
+      "weight_g": 100,
+      "volume_cm3": 50,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "System Recovery Procedures"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "各種ブート用USBメディア",
+      "name_en": "Bootable USB Media Set",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "緊急起動・リカバリー",
+      "purpose_short_en": "Emergency boot and recovery",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sa_backup_drive",
+      "weight_g": 200,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Backup Best Practices"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "ポータブルバックアップドライブ（2TB）",
+      "name_en": "Portable Backup Drive (2TB)",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "緊急バックアップ",
+      "purpose_short_en": "Emergency backup",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sa_thermal_paste",
+      "weight_g": 50,
+      "volume_cm3": 30,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Hardware Maintenance"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "サーマルグリス",
+      "name_en": "Thermal Paste",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "CPU冷却メンテナンス",
+      "purpose_short_en": "CPU cooling maintenance",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sa_screwdriver",
+      "weight_g": 200,
+      "volume_cm3": 120,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Server Hardware Guide"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "精密ドライバーセット",
+      "name_en": "Precision Screwdriver Set",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "サーバー開閉作業",
+      "purpose_short_en": "Server opening/closing operations",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sa_flashlight",
+      "weight_g": 100,
+      "volume_cm3": 80,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Data Center Safety"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 1,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "LEDヘッドライト",
+      "name_en": "LED Headlamp",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "サーバールーム作業",
+      "purpose_short_en": "Server room operations",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sa_cable_ties",
+      "weight_g": 100,
+      "volume_cm3": 80,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Cable Management"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "ケーブルタイ・マジックテープ",
+      "name_en": "Cable Ties & Velcro",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "配線整理",
+      "purpose_short_en": "Cable management",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sa_label_maker",
+      "weight_g": 200,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "IT Asset Management"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "ラベルプリンター",
+      "name_en": "Label Printer",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "機器・ケーブル識別",
+      "purpose_short_en": "Equipment and cable identification",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sa_cleaning_kit",
+      "weight_g": 150,
+      "volume_cm3": 100,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Equipment Maintenance"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "PC清掃キット",
+      "name_en": "PC Cleaning Kit",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "機器メンテナンス",
+      "purpose_short_en": "Equipment maintenance",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sa_multimeter",
+      "weight_g": 250,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Electrical Troubleshooting"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "デジタルマルチメーター",
+      "name_en": "Digital Multimeter",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "電源・配線診断",
+      "purpose_short_en": "Power and wiring diagnosis",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sa_notebook",
+      "weight_g": 150,
+      "volume_cm3": 100,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "IT Operations Documentation"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "運用記録ノート",
+      "name_en": "Operations Log Notebook",
+      "category_ja": "書類",
+      "category_en": "Documents",
+      "purpose_short_ja": "障害対応記録",
+      "purpose_short_en": "Incident response logging",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sa_adapter_kit",
+      "weight_g": 200,
+      "volume_cm3": 120,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Legacy System Support"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "各種変換アダプターキット",
+      "name_en": "Converter Adapter Kit",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "レガシー機器対応",
+      "purpose_short_en": "Legacy device support",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sa_portable_monitor",
+      "weight_g": 700,
+      "volume_cm3": 500,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Field Service Tools"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "携帯モニター（USB接続）",
+      "name_en": "Portable Monitor (USB)",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "現場での表示確認",
+      "purpose_short_en": "On-site display verification",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sa_emergency_docs",
+      "weight_g": 100,
+      "volume_cm3": 80,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Disaster Recovery Planning"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "緊急対応手順書",
+      "name_en": "Emergency Response Manual",
+      "category_ja": "書類",
+      "category_en": "Documents",
+      "purpose_short_ja": "災害復旧プラン",
+      "purpose_short_en": "Disaster recovery plan",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    }
+  ],
+  "name_ja": "システム管理者型",
+  "name_en": "System Administrator"
+}

@@ -1,0 +1,504 @@
+{
+  "category": "hacker",
+  "items": [
+    {
+      "id": "dr_interface_adapter",
+      "weight_g": 300,
+      "volume_cm3": 200,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Data Recovery Equipment"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "各種インターフェイスアダプター",
+      "name_en": "Interface Adapter Set",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "IDE/SATA/NVMe対応",
+      "purpose_short_en": "IDE/SATA/NVMe compatible",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "dr_cloning_dock",
+      "weight_g": 500,
+      "volume_cm3": 350,
+      "dual_use": true,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Disk Imaging Procedures"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 3,
+        "concealability": 1,
+        "legality_penalty": 1
+      },
+      "name_ja": "ディスククローニングドック",
+      "name_en": "Disk Cloning Dock",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "ディスク複製",
+      "purpose_short_en": "Disk cloning",
+      "legality_notes_ja": {
+        "JP": "業務用途推奨",
+        "US": "適切な認可必須"
+      },
+      "legality_notes_en": {
+        "JP": "Professional use recommended",
+        "US": "Proper authorization required"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "dr_diagnostic_tools",
+      "weight_g": 200,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "HDD Diagnostics"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "ディスク診断ツールセット",
+      "name_en": "Disk Diagnostic Tool Set",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "故障診断",
+      "purpose_short_en": "Fault diagnosis",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "dr_clean_room_tools",
+      "weight_g": 400,
+      "volume_cm3": 300,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Hard Drive Repair"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "クリーンルーム用工具セット",
+      "name_en": "Clean Room Tool Set",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "HDD物理修復",
+      "purpose_short_en": "HDD physical repair",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "dr_spare_parts",
+      "weight_g": 200,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "HDD Component Replacement"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "交換用部品セット（ヘッド等）",
+      "name_en": "Replacement Parts Set (Heads etc.)",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "故障部品交換",
+      "purpose_short_en": "Faulty component replacement",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "dr_firmware_tools",
+      "weight_g": 150,
+      "volume_cm3": 100,
+      "dual_use": true,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Firmware Recovery"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 1
+      },
+      "name_ja": "ファームウェア修復ツール",
+      "name_en": "Firmware Recovery Tool",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "ファームウェア障害対応",
+      "purpose_short_en": "Firmware failure response",
+      "legality_notes_ja": {
+        "JP": "業務用途のみ"
+      },
+      "legality_notes_en": {
+        "JP": "Professional use only"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "dr_anti_static",
+      "weight_g": 100,
+      "volume_cm3": 80,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "ESD Protection"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "静電気対策用品セット",
+      "name_en": "Anti-static Equipment Set",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "静電破壊防止",
+      "purpose_short_en": "ESD protection",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "dr_magnifier",
+      "weight_g": 100,
+      "volume_cm3": 80,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "PCB Inspection"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "拡大鏡",
+      "name_en": "Magnifying Glass",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "基板検査",
+      "purpose_short_en": "PCB inspection",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "dr_recovery_software",
+      "weight_g": 30,
+      "volume_cm3": 10,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Logical Data Recovery"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "データ復旧ソフトウェアUSB",
+      "name_en": "Data Recovery Software USB",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "論理障害復旧",
+      "purpose_short_en": "Logical failure recovery",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "dr_hex_editor",
+      "weight_g": 50,
+      "volume_cm3": 30,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "File System Repair"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "バイナリ解析ツール",
+      "name_en": "Binary Analysis Tool",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "ファイルシステム修復",
+      "purpose_short_en": "File system repair",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "dr_cleanroom_wipes",
+      "weight_g": 50,
+      "volume_cm3": 40,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Clean Room Procedures"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "クリーンルーム用ワイパー",
+      "name_en": "Clean Room Wiper",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "プラッター清掃",
+      "purpose_short_en": "Platter cleaning",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "dr_laptop",
+      "weight_g": 2000,
+      "volume_cm3": 3000,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Recovery Workstation"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "解析用高性能ノートPC",
+      "name_en": "High-performance Analysis Laptop",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "データ復旧解析",
+      "purpose_short_en": "Data recovery analysis",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "dr_case_docs",
+      "weight_g": 100,
+      "volume_cm3": 50,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Recovery Documentation"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "復旧作業記録フォーム",
+      "name_en": "Recovery Work Log Form",
+      "category_ja": "書類",
+      "category_en": "Documents",
+      "purpose_short_ja": "作業履歴管理",
+      "purpose_short_en": "Work history management",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "dr_storage",
+      "weight_g": 300,
+      "volume_cm3": 200,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Recovered Data Storage"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "大容量外付けストレージ（4TB）",
+      "name_en": "Large External Storage (4TB)",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "復旧データ保存",
+      "purpose_short_en": "Recovery data storage",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "dr_microscope",
+      "weight_g": 400,
+      "volume_cm3": 300,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Component Level Repair"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "デジタル顕微鏡",
+      "name_en": "Digital Microscope",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "基板・チップ詳細検査",
+      "purpose_short_en": "PCB and chip detailed inspection",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    }
+  ],
+  "name_ja": "データ復旧技術者型",
+  "name_en": "Data Recovery Technician"
+}

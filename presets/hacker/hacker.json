@@ -1,0 +1,506 @@
+{
+  "category": "hacker",
+  "items": [
+    {
+      "id": "h_laptop",
+      "weight_g": 1200,
+      "volume_cm3": 2000,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "デジタルノマド装備ガイド"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 3,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "ノートPC（軽量・高性能）",
+      "name_en": "Laptop (Lightweight, High Performance)",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "開発・通信・データアクセス",
+      "purpose_short_en": "Development, communication, data access",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "h_powerbank_large",
+      "weight_g": 500,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": true,
+      "sources": [
+        {
+          "title": "航空機リチウム電池ガイドライン"
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 2,
+        "legality_penalty": 1
+      },
+      "name_ja": "モバイルバッテリー（大容量30000mAh）",
+      "name_en": "Mobile Battery (30000mAh)",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "長時間稼働の電源確保",
+      "purpose_short_en": "Power supply for extended operation",
+      "legality_notes_ja": {
+        "JP": "航空輸送制限あり（容量確認必須）"
+      },
+      "legality_notes_en": {
+        "JP": "Air transport restricted (check capacity limits)"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "h_usb_cables",
+      "weight_g": 100,
+      "volume_cm3": 50,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "デジタル装備ベストプラクティス"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "USB充電ケーブルセット（USB-C/Lightning/Micro）",
+      "name_en": "USB Charging Cable Set (USB-C/Lightning/Micro)",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "各種デバイス充電",
+      "purpose_short_en": "Various device charging",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "h_portable_ssd",
+      "weight_g": 50,
+      "volume_cm3": 30,
+      "dual_use": true,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "データセキュリティガイド"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 3,
+        "concealability": 3,
+        "legality_penalty": 1
+      },
+      "name_ja": "ポータブルSSD（暗号化対応・1TB）",
+      "name_en": "Portable SSD (Encrypted, 1TB)",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "重要データのバックアップと持ち運び",
+      "purpose_short_en": "Important data backup and portability",
+      "legality_notes_ja": {
+        "JP": "暗号化データの国境越え時は注意",
+        "US": "暗号化製品の輸出規制に注意"
+      },
+      "legality_notes_en": {
+        "JP": "Caution when crossing borders with encrypted data",
+        "US": "Subject to encryption export controls"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "h_vpn_router",
+      "weight_g": 150,
+      "volume_cm3": 80,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "セキュア通信ガイド"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 3,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "ポケットWi-Fi / VPNルーター",
+      "name_en": "Pocket Wi-Fi / VPN Router",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "セキュアなインターネット接続",
+      "purpose_short_en": "Secure internet connection",
+      "legality_notes_ja": {
+        "JP": "許可",
+        "US": "VPN使用制限国あり"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed",
+        "US": "VPN restrictions in some countries"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "h_usb_adapter",
+      "weight_g": 80,
+      "volume_cm3": 40,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "デジタルノマド必携品"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "多機能USBアダプター（HDMI/LAN/USB-A）",
+      "name_en": "Multi-function USB Adapter (HDMI/LAN/USB-A)",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "外部ディスプレイ接続・有線LAN接続",
+      "purpose_short_en": "External display and wired LAN connection",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "h_security_key",
+      "weight_g": 10,
+      "volume_cm3": 5,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "アカウントセキュリティベストプラクティス"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "セキュリティキー（YubiKey等）",
+      "name_en": "Security Key (YubiKey etc.)",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "2要素認証・アカウント保護",
+      "purpose_short_en": "Two-factor authentication, account protection",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "h_backup_sim",
+      "weight_g": 5,
+      "volume_cm3": 2,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "グローバル通信ガイド"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 3,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "予備SIM / eSIM（複数キャリア）",
+      "name_en": "Spare SIM / eSIM (Multi-carrier)",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "通信手段のバックアップ",
+      "purpose_short_en": "Backup communication method",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "h_headset",
+      "weight_g": 250,
+      "volume_cm3": 300,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "リモートワーク装備"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "ノイズキャンセリングヘッドセット",
+      "name_en": "Noise Canceling Headset",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "オンライン会議・集中作業",
+      "purpose_short_en": "Online meetings, focused work",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "h_lan_cable",
+      "weight_g": 80,
+      "volume_cm3": 100,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "ネットワーク機器ガイド"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "LANケーブル（3m・カテゴリ6）",
+      "name_en": "LAN Cable (3m, Cat6)",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "有線接続（Wi-Fi障害時）",
+      "purpose_short_en": "Wired connection (during Wi-Fi outage)",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "h_multi_charger",
+      "weight_g": 150,
+      "volume_cm3": 80,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "電源管理ガイド"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "マルチポート充電器（USB-C PD対応）",
+      "name_en": "Multi-port Charger (USB-C PD)",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "複数デバイス同時充電",
+      "purpose_short_en": "Simultaneous multi-device charging",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "h_repair_kit",
+      "weight_g": 100,
+      "volume_cm3": 50,
+      "dual_use": true,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "DIY修理ガイド"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 1
+      },
+      "name_ja": "電子機器修理キット（精密ドライバーセット）",
+      "name_en": "Electronics Repair Kit (Precision Screwdrivers)",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "デバイスの簡易修理・分解",
+      "purpose_short_en": "Simple device repair and disassembly",
+      "legality_notes_ja": {
+        "JP": "航空機内持ち込み制限の可能性"
+      },
+      "legality_notes_en": {
+        "JP": "May be restricted on aircraft"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "h_backup_hdd",
+      "weight_g": 200,
+      "volume_cm3": 120,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "データバックアップガイド"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "外付けHDD（耐衝撃・2TB）",
+      "name_en": "External HDD (Shock-resistant, 2TB)",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "大容量データバックアップ",
+      "purpose_short_en": "Large capacity data backup",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "h_screen_cleaner",
+      "weight_g": 30,
+      "volume_cm3": 20,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "デジタル機器メンテナンス"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "液晶クリーナー・マイクロファイバークロス",
+      "name_en": "LCD Cleaner & Microfiber Cloth",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "画面・機器のメンテナンス",
+      "purpose_short_en": "Screen and equipment maintenance",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "h_cable_organizer",
+      "weight_g": 50,
+      "volume_cm3": 30,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "パッキング効率化ガイド"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "ケーブルオーガナイザー",
+      "name_en": "Cable Organizer",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "配線整理・絡まり防止",
+      "purpose_short_en": "Cable organization, tangle prevention",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    }
+  ],
+  "name_ja": "ハッカー型",
+  "name_en": "Hacker/IT"
+}

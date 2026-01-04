@@ -1,0 +1,171 @@
+{
+  "version": "1.0",
+  "categories": {
+    "evasion": {
+      "ja": "脱出・回避",
+      "en": "Evasion"
+    },
+    "edc": {
+      "ja": "日常携帯",
+      "en": "EDC"
+    },
+    "rescue": {
+      "ja": "救助",
+      "en": "Rescue"
+    },
+    "security": {
+      "ja": "セキュリティ",
+      "en": "Security"
+    },
+    "disaster": {
+      "ja": "災害対応",
+      "en": "Disaster"
+    },
+    "hacker": {
+      "ja": "IT・ハッカー",
+      "en": "IT/Hacker"
+    }
+  },
+  "presets": {
+    "embassy": {
+      "category": "evasion",
+      "name_ja": "大使館脱出型",
+      "name_en": "Embassy Evacuation",
+      "item_count": 20,
+      "file": "evasion/embassy.json"
+    },
+    "sere": {
+      "category": "evasion",
+      "name_ja": "SERE航空兵型",
+      "name_en": "SERE Aircrew",
+      "item_count": 10,
+      "file": "evasion/sere.json"
+    },
+    "urban": {
+      "category": "edc",
+      "name_ja": "都市潜入型",
+      "name_en": "Urban Evasion",
+      "item_count": 10,
+      "file": "edc/urban.json"
+    },
+    "firefighter": {
+      "category": "rescue",
+      "name_ja": "消防隊員型",
+      "name_en": "Firefighter",
+      "item_count": 10,
+      "file": "rescue/firefighter.json"
+    },
+    "sar": {
+      "category": "rescue",
+      "name_ja": "山岳救助隊型",
+      "name_en": "Search and Rescue",
+      "item_count": 10,
+      "file": "rescue/sar.json"
+    },
+    "security_guard": {
+      "category": "security",
+      "name_ja": "警備員型",
+      "name_en": "Security Guard",
+      "item_count": 10,
+      "file": "security/security_guard.json"
+    },
+    "disaster": {
+      "category": "disaster",
+      "name_ja": "災害対応型",
+      "name_en": "Disaster Preparedness",
+      "item_count": 20,
+      "file": "disaster/disaster.json"
+    },
+    "hacker": {
+      "category": "hacker",
+      "name_ja": "ハッカー型",
+      "name_en": "Hacker/IT",
+      "item_count": 15,
+      "file": "hacker/hacker.json"
+    },
+    "pentest": {
+      "category": "hacker",
+      "name_ja": "ペネトレーションテスター型",
+      "name_en": "Penetration Tester",
+      "item_count": 15,
+      "file": "hacker/pentest.json"
+    },
+    "locksmith": {
+      "category": "security",
+      "name_ja": "錠前師型",
+      "name_en": "Locksmith",
+      "item_count": 27,
+      "file": "security/locksmith.json"
+    },
+    "neteng": {
+      "category": "hacker",
+      "name_ja": "ネットワークエンジニア型",
+      "name_en": "Network Engineer",
+      "item_count": 15,
+      "file": "hacker/neteng.json"
+    },
+    "forensic": {
+      "category": "hacker",
+      "name_ja": "フォレンジック調査員型",
+      "name_en": "Forensic Investigator",
+      "item_count": 15,
+      "file": "hacker/forensic.json"
+    },
+    "hwdev": {
+      "category": "hacker",
+      "name_ja": "ハードウェア開発者型",
+      "name_en": "Hardware Developer",
+      "item_count": 15,
+      "file": "hacker/hwdev.json"
+    },
+    "sysadmin": {
+      "category": "hacker",
+      "name_ja": "システム管理者型",
+      "name_en": "System Administrator",
+      "item_count": 15,
+      "file": "hacker/sysadmin.json"
+    },
+    "datarecovery": {
+      "category": "hacker",
+      "name_ja": "データ復旧技術者型",
+      "name_en": "Data Recovery Technician",
+      "item_count": 15,
+      "file": "hacker/datarecovery.json"
+    },
+    "rftech": {
+      "category": "hacker",
+      "name_ja": "RF技術者型",
+      "name_en": "RF Technician",
+      "item_count": 15,
+      "file": "hacker/rftech.json"
+    },
+    "prepper": {
+      "category": "disaster",
+      "name_ja": "プレッパー型",
+      "name_en": "Prepper/Survivalist",
+      "item_count": 20,
+      "file": "disaster/prepper.json"
+    },
+    "bushcraft_minimal": {
+      "category": "disaster",
+      "name_ja": "ブッシュクラフト型（ミニマル）",
+      "name_en": "Bushcraft Minimal",
+      "item_count": 5,
+      "file": "disaster/bushcraft_minimal.json"
+    },
+    "bushcraft_standard": {
+      "category": "disaster",
+      "name_ja": "ブッシュクラフト型（スタンダード）",
+      "name_en": "Bushcraft Standard",
+      "item_count": 15,
+      "file": "disaster/bushcraft_standard.json"
+    },
+    "bushcraft_extended": {
+      "category": "disaster",
+      "name_ja": "ブッシュクラフト型（拡張）",
+      "name_en": "Bushcraft Extended",
+      "item_count": 27,
+      "file": "disaster/bushcraft_extended.json"
+    }
+  }
+}

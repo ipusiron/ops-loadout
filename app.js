@@ -26,27 +26,15 @@
 
 (() => {
   // ============================================================
-  // PRESETS定義 (18種類のビルトインプリセット)
+  // PRESETS定義 (プリセットの動的読み込み)
   // ============================================================
-  // 各プリセットは以下の構造を持つ:
-  // - name: プリセット名
-  // - category: カテゴリ (evasion, edc, rescue, security, disaster, hacker)
-  // - items: アイテム配列
-  //   - id: 一意識別子
-  //   - name: アイテム名
-  //   - category: アイテムカテゴリ
-  //   - weight_g: 重量（グラム）
-  //   - volume_cm3: 体積（立方センチメートル）
-  //   - purpose_short: 用途説明
-  //   - dual_use: 軍民両用フラグ
-  //   - hazard_flag: 危険物フラグ
-  //   - legality_notes: 法的注意事項（国別）
-  //   - sources: 出典情報
-  //   - scores: 各種スコア
-  let PRESETS = {};
-
-  // PRESETSは presets.json から動的に読み込まれます
-  // fetch()でロード後、initApp()を呼び出してアプリケーションを初期化
+  // プリセットは presets/index.json のメタデータと
+  // 個別の presets/{category}/{key}.json ファイルから読み込まれます
+  //
+  // PRESETS_META: メタデータ（名前、カテゴリ、ファイルパス）- 初期ロード
+  // PRESETS: 実際のプリセットデータ（アイテム含む）- 遅延ロード
+  let PRESETS_META = {};  // index.json から読み込むメタデータ
+  let PRESETS = {};       // 遅延ロードされた完全なプリセットデータのキャッシュ
 
   // ============================================================
   // アプリケーションステート (In-Memory State Management)
@@ -58,7 +46,8 @@
   let state = {
     checklistName: '',
     items: [],
-    selectedItemId: null
+    selectedItemId: null,
+    isDirty: false  // 未保存変更フラグ
   };
 
   // ============================================================
@@ -71,6 +60,9 @@
   const currentChecklistName = document.getElementById('currentChecklistName');
   const totalWeightEl = document.getElementById('totalWeight');
   const totalVolumeEl = document.getElementById('totalVolume');
+  const targetWeightInput = document.getElementById('targetWeight');
+  const weightProgressFill = document.getElementById('weightProgressFill');
+  const weightProgressPercent = document.getElementById('weightProgressPercent');
   const addItemBtn = document.getElementById('addItemBtn');
   const modalBackdrop = document.getElementById('modalBackdrop');
   const modalTitle = document.getElementById('modalTitle');
@@ -163,6 +155,17 @@
   }
 
   /**
+   * 重量クラスを判定
+   * @param {number} weight - 重量(g)
+   * @returns {string} 'light' | 'normal' | 'heavy'
+   */
+  function getWeightClass(weight) {
+    if (weight <= 50) return 'light';
+    if (weight >= 200) return 'heavy';
+    return 'normal';
+  }
+
+  /**
    * Get localized field value from an item or preset
    * @param {Object} obj - Item or preset object
    * @param {string} field - Field name (e.g., 'name', 'category', 'purpose_short')
@@ -223,6 +226,8 @@
     }
 
     saveAllChecklists(checklists);
+    state.isDirty = false;
+    updateDirtyIndicator();
     renderPresetOptions(currentCategory);
   }
 
@@ -233,6 +238,7 @@
       currentChecklistId = checklist.id;
       state.checklistName = checklist.name;
       state.items = JSON.parse(JSON.stringify(checklist.items)).map(normalizeItem);
+      state.isDirty = false;
       renderAll();
     }
   }
@@ -251,15 +257,51 @@
     currentChecklistId = null;
     state.checklistName = t('msg.newChecklist');
     state.items = [];
+    state.isDirty = false;
     renderAll();
   }
 
-  function loadFromPreset(key) {
-    const p = PRESETS[key];
-    if (!p) return;
-    state.checklistName = getL(p, 'name');
-    state.items = JSON.parse(JSON.stringify(p.items)).map(normalizeItem);
+  /**
+   * プリセットを読み込む（遅延ロード対応）
+   * @param {string} key - プリセットキー
+   */
+  async function loadFromPreset(key) {
+    // Check cache first
+    if (PRESETS[key]) {
+      applyPreset(key, PRESETS[key]);
+      return;
+    }
+
+    // Get metadata
+    const meta = PRESETS_META[key];
+    if (!meta) {
+      console.error('Preset not found:', key);
+      return;
+    }
+
+    // Fetch individual preset file
+    try {
+      const response = await fetch(`presets/${meta.file}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const presetData = await response.json();
+      PRESETS[key] = presetData;  // Cache it
+      applyPreset(key, presetData);
+    } catch (error) {
+      console.error('Failed to load preset:', key, error);
+      alert(t('msg.presetLoadFailed') || 'Failed to load preset');
+    }
+  }
+
+  /**
+   * プリセットデータを適用
+   */
+  function applyPreset(key, presetData) {
+    state.checklistName = getL(presetData, 'name');
+    state.items = JSON.parse(JSON.stringify(presetData.items)).map(normalizeItem);
     currentChecklistId = null; // Treat as new checklist
+    state.isDirty = false;
     renderAll();
   }
 
@@ -283,8 +325,29 @@
   }
 
   // Render functions
+  /**
+   * 未保存変更をマーク
+   */
+  function markDirty() {
+    if (!state.isDirty) {
+      state.isDirty = true;
+      updateDirtyIndicator();
+    }
+  }
+
+  /**
+   * 未保存インジケータを更新
+   */
+  function updateDirtyIndicator() {
+    const indicator = document.getElementById('dirtyIndicator');
+    if (indicator) {
+      indicator.classList.toggle('hidden', !state.isDirty);
+    }
+  }
+
   function renderAll() {
     currentChecklistName.textContent = state.checklistName;
+    updateDirtyIndicator();
     renderList();
     renderDetail(state.selectedItemId);
     renderTotals();
@@ -364,7 +427,7 @@
         </div>
         <div class="col-name">${escapeHtml(getL(it, 'name'))}</div>
         <div class="col-category">${escapeHtml(getL(it, 'category'))}</div>
-        <div class="col-weight">${it.weight_g ?? 0}</div>
+        <div class="col-weight"><span class="weight-badge weight-${getWeightClass(it.weight_g || 0)}">${it.weight_g ?? 0}</span></div>
         <div class="col-qty">
           <input type="number" min="0" max="999" value="${it.quantity ?? 1}" data-id="${it.id}"
             class="qty-input w-full px-1 py-0.5 text-xs border rounded focus:ring-1 focus:ring-blue-500" />
@@ -396,7 +459,7 @@
       cb.addEventListener('change', e=>{
         const id = e.target.dataset.id;
         const it = state.items.find(x=>x.id===id);
-        if (it) { it.checked = e.target.checked; renderTotals(); }
+        if (it) { it.checked = e.target.checked; markDirty(); renderTotals(); }
       });
     });
     itemTable.querySelectorAll('.qty-input').forEach(input=>{
@@ -407,6 +470,7 @@
           const newQty = Math.max(0, parseInt(e.target.value) || 1);
           it.quantity = newQty;
           e.target.value = newQty;
+          markDirty();
           renderTotals();
         }
       });
@@ -429,6 +493,7 @@
         const id = e.currentTarget.dataset.id;
         if (confirm(t('msg.confirmDelete'))) {
           state.items = state.items.filter(x=>x.id!==id);
+          markDirty();
           renderAll();
         }
       });
@@ -451,38 +516,84 @@
     const legalityObj = getL(it, 'legality_notes') || it.legality_notes || {};
     const legalityHtml = JSON.stringify(legalityObj, null, 2);
     const repackLabels = {never: t('freq.never'), daily: t('freq.daily'), weekly: t('freq.weekly'), monthly: t('freq.monthly')};
+
+    // Source links HTML
+    const sourcesHtml = (it.sources||[]).map(s => {
+      const safeUrl = sanitizeUrl(s.url);
+      if (safeUrl) {
+        return `<a href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">${escapeHtml(s.title)}</a>`;
+      }
+      return escapeHtml(s.title);
+    }).join('<br/>');
+
     itemDetail.innerHTML = `
-      <div class="flex justify-between items-start mb-2">
+      <div class="flex justify-between items-start mb-3">
         <h4 class="font-semibold text-base">${escapeHtml(getL(it, 'name'))}</h4>
-        <button id="closeDetail" class="text-gray-400 hover:text-gray-600 text-xl leading-none">×</button>
+        <button id="closeDetail" class="text-gray-400 hover:text-gray-600 text-xl leading-none" aria-label="Close">×</button>
       </div>
-      <p class="text-sm text-gray-600 mb-3">${escapeHtml(getL(it, 'purpose_short'))}</p>
-      <dl class="text-sm text-gray-700 space-y-2">
-        <div><dt class="font-medium text-xs text-gray-500">${t('detail.category')}</dt><dd class="mt-0.5">${escapeHtml(getL(it, 'category'))}</dd></div>
-        <div><dt class="font-medium text-xs text-gray-500">${t('detail.weight')}</dt><dd class="mt-0.5">${it.weight_g ?? 0} g</dd></div>
-        <div><dt class="font-medium text-xs text-gray-500">${t('detail.volume')}</dt><dd class="mt-0.5">${it.volume_cm3 ?? 0} cm³</dd></div>
-        <div><dt class="font-medium text-xs text-gray-500">${t('detail.quantity')}</dt><dd class="mt-0.5">${it.quantity ?? 1}</dd></div>
-        <div><dt class="font-medium text-xs text-gray-500">${t('detail.recommendedQty')}</dt><dd class="mt-0.5">${it.recommended_quantity ?? 1}</dd></div>
-        <div><dt class="font-medium text-xs text-gray-500">${t('detail.repackFreq')}</dt><dd class="mt-0.5">${repackLabels[it.repack_frequency] || it.repack_frequency || t('freq.never')}</dd></div>
-        <div><dt class="font-medium text-xs text-gray-500">${t('detail.categoryTags')}</dt><dd class="mt-0.5">${(it.category_tags||[]).join(', ') || t('detail.none')}</dd></div>
-        <div>
-          <dt class="font-medium text-xs text-gray-500">${t('detail.concealDualHazard')}</dt>
-          <dd class="mt-0.5">
-            ${t('detail.concealability')}: ${it.concealability ?? t('detail.unknown')} <br/>
-            ${t('detail.dualUse')}: ${it.dual_use ? t('yes') : t('no')} <br/>
-            ${t('detail.hazard')}: ${it.hazard_flag ? t('yes') : t('no')}
-          </dd>
+      <p class="text-sm text-gray-600 mb-4">${escapeHtml(getL(it, 'purpose_short'))}</p>
+
+      <!-- Basic Info Section -->
+      <div class="detail-section" data-section="basic">
+        <div class="detail-section-header">
+          <span class="detail-section-title">${t('detail.section.basic')}</span>
+          <span class="detail-section-toggle">▼</span>
         </div>
-        <div><dt class="font-medium text-xs text-gray-500">${t('detail.legality')}</dt><dd class="mt-0.5"><pre class="text-xs bg-gray-50 p-2 rounded overflow-x-auto">${escapeHtml(legalityHtml)}</pre></dd></div>
-        ${getL(it, 'description') ? `<div><dt class="font-medium text-xs text-gray-500">${t('detail.description')}</dt><dd class="mt-0.5 whitespace-pre-wrap text-sm">${escapeHtml(getL(it, 'description'))}</dd></div>` : ''}
-        <div><dt class="font-medium text-xs text-gray-500">${t('detail.sources')}</dt><dd class="mt-0.5">${(it.sources||[]).map(s => {
-          const safeUrl = sanitizeUrl(s.url);
-          if (safeUrl) {
-            return `<a href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">${escapeHtml(s.title)}</a>`;
-          }
-          return escapeHtml(s.title);
-        }).join('<br/>')}</dd></div>
-      </dl>
+        <div class="detail-section-content">
+          <dl class="text-sm text-gray-700 space-y-1.5">
+            <div class="flex"><dt class="w-24 flex-shrink-0 text-xs text-gray-500">${t('detail.category')}</dt><dd>${escapeHtml(getL(it, 'category'))}</dd></div>
+            <div class="flex"><dt class="w-24 flex-shrink-0 text-xs text-gray-500">${t('detail.weight')}</dt><dd><span class="weight-badge weight-${getWeightClass(it.weight_g || 0)}">${it.weight_g ?? 0} g</span></dd></div>
+            <div class="flex"><dt class="w-24 flex-shrink-0 text-xs text-gray-500">${t('detail.volume')}</dt><dd>${it.volume_cm3 ?? 0} cm³</dd></div>
+          </dl>
+        </div>
+      </div>
+
+      <!-- Packing Info Section -->
+      <div class="detail-section" data-section="packing">
+        <div class="detail-section-header">
+          <span class="detail-section-title">${t('detail.section.packing')}</span>
+          <span class="detail-section-toggle">▼</span>
+        </div>
+        <div class="detail-section-content">
+          <dl class="text-sm text-gray-700 space-y-1.5">
+            <div class="flex"><dt class="w-24 flex-shrink-0 text-xs text-gray-500">${t('detail.quantity')}</dt><dd>${it.quantity ?? 1}</dd></div>
+            <div class="flex"><dt class="w-24 flex-shrink-0 text-xs text-gray-500">${t('detail.recommendedQty')}</dt><dd>${it.recommended_quantity ?? 1}</dd></div>
+            <div class="flex"><dt class="w-24 flex-shrink-0 text-xs text-gray-500">${t('detail.repackFreq')}</dt><dd>${repackLabels[it.repack_frequency] || it.repack_frequency || t('freq.never')}</dd></div>
+            <div class="flex"><dt class="w-24 flex-shrink-0 text-xs text-gray-500">${t('detail.categoryTags')}</dt><dd>${(it.category_tags||[]).join(', ') || t('detail.none')}</dd></div>
+          </dl>
+        </div>
+      </div>
+
+      <!-- Legal & Safety Section -->
+      <div class="detail-section" data-section="legal">
+        <div class="detail-section-header">
+          <span class="detail-section-title">${t('detail.section.legal')}</span>
+          <span class="detail-section-toggle">▼</span>
+        </div>
+        <div class="detail-section-content">
+          <dl class="text-sm text-gray-700 space-y-1.5">
+            <div class="flex"><dt class="w-24 flex-shrink-0 text-xs text-gray-500">${t('detail.concealability')}</dt><dd>${it.concealability ?? t('detail.unknown')}</dd></div>
+            <div class="flex"><dt class="w-24 flex-shrink-0 text-xs text-gray-500">${t('detail.dualUse')}</dt><dd>${it.dual_use ? `<span class="badge badge-warning">${t('yes')}</span>` : t('no')}</dd></div>
+            <div class="flex"><dt class="w-24 flex-shrink-0 text-xs text-gray-500">${t('detail.hazard')}</dt><dd>${it.hazard_flag ? `<span class="badge badge-danger">${t('yes')}</span>` : t('no')}</dd></div>
+            <div><dt class="text-xs text-gray-500 mb-1">${t('detail.legality')}</dt><dd><pre class="text-xs bg-white p-2 rounded border overflow-x-auto">${escapeHtml(legalityHtml)}</pre></dd></div>
+          </dl>
+        </div>
+      </div>
+
+      <!-- Sources & Notes Section -->
+      <div class="detail-section" data-section="sources">
+        <div class="detail-section-header">
+          <span class="detail-section-title">${t('detail.section.sources')}</span>
+          <span class="detail-section-toggle">▼</span>
+        </div>
+        <div class="detail-section-content">
+          <dl class="text-sm text-gray-700 space-y-1.5">
+            ${getL(it, 'description') ? `<div><dt class="text-xs text-gray-500 mb-1">${t('detail.description')}</dt><dd class="whitespace-pre-wrap bg-white p-2 rounded border text-sm">${escapeHtml(getL(it, 'description'))}</dd></div>` : ''}
+            <div><dt class="text-xs text-gray-500 mb-1">${t('detail.sources')}</dt><dd>${sourcesHtml || t('detail.none')}</dd></div>
+          </dl>
+        </div>
+      </div>
+
       <div class="mt-4">
         <button id="detailEdit" class="btn btn-primary btn-sm">${t('button.edit')}</button>
       </div>
@@ -494,6 +605,17 @@
       renderDetail(null);
     });
     document.getElementById('detailEdit').addEventListener('click', ()=> openItemModal('edit', it));
+
+    // Collapsible section toggle
+    itemDetail.querySelectorAll('.detail-section-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const section = header.closest('.detail-section');
+        const content = section.querySelector('.detail-section-content');
+        const toggle = section.querySelector('.detail-section-toggle');
+        content.classList.toggle('collapsed');
+        toggle.classList.toggle('collapsed');
+      });
+    });
   }
 
   function renderTotals() {
@@ -507,6 +629,20 @@
     }, {weight:0, volume:0});
     totalWeightEl.textContent = totals.weight;
     totalVolumeEl.textContent = totals.volume;
+
+    // Update weight progress bar
+    const targetWeight = parseInt(targetWeightInput.value) || 5000;
+    const percentage = Math.min(100, Math.round((totals.weight / targetWeight) * 100));
+    weightProgressFill.style.width = percentage + '%';
+    weightProgressPercent.textContent = percentage + '%';
+
+    // Update color based on percentage
+    weightProgressFill.classList.remove('warning', 'danger');
+    if (percentage >= 100) {
+      weightProgressFill.classList.add('danger');
+    } else if (percentage >= 80) {
+      weightProgressFill.classList.add('warning');
+    }
   }
 
   // Modal management for add/edit
@@ -596,11 +732,47 @@
     } else {
       state.items.push(payload);
     }
+    markDirty();
     closeModal();
     renderAll();
   });
 
   addItemBtn.addEventListener('click', ()=> openItemModal('add'));
+
+  // Bulk check/uncheck buttons
+  const checkAllBtn = document.getElementById('checkAllBtn');
+  const uncheckAllBtn = document.getElementById('uncheckAllBtn');
+
+  checkAllBtn.addEventListener('click', () => {
+    const hasUnchecked = state.items.some(it => !it.checked);
+    if (hasUnchecked) {
+      state.items.forEach(it => it.checked = true);
+      markDirty();
+      renderAll();
+    }
+  });
+
+  uncheckAllBtn.addEventListener('click', () => {
+    const hasChecked = state.items.some(it => it.checked);
+    if (hasChecked) {
+      state.items.forEach(it => it.checked = false);
+      markDirty();
+      renderAll();
+    }
+  });
+
+  // Target weight input - update progress bar on change
+  targetWeightInput.addEventListener('input', () => {
+    renderTotals();
+    // Save target weight to localStorage
+    localStorage.setItem('ops_target_weight', targetWeightInput.value);
+  });
+
+  // Load saved target weight
+  const savedTargetWeight = localStorage.getItem('ops_target_weight');
+  if (savedTargetWeight) {
+    targetWeightInput.value = savedTargetWeight;
+  }
 
   // Export functions
   function exportJSON() {
@@ -967,14 +1139,23 @@
   let currentCategory = 'all';
 
   function renderPresetOptions(category = 'all') {
+    // Build presetsByCategory dynamically from PRESETS_META
     const presetsByCategory = {
-      evasion: ['embassy', 'sere'],
-      edc: ['urban'],
-      rescue: ['firefighter', 'sar'],
-      security: ['security_guard', 'locksmith'],
-      disaster: ['disaster', 'prepper'],
-      hacker: ['hacker', 'pentest', 'neteng', 'forensic', 'hwdev', 'sysadmin', 'datarecovery', 'rftech']
+      evasion: [],
+      edc: [],
+      rescue: [],
+      security: [],
+      disaster: [],
+      hacker: []
     };
+
+    // Group presets by category from metadata
+    Object.keys(PRESETS_META).forEach(key => {
+      const cat = PRESETS_META[key].category;
+      if (presetsByCategory[cat]) {
+        presetsByCategory[cat].push(key);
+      }
+    });
 
     presetSelectEl.innerHTML = '';
 
@@ -1007,13 +1188,14 @@
       };
 
       Object.keys(presetsByCategory).forEach(cat => {
+        if (presetsByCategory[cat].length === 0) return; // Skip empty categories
         const optgroup = document.createElement('optgroup');
         optgroup.label = categoryLabels[cat];
 
         presetsByCategory[cat].forEach(presetKey => {
           const option = document.createElement('option');
           option.value = presetKey;
-          option.textContent = getL(PRESETS[presetKey], 'name');
+          option.textContent = getL(PRESETS_META[presetKey], 'name');
           optgroup.appendChild(option);
         });
 
@@ -1025,7 +1207,7 @@
       presetsToShow.forEach(presetKey => {
         const option = document.createElement('option');
         option.value = presetKey;
-        option.textContent = getL(PRESETS[presetKey], 'name');
+        option.textContent = getL(PRESETS_META[presetKey], 'name');
         presetSelectEl.appendChild(option);
       });
     }
@@ -1066,37 +1248,42 @@
   // ============================================================
   // アプリケーション初期化 (Application Initialization)
   // ============================================================
-  // presets.jsonからPRESETSを読み込み、アプリケーションを初期化
+  // presets/index.jsonからメタデータを読み込み、アプリケーションを初期化
 
   async function loadPresets() {
     try {
-      const response = await fetch('presets.json');
+      const response = await fetch('presets/index.json');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      PRESETS = await response.json();
+      const indexData = await response.json();
+      PRESETS_META = indexData.presets;
       initApp();
     } catch (error) {
-      console.error('Failed to load presets:', error);
+      console.error('Failed to load preset index:', error);
       // Fallback: empty preset for initialization
-      PRESETS = {
+      PRESETS_META = {
         empty: {
-          name: t('msg.newChecklist'),
           category: "edc",
-          items: []
+          name_ja: t('msg.newChecklist'),
+          name_en: "New Checklist",
+          item_count: 0,
+          file: ""
         }
       };
+      PRESETS['empty'] = { name_ja: t('msg.newChecklist'), name_en: "New Checklist", items: [] };
       initApp();
     }
   }
 
-  function initApp() {
-    const defaultPreset = PRESETS.embassy || Object.values(PRESETS)[0];
-    state.checklistName = getL(defaultPreset, 'name');
-    state.items = JSON.parse(JSON.stringify(defaultPreset.items)).map(normalizeItem);
+  async function initApp() {
+    // Render preset options first (using metadata)
     renderPresetOptions('all');
-    presetSelectEl.value = Object.keys(PRESETS).find(k => PRESETS[k] === defaultPreset) || Object.keys(PRESETS)[0];
-    renderAll();
+
+    // Load default preset (embassy or first available)
+    const defaultKey = PRESETS_META['embassy'] ? 'embassy' : Object.keys(PRESETS_META)[0];
+    await loadFromPreset(defaultKey);
+    presetSelectEl.value = defaultKey;
   }
 
   // ============================================================
@@ -1106,6 +1293,36 @@
   document.addEventListener('langchange', () => {
     renderAll();
     renderPresetOptions(currentCategory);
+  });
+
+  // ============================================================
+  // 印刷イベントリスナー (Print Event Listener)
+  // ============================================================
+  // 印刷前にヘッダーとサマリーを更新
+  window.addEventListener('beforeprint', () => {
+    const printTitle = document.getElementById('printTitle');
+    const printDate = document.getElementById('printDate');
+    const printSummary = document.getElementById('printSummary');
+
+    if (printTitle) {
+      printTitle.textContent = `OpsLoadout: ${state.checklistName}`;
+    }
+    if (printDate) {
+      const now = new Date();
+      const dateStr = now.toLocaleDateString(currentLang === 'ja' ? 'ja-JP' : 'en-US', {
+        year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+      printDate.textContent = dateStr;
+    }
+    if (printSummary) {
+      const checkedItems = state.items.filter(it => it.checked);
+      const totalWeight = checkedItems.reduce((acc, it) => acc + (Number(it.weight_g || 0) * (Number(it.quantity) || 1)), 0);
+      const totalVolume = checkedItems.reduce((acc, it) => acc + (Number(it.volume_cm3 || 0) * (Number(it.quantity) || 1)), 0);
+      const summaryText = currentLang === 'ja'
+        ? `合計: ${state.items.length}アイテム | チェック済み: ${checkedItems.length}アイテム | 重量: ${totalWeight}g | 体積: ${totalVolume}cm³`
+        : `Total: ${state.items.length} items | Checked: ${checkedItems.length} items | Weight: ${totalWeight}g | Volume: ${totalVolume}cm³`;
+      printSummary.textContent = summaryText;
+    }
   });
 
   // アプリケーション起動

@@ -1,0 +1,506 @@
+{
+  "category": "hacker",
+  "items": [
+    {
+      "id": "df_write_blocker",
+      "weight_g": 200,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Digital Forensics Best Practices"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "書き込み防止装置（Write Blocker）",
+      "name_en": "Write Blocker",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "証拠ディスクの改変防止",
+      "purpose_short_en": "Evidence disk write protection",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "df_imaging_device",
+      "weight_g": 500,
+      "volume_cm3": 300,
+      "dual_use": true,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Computer Forensic Investigation"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 3,
+        "concealability": 1,
+        "legality_penalty": 2
+      },
+      "name_ja": "ディスクイメージング装置",
+      "name_en": "Disk Imaging Device",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "証拠の完全複製",
+      "purpose_short_en": "Complete evidence duplication",
+      "legality_notes_ja": {
+        "JP": "業務用途・法的手続き遵守",
+        "US": "適切な認可必須"
+      },
+      "legality_notes_en": {
+        "JP": "Professional use, legal procedures required",
+        "US": "Proper authorization required"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "df_hash_calculator",
+      "weight_g": 100,
+      "volume_cm3": 80,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Evidence Integrity Verification"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "ハッシュ値計算ツール",
+      "name_en": "Hash Calculation Tool",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "証拠の完全性検証",
+      "purpose_short_en": "Evidence integrity verification",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "df_evidence_bags",
+      "weight_g": 100,
+      "volume_cm3": 200,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Evidence Collection Standards"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "防湿証拠保全バッグ（10枚）",
+      "name_en": "Moisture-proof Evidence Bags (10 pcs)",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "デジタル証拠の保護",
+      "purpose_short_en": "Digital evidence protection",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "df_tamper_seals",
+      "weight_g": 50,
+      "volume_cm3": 30,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Chain of Custody Protocol"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "改ざん防止シール",
+      "name_en": "Tamper-evident Seals",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "証拠の封印",
+      "purpose_short_en": "Evidence sealing",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "df_adapter_kit",
+      "weight_g": 300,
+      "volume_cm3": 200,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Forensic Hardware Tools"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "各種ストレージアダプターキット",
+      "name_en": "Storage Adapter Kit",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "各種HDD/SSD接続",
+      "purpose_short_en": "Various HDD/SSD connections",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "df_usb_forensic",
+      "weight_g": 150,
+      "volume_cm3": 100,
+      "dual_use": true,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Live Forensic Analysis"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 1
+      },
+      "name_ja": "フォレンジック用USBキット",
+      "name_en": "Forensic USB Kit",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "ライブシステム調査",
+      "purpose_short_en": "Live system investigation",
+      "legality_notes_ja": {
+        "JP": "業務用途のみ",
+        "US": "適切な認可必須"
+      },
+      "legality_notes_en": {
+        "JP": "Professional use only",
+        "US": "Proper authorization required"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "df_camera",
+      "weight_g": 400,
+      "volume_cm3": 300,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Crime Scene Documentation"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "証拠撮影用デジタルカメラ",
+      "name_en": "Evidence Photography Camera",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "現場記録・証拠撮影",
+      "purpose_short_en": "Scene recording, evidence photography",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "df_anti_static",
+      "weight_g": 50,
+      "volume_cm3": 40,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Electronics Safety"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "静電気防止リストストラップ",
+      "name_en": "Anti-static Wrist Strap",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "機器保護",
+      "purpose_short_en": "Equipment protection",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "df_chain_custody",
+      "weight_g": 100,
+      "volume_cm3": 50,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Legal Evidence Standards"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "証拠管理台帳フォーム",
+      "name_en": "Chain of Custody Form",
+      "category_ja": "書類",
+      "category_en": "Documents",
+      "purpose_short_ja": "Chain of Custody記録",
+      "purpose_short_en": "Chain of custody documentation",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "df_gloves",
+      "weight_g": 200,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Forensic Procedures"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "ニトリル手袋（50組）",
+      "name_en": "Nitrile Gloves (50 pairs)",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "証拠汚染防止",
+      "purpose_short_en": "Evidence contamination prevention",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "df_tools",
+      "weight_g": 400,
+      "volume_cm3": 300,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Digital Evidence Extraction"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "フォレンジックツールキット",
+      "name_en": "Forensic Toolkit",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "機器分解・証拠取得",
+      "purpose_short_en": "Equipment disassembly, evidence acquisition",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "df_labels",
+      "weight_g": 30,
+      "volume_cm3": 20,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Evidence Tracking"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "証拠ラベルシール",
+      "name_en": "Evidence Label Stickers",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "証拠品の識別",
+      "purpose_short_en": "Evidence identification",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "df_report_template",
+      "weight_g": 50,
+      "volume_cm3": 30,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Forensic Reporting Standards"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "調査報告書テンプレート",
+      "name_en": "Investigation Report Template",
+      "category_ja": "書類",
+      "category_en": "Documents",
+      "purpose_short_ja": "標準化された報告作成",
+      "purpose_short_en": "Standardized report creation",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "df_laptop",
+      "weight_g": 1800,
+      "volume_cm3": 2500,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Forensic Workstation Setup"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "フォレンジック解析用ノートPC",
+      "name_en": "Forensic Analysis Laptop",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "証拠解析・報告書作成",
+      "purpose_short_en": "Evidence analysis, report creation",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    }
+  ],
+  "name_ja": "フォレンジック調査員型",
+  "name_en": "Forensic Investigator"
+}

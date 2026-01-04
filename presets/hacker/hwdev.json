@@ -1,0 +1,504 @@
+{
+  "category": "hacker",
+  "items": [
+    {
+      "id": "hw_oscilloscope",
+      "weight_g": 600,
+      "volume_cm3": 400,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Embedded Systems Development"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "ポータブルオシロスコープ",
+      "name_en": "Portable Oscilloscope",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "信号波形観測",
+      "purpose_short_en": "Signal waveform observation",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "hw_logic_analyzer",
+      "weight_g": 300,
+      "volume_cm3": 200,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Digital Circuit Debugging"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "ロジックアナライザー",
+      "name_en": "Logic Analyzer",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "デジタル信号解析",
+      "purpose_short_en": "Digital signal analysis",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "hw_soldering_iron",
+      "weight_g": 400,
+      "volume_cm3": 300,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "PCB Assembly Guide"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "温度調整はんだごてセット",
+      "name_en": "Temperature-controlled Soldering Iron Set",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "電子部品実装",
+      "purpose_short_en": "Electronic component mounting",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "hw_multimeter",
+      "weight_g": 250,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Electronics Testing"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "デジタルマルチメーター",
+      "name_en": "Digital Multimeter",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "電圧・電流測定",
+      "purpose_short_en": "Voltage and current measurement",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "hw_programmer",
+      "weight_g": 200,
+      "volume_cm3": 120,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Microcontroller Programming"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "マイコン書き込み器（各種対応）",
+      "name_en": "MCU Programmer (Multi-compatible)",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "ファームウェア書き込み",
+      "purpose_short_en": "Firmware writing",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "hw_debugger",
+      "weight_g": 150,
+      "volume_cm3": 100,
+      "dual_use": true,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Embedded Debugging Tools"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 1
+      },
+      "name_ja": "JTAG/SWDデバッガ",
+      "name_en": "JTAG/SWD Debugger",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "組み込みデバッグ",
+      "purpose_short_en": "Embedded debugging",
+      "legality_notes_ja": {
+        "JP": "許可",
+        "US": "一部製品は輸出規制対象"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed",
+        "US": "Some products subject to export controls"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "hw_breadboard",
+      "weight_g": 150,
+      "volume_cm3": 200,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Circuit Prototyping"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "ブレッドボード＆ジャンパー線",
+      "name_en": "Breadboard & Jumper Wires",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "プロトタイピング",
+      "purpose_short_en": "Prototyping",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "hw_components",
+      "weight_g": 200,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Electronics Components Inventory"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "基本電子部品セット",
+      "name_en": "Basic Electronic Components Set",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "抵抗・コンデンサ・IC等",
+      "purpose_short_en": "Resistors, capacitors, ICs, etc.",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "hw_power_supply",
+      "weight_g": 800,
+      "volume_cm3": 600,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Lab Power Supply Guide"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "可変電源装置",
+      "name_en": "Variable Power Supply",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "電源供給（0-30V）",
+      "purpose_short_en": "Power supply (0-30V)",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "hw_magnifier",
+      "weight_g": 300,
+      "volume_cm3": 250,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "SMD Soldering Techniques"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "拡大鏡スタンド",
+      "name_en": "Magnifying Glass Stand",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "微細作業の視認性向上",
+      "purpose_short_en": "Visibility improvement for fine work",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "hw_tweezers",
+      "weight_g": 80,
+      "volume_cm3": 50,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Electronics Assembly Tools"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "精密ピンセットセット",
+      "name_en": "Precision Tweezers Set",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "小型部品操作",
+      "purpose_short_en": "Small component handling",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "hw_dev_boards",
+      "weight_g": 200,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "IoT Development Platforms"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "各種開発ボード（Arduino/ESP32等）",
+      "name_en": "Development Boards (Arduino/ESP32 etc.)",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "プロトタイプ開発",
+      "purpose_short_en": "Prototype development",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "hw_solder",
+      "weight_g": 100,
+      "volume_cm3": 80,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Soldering Materials"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "はんだ・フラックス",
+      "name_en": "Solder & Flux",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "接合材料",
+      "purpose_short_en": "Bonding material",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "hw_wire_stripper",
+      "weight_g": 150,
+      "volume_cm3": 100,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Wiring Tools"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "ワイヤーストリッパー",
+      "name_en": "Wire Stripper",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "配線被覆剥き",
+      "purpose_short_en": "Wire insulation stripping",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "hw_esd_mat",
+      "weight_g": 300,
+      "volume_cm3": 200,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "ESD Protection"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "静電気対策マット",
+      "name_en": "Anti-static Mat",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "作業環境の静電気防止",
+      "purpose_short_en": "ESD prevention in work environment",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    }
+  ],
+  "name_ja": "ハードウェア開発者型",
+  "name_en": "Hardware Developer"
+}

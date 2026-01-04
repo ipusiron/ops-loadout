@@ -1,0 +1,337 @@
+{
+  "category": "rescue",
+  "items": [
+    {
+      "id": "sar_gps",
+      "weight_g": 200,
+      "volume_cm3": 120,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "山岳救助マニュアル"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 3,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "GPS端末",
+      "name_en": "GPS Device",
+      "category_ja": "ナビゲーション",
+      "category_en": "Navigation",
+      "purpose_short_ja": "位置情報・捜索エリア管理",
+      "purpose_short_en": "Location info, search area management",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sar_radio",
+      "weight_g": 300,
+      "volume_cm3": 180,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "救助活動基準"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 3,
+        "exfiltration_support": 0,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "業務用無線機（防水）",
+      "name_en": "Professional Radio (Waterproof)",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "隊員間・ベースキャンプとの通信",
+      "purpose_short_en": "Team and base camp communication",
+      "legality_notes_ja": {
+        "JP": "業務用途のみ"
+      },
+      "legality_notes_en": {
+        "JP": "Professional use only"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sar_firstaid",
+      "weight_g": 1500,
+      "volume_cm3": 2000,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "救急救命士法"
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 0,
+        "legality_penalty": 0
+      },
+      "name_ja": "大型救急セット",
+      "name_en": "Large First Aid Kit",
+      "category_ja": "医療",
+      "category_en": "Medical",
+      "purpose_short_ja": "外傷処置・応急手当",
+      "purpose_short_en": "Trauma treatment and first aid",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sar_stretcher",
+      "weight_g": 3000,
+      "volume_cm3": 5000,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "救助活動基準"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 3,
+        "concealability": 0,
+        "legality_penalty": 0
+      },
+      "name_ja": "折りたたみ担架",
+      "name_en": "Foldable Stretcher",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "要救助者搬送",
+      "purpose_short_en": "Victim transport",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sar_rope",
+      "weight_g": 1200,
+      "volume_cm3": 800,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "山岳救助技術"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 3,
+        "concealability": 0,
+        "legality_penalty": 0
+      },
+      "name_ja": "ザイル・カラビナセット",
+      "name_en": "Rope & Carabiner Set",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "懸垂下降・救出",
+      "purpose_short_en": "Rappelling and rescue",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sar_helmet",
+      "weight_g": 400,
+      "volume_cm3": 4000,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "救助装備基準"
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 1,
+        "exfiltration_support": 0,
+        "concealability": 0,
+        "legality_penalty": 0
+      },
+      "name_ja": "ヘルメット（ヘッドランプ付）",
+      "name_en": "Helmet (with Headlamp)",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "頭部保護・照明",
+      "purpose_short_en": "Head protection and illumination",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sar_whistle",
+      "weight_g": 20,
+      "volume_cm3": 10,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "山岳救助事例"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 3,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "大音量ホイッスル",
+      "name_en": "Loud Whistle",
+      "category_ja": "信号発信",
+      "category_en": "Signaling",
+      "purpose_short_ja": "緊急信号・位置通知",
+      "purpose_short_en": "Emergency signal, location notification",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sar_blanket",
+      "weight_g": 360,
+      "volume_cm3": 120,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "救急処置ガイドライン"
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "サバイバルブランケット（3枚）",
+      "name_en": "Survival Blanket (3 pcs)",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "要救助者の保温・ショック対策",
+      "purpose_short_en": "Victim warming, shock prevention",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sar_water",
+      "weight_g": 200,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "長期捜索活動基準"
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "携帯浄水器",
+      "name_en": "Portable Water Filter",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "長時間活動時の飲料水確保",
+      "purpose_short_en": "Drinking water for extended activities",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sar_marker",
+      "weight_g": 100,
+      "volume_cm3": 80,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "USAR標準"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 2,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "捜索マーキングテープ",
+      "name_en": "Search Marking Tape",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "捜索済みエリア表示",
+      "purpose_short_en": "Searched area marking",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    }
+  ],
+  "name_ja": "山岳救助隊型",
+  "name_en": "Search and Rescue"
+}

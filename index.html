@@ -107,11 +107,18 @@
 
   <!-- Main Content -->
   <main class="main-content">
+    <!-- Print Header (visible only when printing) -->
+    <div class="print-header" style="display: none;">
+      <h1 id="printTitle">OpsLoadout</h1>
+      <div class="print-date" id="printDate"></div>
+    </div>
+
     <section class="checklist-section">
       <div class="checklist-header">
         <h2 class="checklist-title">
           <span data-i18n="checklist.title">チェックリスト</span> —
           <span id="currentChecklistName">大使館脱出型</span>
+          <span id="dirtyIndicator" class="dirty-indicator hidden" title="未保存の変更があります">●</span>
           <button id="renameChecklistBtn" class="rename-btn" data-i18n-title="button.rename" title="名前を変更">✏️</button>
         </h2>
         <div class="flex items-center gap-3">
@@ -120,23 +127,67 @@
         </div>
       </div>
       <div class="table-toolbar">
-        <div id="itemCountDisplay" class="item-count"></div>
-        <button id="addItemBtn" class="btn btn-secondary btn-sm" data-i18n="button.add">＋ 追加</button>
+        <div class="table-toolbar-left">
+          <div id="itemCountDisplay" class="item-count"></div>
+          <div class="bulk-actions">
+            <button id="checkAllBtn" class="btn-icon" title="全選択" data-i18n-title="button.checkAll">☑</button>
+            <button id="uncheckAllBtn" class="btn-icon" title="全解除" data-i18n-title="button.uncheckAll">☐</button>
+          </div>
+        </div>
+        <button id="addItemBtn" class="btn btn-secondary btn-sm" data-i18n="button.add">＋ アイテム追加</button>
       </div>
       <div id="itemTable" class="item-table"></div>
       <div id="itemDetail" class="item-detail-accordion hidden"></div>
+
+      <!-- Print Summary (visible only when printing) -->
+      <div class="print-summary" style="display: none;">
+        <span id="printSummary"></span>
+      </div>
     </section>
 
     <!-- Footer Bar -->
     <div class="footer-bar">
       <div class="footer-bar-left">
-        <span class="footer-info"><span data-i18n="total.weight">合計重量:</span> <strong id="totalWeight">0</strong> g</span>
-        <span class="footer-info"><span data-i18n="total.volume">体積:</span> <strong id="totalVolume">0</strong> cm³</span>
+        <div class="weight-progress-container">
+          <div class="weight-info">
+            <span class="footer-info"><span data-i18n="total.weight">合計重量:</span> <strong id="totalWeight">0</strong> g</span>
+            <span class="weight-target-wrapper">
+              / <input type="number" id="targetWeight" class="target-weight-input" value="5000" min="100" step="100" /> g
+            </span>
+          </div>
+          <div class="weight-progress-bar">
+            <div id="weightProgressFill" class="weight-progress-fill"></div>
+          </div>
+          <div id="weightProgressPercent" class="weight-progress-percent">0%</div>
+        </div>
+        <span class="footer-info volume-info"><span data-i18n="total.volume">体積:</span> <strong id="totalVolume">0</strong> cm³</span>
       </div>
       <div class="footer-bar-right">
-        <button id="exportJson" class="btn btn-secondary btn-sm">JSON</button>
-        <button id="exportCsv" class="btn btn-secondary btn-sm">CSV</button>
-        <button id="exportPdf" class="btn btn-secondary btn-sm">PDF</button>
+        <button id="exportJson" class="btn btn-secondary btn-sm export-btn">
+          <svg class="export-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+          JSON
+        </button>
+        <button id="exportCsv" class="btn btn-secondary btn-sm export-btn">
+          <svg class="export-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <rect x="8" y="12" width="8" height="6" rx="1"/>
+          </svg>
+          CSV
+        </button>
+        <button id="exportPdf" class="btn btn-secondary btn-sm export-btn">
+          <svg class="export-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <path d="M9 15h6"/>
+          </svg>
+          PDF
+        </button>
       </div>
     </div>
 

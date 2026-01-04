@@ -1,0 +1,337 @@
+{
+  "category": "security",
+  "items": [
+    {
+      "id": "sg_radio",
+      "weight_g": 250,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "警備業法"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 2,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "業務用無線機",
+      "name_en": "Professional Radio",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "警備本部・隊員間通信",
+      "purpose_short_en": "Security HQ and team communication",
+      "legality_notes_ja": {
+        "JP": "業務用途のみ"
+      },
+      "legality_notes_en": {
+        "JP": "Professional use only"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sg_flashlight",
+      "weight_g": 300,
+      "volume_cm3": 200,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "警備実務"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 1,
+        "exfiltration_support": 0,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "警備用懐中電灯",
+      "name_en": "Security Flashlight",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "夜間巡回・照明",
+      "purpose_short_en": "Night patrol and illumination",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sg_baton",
+      "weight_g": 400,
+      "volume_cm3": 300,
+      "dual_use": true,
+      "hazard_flag": true,
+      "sources": [
+        {
+          "title": "警備業法"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 1,
+        "legality_penalty": 2
+      },
+      "name_ja": "警棒",
+      "name_en": "Baton",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "護身・威嚇",
+      "purpose_short_en": "Self-defense, deterrence",
+      "legality_notes_ja": {
+        "JP": "警備業法による制限、正当防衛の範囲内"
+      },
+      "legality_notes_en": {
+        "JP": "Security Industry Law restrictions, self-defense scope only"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sg_whistle",
+      "weight_g": 15,
+      "volume_cm3": 8,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "警備実務"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 3,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "警笛",
+      "name_en": "Police Whistle",
+      "category_ja": "信号発信",
+      "category_en": "Signaling",
+      "purpose_short_ja": "緊急通報・注意喚起",
+      "purpose_short_en": "Emergency alert, attention call",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sg_notebook",
+      "weight_g": 150,
+      "volume_cm3": 100,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "警備業法"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "巡回記録帳・ペン",
+      "name_en": "Patrol Log & Pen",
+      "category_ja": "書類",
+      "category_en": "Documents",
+      "purpose_short_ja": "巡回記録・報告書作成",
+      "purpose_short_en": "Patrol records and report creation",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sg_firstaid",
+      "weight_g": 200,
+      "volume_cm3": 120,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "警備実務マニュアル"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "救急セット",
+      "name_en": "First Aid Kit",
+      "category_ja": "医療",
+      "category_en": "Medical",
+      "purpose_short_ja": "応急手当",
+      "purpose_short_en": "First aid",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sg_gloves",
+      "weight_g": 80,
+      "volume_cm3": 120,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "警備実務"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "作業用手袋",
+      "name_en": "Work Gloves",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "施錠確認・作業保護",
+      "purpose_short_en": "Lock verification, work protection",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sg_raincoat",
+      "weight_g": 250,
+      "volume_cm3": 200,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "警備実務"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "レインコート",
+      "name_en": "Raincoat",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "雨天時の巡回",
+      "purpose_short_en": "Patrol in rainy weather",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sg_water",
+      "weight_g": 120,
+      "volume_cm3": 600,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "労働安全"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "携帯水筒",
+      "name_en": "Portable Water Bottle",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "長時間勤務の水分補給",
+      "purpose_short_en": "Hydration during long shifts",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "sg_multitool",
+      "weight_g": 100,
+      "volume_cm3": 50,
+      "dual_use": true,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "警備実務"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 1
+      },
+      "name_ja": "小型マルチツール",
+      "name_en": "Small Multi-tool",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "簡易作業",
+      "purpose_short_en": "Simple tasks",
+      "legality_notes_ja": {
+        "JP": "業務用途のみ"
+      },
+      "legality_notes_en": {
+        "JP": "Professional use only"
+      },
+      "description_ja": "",
+      "description_en": ""
+    }
+  ],
+  "name_ja": "警備員型",
+  "name_en": "Security Guard"
+}

@@ -1,0 +1,506 @@
+{
+  "category": "hacker",
+  "items": [
+    {
+      "id": "rf_sdr_dongle",
+      "weight_g": 50,
+      "volume_cm3": 30,
+      "dual_use": true,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Software Defined Radio"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 2
+      },
+      "name_ja": "SDRドングル（RTL-SDR等）",
+      "name_en": "SDR Dongle (RTL-SDR etc.)",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "無線信号受信・解析",
+      "purpose_short_en": "Wireless signal reception and analysis",
+      "legality_notes_ja": {
+        "JP": "電波法遵守、受信のみ",
+        "US": "FCC規制遵守"
+      },
+      "legality_notes_en": {
+        "JP": "Radio law compliance, receive-only",
+        "US": "FCC compliance required"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "rf_spectrum_analyzer",
+      "weight_g": 800,
+      "volume_cm3": 600,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "RF Signal Analysis"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "ポータブルスペクトラムアナライザー",
+      "name_en": "Portable Spectrum Analyzer",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "周波数スペクトル解析",
+      "purpose_short_en": "Frequency spectrum analysis",
+      "legality_notes_ja": {
+        "JP": "電波法遵守"
+      },
+      "legality_notes_en": {
+        "JP": "Radio law compliance required"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "rf_antennas",
+      "weight_g": 300,
+      "volume_cm3": 400,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Antenna Design Guide"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 2,
+        "exfiltration_support": 1,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "各種アンテナセット",
+      "name_en": "Antenna Set",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "HF/VHF/UHF対応",
+      "purpose_short_en": "HF/VHF/UHF compatible",
+      "legality_notes_ja": {
+        "JP": "受信用途"
+      },
+      "legality_notes_en": {
+        "JP": "Receive-only use"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "rf_vna",
+      "weight_g": 500,
+      "volume_cm3": 350,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "RF Circuit Design"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "ベクトルネットワークアナライザー",
+      "name_en": "Vector Network Analyzer",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "インピーダンス測定",
+      "purpose_short_en": "Impedance measurement",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "rf_field_strength",
+      "weight_g": 200,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "EMC Testing"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "電界強度計",
+      "name_en": "Field Strength Meter",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "電波強度測定",
+      "purpose_short_en": "Radio wave strength measurement",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "rf_coax_tools",
+      "weight_g": 300,
+      "volume_cm3": 200,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Coaxial Cable Assembly"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "同軸ケーブル加工工具",
+      "name_en": "Coaxial Cable Tools",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "コネクタ取付",
+      "purpose_short_en": "Connector installation",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "rf_attenuator",
+      "weight_g": 150,
+      "volume_cm3": 100,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "RF Test Equipment"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "可変減衰器セット",
+      "name_en": "Variable Attenuator Set",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "信号レベル調整",
+      "purpose_short_en": "Signal level adjustment",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "rf_cables",
+      "weight_g": 400,
+      "volume_cm3": 300,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "RF System Setup"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "各種同軸ケーブル",
+      "name_en": "Coaxial Cable Set",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "機器間接続",
+      "purpose_short_en": "Inter-device connection",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "rf_dummy_load",
+      "weight_g": 200,
+      "volume_cm3": 120,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Transmitter Testing"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "ダミーロード",
+      "name_en": "Dummy Load",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "送信機テスト",
+      "purpose_short_en": "Transmitter testing",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "rf_power_meter",
+      "weight_g": 250,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Power Measurement"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "RFパワーメーター",
+      "name_en": "RF Power Meter",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "送信出力測定",
+      "purpose_short_en": "Transmission power measurement",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "rf_frequency_counter",
+      "weight_g": 150,
+      "volume_cm3": 100,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Frequency Calibration"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "周波数カウンター",
+      "name_en": "Frequency Counter",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "周波数精密測定",
+      "purpose_short_en": "Precision frequency measurement",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "rf_laptop",
+      "weight_g": 1500,
+      "volume_cm3": 2500,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "SDR Software"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "RF解析用ノートPC",
+      "name_en": "RF Analysis Laptop",
+      "category_ja": "デジタル機器",
+      "category_en": "Digital Devices",
+      "purpose_short_ja": "信号処理・解析",
+      "purpose_short_en": "Signal processing and analysis",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "rf_license",
+      "weight_g": 20,
+      "volume_cm3": 10,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Radio Operator License"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "無線従事者免許証",
+      "name_en": "Radio Operator License",
+      "category_ja": "書類",
+      "category_en": "Documents",
+      "purpose_short_ja": "業務資格証明",
+      "purpose_short_en": "Professional qualification proof",
+      "legality_notes_ja": {
+        "JP": "業務時必携"
+      },
+      "legality_notes_en": {
+        "JP": "Required equipment for duty"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "rf_reference",
+      "weight_g": 200,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Frequency Allocation"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "周波数割当表・技術資料",
+      "name_en": "Frequency Allocation Table & Technical Docs",
+      "category_ja": "書類",
+      "category_en": "Documents",
+      "purpose_short_ja": "周波数帯域情報",
+      "purpose_short_en": "Frequency band information",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "rf_handheld_radio",
+      "weight_g": 300,
+      "volume_cm3": 200,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Professional Radio Equipment"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 3,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 1
+      },
+      "name_ja": "ハンディ無線機（業務用）",
+      "name_en": "Handheld Radio (Professional)",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "現場通信",
+      "purpose_short_en": "On-site communication",
+      "legality_notes_ja": {
+        "JP": "免許・業務用途必須",
+        "US": "FCC認証必須"
+      },
+      "legality_notes_en": {
+        "JP": "License required, professional use only",
+        "US": "FCC certification required"
+      },
+      "description_ja": "",
+      "description_en": ""
+    }
+  ],
+  "name_ja": "RF技術者型",
+  "name_en": "RF Technician"
+}

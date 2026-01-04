@@ -1,0 +1,685 @@
+{
+  "category": "evasion",
+  "items": [
+    {
+      "id": "em_cash",
+      "weight_g": 50,
+      "volume_cm3": 20,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "米国務省 Go Bagガイダンス"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "緊急現金（現地通貨+USD）",
+      "name_en": "Emergency Cash (Local + USD)",
+      "category_ja": "都市型回避",
+      "category_en": "Urban Evasion",
+      "purpose_short_ja": "短期の現地通貨不足対策",
+      "purpose_short_en": "Short-term local currency shortage solution",
+      "legality_notes_ja": {
+        "US": "許可",
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "US": "Allowed",
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "em_water_tab",
+      "weight_g": 15,
+      "volume_cm3": 6,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "AF SERE ハンドブック"
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "浄水タブレット",
+      "name_en": "Water Purification Tablets",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "少量の飲料水の処理",
+      "purpose_short_en": "Treating small amounts of drinking water",
+      "legality_notes_ja": {
+        "US": "許可",
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "US": "Allowed",
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "em_whistle",
+      "weight_g": 10,
+      "volume_cm3": 4,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "AF SERE 事例"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 2,
+        "exfiltration_support": 0,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "ホイッスル",
+      "name_en": "Whistle",
+      "category_ja": "信号発信",
+      "category_en": "Signaling",
+      "purpose_short_ja": "注意を引く音響信号",
+      "purpose_short_en": "Acoustic signal to attract attention",
+      "legality_notes_ja": {
+        "US": "許可",
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "US": "Allowed",
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "em_mirror",
+      "weight_g": 20,
+      "volume_cm3": 10,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "MARSOC SERE 装備リスト"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 3,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "シグナルミラー（ポケット型）",
+      "name_en": "Signal Mirror (Pocket)",
+      "category_ja": "信号発信",
+      "category_en": "Signaling",
+      "purpose_short_ja": "遠距離視覚信号",
+      "purpose_short_en": "Long-range visual signal",
+      "legality_notes_ja": {
+        "US": "許可"
+      },
+      "legality_notes_en": {
+        "US": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "em_blanket",
+      "weight_g": 120,
+      "volume_cm3": 40,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "AF SERE ハンドブック"
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "マイラーサバイバルブランケット",
+      "name_en": "Mylar Survival Blanket",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "体温保持、軽量シェルター補助",
+      "purpose_short_en": "Body heat retention, lightweight shelter aid",
+      "legality_notes_ja": {
+        "US": "許可",
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "US": "Allowed",
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "em_firstaid",
+      "weight_g": 150,
+      "volume_cm3": 80,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "赤十字 サバイバルキットガイド"
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "小型救急セット（基本）",
+      "name_en": "Compact First Aid Kit (Basic)",
+      "category_ja": "医療",
+      "category_en": "Medical",
+      "purpose_short_ja": "基本的な創傷処置と包帯",
+      "purpose_short_en": "Basic wound treatment and bandaging",
+      "legality_notes_ja": {
+        "US": "許可",
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "US": "Allowed",
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "em_led",
+      "weight_g": 30,
+      "volume_cm3": 12,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "CIA博物館 E&Eキット事例"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 2,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "ケミカルライト / LED（信号用）",
+      "name_en": "Chemical Light / LED (Signaling)",
+      "category_ja": "信号発信",
+      "category_en": "Signaling",
+      "purpose_short_ja": "暗所での信号発信・照明",
+      "purpose_short_en": "Signaling and illumination in darkness",
+      "legality_notes_ja": {
+        "US": "許可",
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "US": "Allowed",
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "em_multitool",
+      "weight_g": 80,
+      "volume_cm3": 30,
+      "dual_use": true,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "CIA博物館 E&Eキット マルチツール事例"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 1
+      },
+      "name_ja": "小型マルチツール（ハサミ、缶切り、プライヤー）",
+      "name_en": "Compact Multitool (Scissors, Can Opener, Pliers)",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "汎用工具作業（非破壊的）",
+      "purpose_short_en": "General tool work (non-destructive)",
+      "legality_notes_ja": {
+        "US": "航空機内で制限される場合あり",
+        "JP": "制限される場合あり"
+      },
+      "legality_notes_en": {
+        "US": "May be restricted on aircraft",
+        "JP": "May be restricted"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "em_compass",
+      "weight_g": 20,
+      "volume_cm3": 8,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "MARSOC SERE 装備リスト"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "小型コンパス（ボタン型）",
+      "name_en": "Mini Compass (Button Type)",
+      "category_ja": "ナビゲーション",
+      "category_en": "Navigation",
+      "purpose_short_ja": "基本的な方向確認",
+      "purpose_short_en": "Basic direction finding",
+      "legality_notes_ja": {
+        "US": "許可"
+      },
+      "legality_notes_en": {
+        "US": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "em_map",
+      "weight_g": 40,
+      "volume_cm3": 20,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "米国大使館 PREP ガイド"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "現地地図（小型、防水スリーブ）",
+      "name_en": "Local Map (Compact, Waterproof Sleeve)",
+      "category_ja": "ナビゲーション",
+      "category_en": "Navigation",
+      "purpose_short_ja": "現地ルートと安全地点の記載地図",
+      "purpose_short_en": "Map with local routes and safe points",
+      "legality_notes_ja": {
+        "US": "許可"
+      },
+      "legality_notes_en": {
+        "US": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "em_contacts",
+      "weight_g": 20,
+      "volume_cm3": 10,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "国務省 Go Bag ガイド"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "緊急連絡先リスト（ラミネート加工）",
+      "name_en": "Emergency Contact List (Laminated)",
+      "category_ja": "書類",
+      "category_en": "Documents",
+      "purpose_short_ja": "重要な電話番号と大使館連絡先",
+      "purpose_short_en": "Important phone numbers and embassy contacts",
+      "legality_notes_ja": {
+        "US": "許可"
+      },
+      "legality_notes_en": {
+        "US": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "em_sim",
+      "weight_g": 5,
+      "volume_cm3": 2,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "大使館 Go Bag ガイダンス（通信）"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "予備SIM / 現地SIM + 小型アダプター",
+      "name_en": "Spare SIM / Local SIM + Adapter",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "現地モバイル接続のバックアップ",
+      "purpose_short_en": "Backup for local mobile connection",
+      "legality_notes_ja": {
+        "US": "許可",
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "US": "Allowed",
+        "JP": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "em_powerbank",
+      "weight_g": 200,
+      "volume_cm3": 70,
+      "dual_use": false,
+      "hazard_flag": true,
+      "sources": [
+        {
+          "title": "Ready.gov キット構築ガイド"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 2,
+        "legality_penalty": 1
+      },
+      "name_ja": "モバイルバッテリー",
+      "name_en": "Mobile Battery",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "モバイル機器充電、通信維持",
+      "purpose_short_en": "Mobile device charging, maintaining communications",
+      "legality_notes_ja": {
+        "US": "航空輸送制限（バッテリー容量）",
+        "JP": "航空輸送制限"
+      },
+      "legality_notes_en": {
+        "US": "Air transport restricted (battery capacity)",
+        "JP": "Air transport restricted"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "em_energy_bars",
+      "weight_g": 300,
+      "volume_cm3": 200,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Ready.gov 食料・水ガイダンス"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "軽量エナジーバー（3〜5本）",
+      "name_en": "Lightweight Energy Bars (3-5)",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "短期高エネルギー配給",
+      "purpose_short_en": "Short-term high energy supply",
+      "legality_notes_ja": {
+        "US": "許可"
+      },
+      "legality_notes_en": {
+        "US": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "em_duct_tape",
+      "weight_g": 60,
+      "volume_cm3": 40,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "汎用サバイバルキット推奨品"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "ダクトテープ（小型ロール）",
+      "name_en": "Duct Tape (Mini Roll)",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "修理・応急処置",
+      "purpose_short_en": "Repairs and first aid",
+      "legality_notes_ja": {
+        "US": "許可"
+      },
+      "legality_notes_en": {
+        "US": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "em_paracord",
+      "weight_g": 70,
+      "volume_cm3": 30,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Backpacker SERE ガイダンス"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "パラコード（3〜5m）",
+      "name_en": "Paracord (3-5m)",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "シェルター・修理用コード",
+      "purpose_short_en": "Cord for shelter and repairs",
+      "legality_notes_ja": {
+        "US": "許可"
+      },
+      "legality_notes_en": {
+        "US": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "em_sewing_kit",
+      "weight_g": 25,
+      "volume_cm3": 10,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "大使館 Go Bag 推奨品"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "裁縫セット（針、糸）",
+      "name_en": "Sewing Kit (Needle, Thread)",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "衣服修理と小規模補修",
+      "purpose_short_en": "Clothing repair and minor fixes",
+      "legality_notes_ja": {
+        "US": "許可"
+      },
+      "legality_notes_en": {
+        "US": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "em_water_bottle",
+      "weight_g": 80,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "Ready.gov 水ガイダンス"
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "折りたたみ水筒",
+      "name_en": "Collapsible Water Bottle",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "水の運搬、可能な限り補充",
+      "purpose_short_en": "Water transport, refill when possible",
+      "legality_notes_ja": {
+        "US": "許可"
+      },
+      "legality_notes_en": {
+        "US": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "em_notebook",
+      "weight_g": 40,
+      "volume_cm3": 20,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "大使館 PREP 個人緊急行動計画"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "防水ノート＆ペン",
+      "name_en": "Waterproof Notebook & Pen",
+      "category_ja": "書類",
+      "category_en": "Documents",
+      "purpose_short_ja": "メモ、連絡先、短文メッセージ",
+      "purpose_short_en": "Notes, contacts, short messages",
+      "legality_notes_ja": {
+        "US": "許可"
+      },
+      "legality_notes_en": {
+        "US": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    },
+    {
+      "id": "em_waterproof_bags",
+      "weight_g": 10,
+      "volume_cm3": 5,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "汎用緊急キット推奨品"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "防水袋（小型ジップロック）",
+      "name_en": "Waterproof Bags (Small Ziplock)",
+      "category_ja": "その他",
+      "category_en": "Other",
+      "purpose_short_ja": "書類・電子機器の防湿保護",
+      "purpose_short_en": "Moisture protection for documents and electronics",
+      "legality_notes_ja": {
+        "US": "許可"
+      },
+      "legality_notes_en": {
+        "US": "Allowed"
+      },
+      "description_ja": "",
+      "description_en": ""
+    }
+  ],
+  "name_ja": "大使館脱出型",
+  "name_en": "Embassy Evacuation"
+}
