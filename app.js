@@ -1622,7 +1622,7 @@
   });
 
   // Preset loading
-  presetSelectEl.addEventListener('change', (e)=>{
+  presetSelectEl.addEventListener('change', async (e)=>{
     const value = e.target.value;
     // Check if it's a saved checklist
     if (value.startsWith('saved-')) {
@@ -1633,7 +1633,7 @@
       renamePresetBtn.classList.remove('hidden');
       deletePresetBtn.classList.remove('hidden');
     } else {
-      loadFromPreset(value);
+      await loadFromPreset(value);
       // Hide rename and delete buttons for built-in presets
       renamePresetBtn.classList.add('hidden');
       deletePresetBtn.classList.add('hidden');
@@ -1680,7 +1680,8 @@
       rescue: [],
       security: [],
       disaster: [],
-      hacker: []
+      hacker: [],
+      cyber_ninja: []
     };
 
     // Group presets by category from metadata
@@ -1719,7 +1720,7 @@
         security: '🛡️ ' + t('optgroup.security'),
         disaster: '⚠️ ' + t('optgroup.disaster'),
         hacker: '💻 ' + t('optgroup.hacker'),
-        cyber_ninja: '🥷 ' + t('optgroup.cyber_ninja')
+        cyber_ninja: '✴️ ' + t('optgroup.cyber_ninja')
       };
 
       Object.keys(presetsByCategory).forEach(cat => {
