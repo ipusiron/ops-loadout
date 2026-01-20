@@ -201,7 +201,7 @@ Edit the JSON file in `presets/{category}/{preset}.json`. **REQUIRED fields**:
 - Modal backdrop uses `fixed inset-0` with flex centering
 - Items with `dual_use=true` show yellow badge
 - Items with `hazard_flag=true` show red badge
-- Category filter buttons at the top for preset filtering (evasion/edc/rescue/security/disaster/hacker)
+- Category filter buttons at the top for preset filtering (evasion/edc/rescue/security/disaster/hacker/cyber_ninja)
 - Inline quantity editing in the table view
 - Save flow: prompts for overwrite vs new-save if checklist already exists
 

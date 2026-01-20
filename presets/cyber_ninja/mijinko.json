@@ -1,0 +1,776 @@
+{
+  "category": "cyber_ninja",
+  "description_ja": "軽装・多機能・ローキーを重視したサイバー忍者装備セット（ミジンコ流）。都市偵察・暗部探索・汎用作業向け。",
+  "description_en": "Lightweight, multi-functional, low-key cyber ninja loadout (Daphnia Style). For urban reconnaissance, dark area exploration, and general operations.",
+  "items": [
+    {
+      "id": "cn_rage_usb",
+      "weight_g": 30,
+      "volume_cm3": 10,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "ミジンコ流サイバー忍者装備リスト"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "耐衝撃USBメモリ",
+      "name_en": "Rugged USB Drive",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "データ持ち運び・記録用",
+      "purpose_short_en": "Data transport and backup",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "防水・耐衝撃仕様のUSBメモリ。重要データのバックアップや持ち運びに使用。",
+      "description_en": "Waterproof and shock-resistant USB drive for backing up and transporting critical data."
+    },
+    {
+      "id": "cn_weatherproof_notebook",
+      "weight_g": 80,
+      "volume_cm3": 60,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "ミジンコ流サイバー忍者装備リスト"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "耐水ノート",
+      "name_en": "Weatherproof Notebook",
+      "category_ja": "書類",
+      "category_en": "Documents",
+      "purpose_short_ja": "デジタルに頼らないメモ記録",
+      "purpose_short_en": "Analog note-taking independent of digital devices",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "雨天や水濡れ環境でも使用可能な耐水ノート。電子機器が使えない状況での記録用。",
+      "description_en": "Water-resistant notebook usable in rain or wet conditions. For recording when electronics are unavailable."
+    },
+    {
+      "id": "cn_ir_light",
+      "weight_g": 50,
+      "volume_cm3": 30,
+      "dual_use": true,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "ミジンコ流サイバー忍者装備リスト"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 1,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 1
+      },
+      "name_ja": "赤外線ライト",
+      "name_en": "Infrared Light",
+      "category_ja": "信号発信",
+      "category_en": "Signaling",
+      "purpose_short_ja": "暗部での視認補助・暗視機器併用",
+      "purpose_short_en": "Visual aid in dark areas, used with night vision",
+      "legality_notes_ja": {
+        "JP": "許可（暗視機器との組み合わせに注意）"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed (caution when combined with night vision)"
+      },
+      "description_ja": "暗視機器と併用することで暗闘環境での視認性を向上させる赤外線ライト。",
+      "description_en": "Infrared light that improves visibility in dark environments when used with night vision devices."
+    },
+    {
+      "id": "cn_invisible_powder",
+      "weight_g": 20,
+      "volume_cm3": 15,
+      "dual_use": true,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "ミジンコ流サイバー忍者装備リスト"
+        }
+      ],
+      "scores": {
+        "survivability": 0,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 1
+      },
+      "name_ja": "不可視パウダー",
+      "name_en": "Invisible Powder",
+      "category_ja": "回避",
+      "category_en": "Evasion",
+      "purpose_short_ja": "痕跡隠蔽・擬装用途",
+      "purpose_short_en": "Trace concealment and camouflage",
+      "legality_notes_ja": {
+        "JP": "許可（使用目的に注意）"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed (caution regarding intended use)"
+      },
+      "description_ja": "痕跡隠蔽や擬装に使用するパウダー。",
+      "description_en": "Powder used for trace concealment and camouflage purposes."
+    },
+    {
+      "id": "cn_night_vision_scope",
+      "weight_g": 300,
+      "volume_cm3": 200,
+      "dual_use": true,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "ミジンコ流サイバー忍者装備リスト"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 1,
+        "legality_penalty": 2
+      },
+      "name_ja": "暗視スコープ",
+      "name_en": "Night Vision Scope",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "低光環境での遠距離視認",
+      "purpose_short_en": "Long-range viewing in low-light environments",
+      "legality_notes_ja": {
+        "JP": "許可（輸出規制に注意）",
+        "US": "ITAR規制対象の場合あり"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed (export restrictions may apply)",
+        "US": "May be subject to ITAR regulations"
+      },
+      "description_ja": "低光環境での遠距離視認に使用する暗視スコープ。軍用グレードは規制対象。",
+      "description_en": "Night vision scope for long-range viewing in low-light conditions. Military-grade units may be regulated."
+    },
+    {
+      "id": "cn_pick_tension_materials",
+      "weight_g": 30,
+      "volume_cm3": 20,
+      "dual_use": true,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "ミジンコ流サイバー忍者装備リスト"
+        }
+      ],
+      "scores": {
+        "survivability": 0,
+        "signalability": 0,
+        "exfiltration_support": 3,
+        "concealability": 3,
+        "legality_penalty": 4
+      },
+      "name_ja": "ピック & テンション素材",
+      "name_en": "Pick & Tension Materials",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "即席ピック／テンションツール自作用素材",
+      "purpose_short_en": "Materials for improvised pick/tension tools",
+      "legality_notes_ja": {
+        "JP": "ピッキング防止法により所持制限あり（正当理由要）",
+        "US": "州により規制が異なる"
+      },
+      "legality_notes_en": {
+        "JP": "Possession restricted under anti-picking law (legitimate reason required)",
+        "US": "Regulations vary by state"
+      },
+      "description_ja": "即席ピックやテンションツールを自作するための素材一式。教育・訓練目的。法的制限に注意。",
+      "description_en": "Material kit for making improvised picks and tension tools. For educational/training purposes. Note legal restrictions."
+    },
+    {
+      "id": "cn_tactical_pen",
+      "weight_g": 40,
+      "volume_cm3": 8,
+      "dual_use": true,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "ミジンコ流サイバー忍者装備リスト"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 2
+      },
+      "name_ja": "タクティカルペン",
+      "name_en": "Tactical Pen",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "筆記＋簡易防衛",
+      "purpose_short_en": "Writing + basic self-defense",
+      "legality_notes_ja": {
+        "JP": "航空機内持込制限あり",
+        "US": "航空機内持込制限あり"
+      },
+      "legality_notes_en": {
+        "JP": "Restricted on aircraft",
+        "US": "Restricted on aircraft"
+      },
+      "description_ja": "筆記具としても使える堅牢なペン。緊急時の簡易防衛にも使用可能。",
+      "description_en": "Sturdy pen usable as writing instrument. Can also be used for basic self-defense in emergencies."
+    },
+    {
+      "id": "cn_high_power_flashlight",
+      "weight_g": 150,
+      "volume_cm3": 80,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "ミジンコ流サイバー忍者装備リスト"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 2,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "強力フラッシュライト",
+      "name_en": "High-Power Flashlight",
+      "category_ja": "信号発信",
+      "category_en": "Signaling",
+      "purpose_short_ja": "広範囲照射・目潰し兼用",
+      "purpose_short_en": "Wide-area illumination and disorientation",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "広範囲を照射できる強力なフラッシュライト。緊急時の目潰しにも使用可能。",
+      "description_en": "Powerful flashlight for wide-area illumination. Can also be used to disorient in emergencies."
+    },
+    {
+      "id": "cn_notebook_pc",
+      "weight_g": 1500,
+      "volume_cm3": 2000,
+      "dual_use": false,
+      "hazard_flag": true,
+      "sources": [
+        {
+          "title": "ミジンコ流サイバー忍者装備リスト"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 3,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "ノートPC",
+      "name_en": "Laptop Computer",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "汎用作業・目立たない一般機",
+      "purpose_short_en": "General operations with inconspicuous appearance",
+      "legality_notes_ja": {
+        "JP": "許可（バッテリー航空輸送制限あり）"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed (battery air transport restrictions)"
+      },
+      "description_ja": "特殊機能不要の目立たない一般的なノートPC。サイバー作業の主力機材。",
+      "description_en": "Ordinary, inconspicuous laptop without special features. Primary equipment for cyber operations."
+    },
+    {
+      "id": "cn_handcuff_key",
+      "weight_g": 5,
+      "volume_cm3": 2,
+      "dual_use": true,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "ミジンコ流サイバー忍者装備リスト"
+        }
+      ],
+      "scores": {
+        "survivability": 0,
+        "signalability": 0,
+        "exfiltration_support": 3,
+        "concealability": 3,
+        "legality_penalty": 4
+      },
+      "name_ja": "偽装型・隠蔽型手錠合鍵",
+      "name_en": "Disguised/Concealed Handcuff Key",
+      "category_ja": "回避",
+      "category_en": "Evasion",
+      "purpose_short_ja": "手錠用合鍵・シム代用可",
+      "purpose_short_en": "Handcuff key, shim can substitute",
+      "legality_notes_ja": {
+        "JP": "所持には正当理由が必要",
+        "US": "州により規制が異なる"
+      },
+      "legality_notes_en": {
+        "JP": "Legitimate reason required for possession",
+        "US": "Regulations vary by state"
+      },
+      "description_ja": "手錠用の合鍵。手錠用シムでも代用可能。偽装型や隠蔽型であれば不審を避けられる。SERE訓練・教育目的。",
+      "description_en": "Universal handcuff key. Handcuff shims can substitute. Disguised or concealed types avoid suspicion. For SERE training/educational purposes."
+    },
+    {
+      "id": "cn_faraday_bag",
+      "weight_g": 80,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "ミジンコ流サイバー忍者装備リスト"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "ファラデーバッグ",
+      "name_en": "Faraday Bag",
+      "category_ja": "セキュリティ",
+      "category_en": "Security",
+      "purpose_short_ja": "電磁遮蔽・デバイス保護",
+      "purpose_short_en": "EMF shielding and device protection",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "電磁波を遮断するバッグ。デバイスの遠隔追跡防止やEMP対策に使用。",
+      "description_en": "Bag that blocks electromagnetic signals. Used for preventing remote tracking and EMP protection."
+    },
+    {
+      "id": "cn_multi_tool",
+      "weight_g": 120,
+      "volume_cm3": 50,
+      "dual_use": true,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "ミジンコ流サイバー忍者装備リスト"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 1
+      },
+      "name_ja": "マルチツール（コンパクト）",
+      "name_en": "Multi-Tool (Compact)",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "ニッパー・ドライバー等多機能工具",
+      "purpose_short_en": "Multi-function tool with pliers, screwdriver, etc.",
+      "legality_notes_ja": {
+        "JP": "航空機内持込制限あり"
+      },
+      "legality_notes_en": {
+        "JP": "Restricted on aircraft"
+      },
+      "description_ja": "ニッパー、ドライバー等を兼ねたコンパクトな多機能工具。",
+      "description_en": "Compact multi-function tool combining pliers, screwdriver, and more."
+    },
+    {
+      "id": "cn_powerbank",
+      "weight_g": 200,
+      "volume_cm3": 100,
+      "dual_use": false,
+      "hazard_flag": true,
+      "sources": [
+        {
+          "title": "ミジンコ流サイバー忍者装備リスト"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "ポータブル電源バンク",
+      "name_en": "Portable Power Bank",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "電源確保・複数デバイス充電",
+      "purpose_short_en": "Power supply for multiple device charging",
+      "legality_notes_ja": {
+        "JP": "航空輸送制限"
+      },
+      "legality_notes_en": {
+        "JP": "Air transport restricted"
+      },
+      "description_ja": "複数デバイスを充電可能なポータブル電源バンク。長時間作業に必須。",
+      "description_en": "Portable power bank capable of charging multiple devices. Essential for extended operations."
+    },
+    {
+      "id": "cn_adhesive_tape",
+      "weight_g": 50,
+      "volume_cm3": 40,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "ミジンコ流サイバー忍者装備リスト"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "強粘着テープ",
+      "name_en": "Heavy-Duty Adhesive Tape",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "機材固定・仮補修・多用途",
+      "purpose_short_en": "Equipment securing, temporary repairs, multi-purpose",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "機材固定や仮補修に使える高性能粘着テープ。多目的に活用可能。簡易的に拘束具として使える。",
+      "description_en": "High-performance adhesive tape for equipment securing and temporary repairs. Multi-purpose use."
+    },
+    {
+      "id": "cn_compact_binoculars",
+      "weight_g": 150,
+      "volume_cm3": 100,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "ミジンコ流サイバー忍者装備リスト"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "コンパクト双眼鏡",
+      "name_en": "Compact Binoculars",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "遠方観察用",
+      "purpose_short_en": "Long-distance observation",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "遠方の状況を観察するためのコンパクトな双眼鏡。",
+      "description_en": "Compact binoculars for observing distant situations."
+    },
+    {
+      "id": "cn_first_aid_mini",
+      "weight_g": 100,
+      "volume_cm3": 60,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "ミジンコ流サイバー忍者装備リスト"
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "ミニ救急セット",
+      "name_en": "Mini First Aid Kit",
+      "category_ja": "医療",
+      "category_en": "Medical",
+      "purpose_short_ja": "怪我対応用基本ファーストエイド",
+      "purpose_short_en": "Basic first aid for injuries",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "軽量でコンパクトな救急セット。基本的な怪我の応急処置に対応。",
+      "description_en": "Lightweight and compact first aid kit for basic injury treatment."
+    },
+    {
+      "id": "cn_face_mask",
+      "weight_g": 30,
+      "volume_cm3": 20,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "ミジンコ流サイバー忍者装備リスト"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "薄手フェイスマスク",
+      "name_en": "Thin Face Mask",
+      "category_ja": "回避",
+      "category_en": "Evasion",
+      "purpose_short_ja": "反射抑制・軽防寒・偽装",
+      "purpose_short_en": "Reflection suppression, light warmth, disguise",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "反射を抑制し、軽い防寒と偽装効果のある薄手フェイスマスク。",
+      "description_en": "Thin face mask that suppresses reflection, provides light warmth, and aids in disguise."
+    },
+    {
+      "id": "cn_recording_device",
+      "weight_g": 40,
+      "volume_cm3": 25,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "ミジンコ流サイバー忍者装備リスト"
+        }
+      ],
+      "scores": {
+        "survivability": 0,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 1
+      },
+      "name_ja": "小型録音・映像デバイス",
+      "name_en": "Compact Recording Device",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "状況ログ用（音声・映像）",
+      "purpose_short_en": "Situation logging (audio/video)",
+      "legality_notes_ja": {
+        "JP": "盗撮・盗聴目的での使用は違法"
+      },
+      "legality_notes_en": {
+        "JP": "Illegal if used for unauthorized recording"
+      },
+      "description_ja": "音声や映像を記録する小型デバイス。状況ログや証拠収集用。",
+      "description_en": "Compact device for recording audio and video. For situation logging and evidence collection."
+    },
+    {
+      "id": "cn_lan_cable",
+      "weight_g": 30,
+      "volume_cm3": 20,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "ミジンコ流サイバー忍者装備リスト"
+        }
+      ],
+      "scores": {
+        "survivability": 0,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "短LANケーブル（1m）",
+      "name_en": "Short LAN Cable (1m)",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "有線ネットワーク接続",
+      "purpose_short_en": "Wired network connection",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "携帯用の短いLANケーブル。無線が使えない環境でのネットワーク接続用。",
+      "description_en": "Portable short LAN cable for network connections when wireless is unavailable."
+    },
+    {
+      "id": "cn_usb_hub",
+      "weight_g": 40,
+      "volume_cm3": 25,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "ミジンコ流サイバー忍者装備リスト"
+        }
+      ],
+      "scores": {
+        "survivability": 0,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "USBハブ/OTGアダプタ",
+      "name_en": "USB Hub / OTG Adapter",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "複数デバイス接続",
+      "purpose_short_en": "Multiple device connection",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "複数のUSBデバイスを同時接続するためのハブ。OTG機能でスマホにも対応。",
+      "description_en": "Hub for connecting multiple USB devices simultaneously. OTG compatible for smartphones."
+    },
+    {
+      "id": "cn_microsd",
+      "weight_g": 2,
+      "volume_cm3": 1,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "ミジンコ流サイバー忍者装備リスト"
+        }
+      ],
+      "scores": {
+        "survivability": 1,
+        "signalability": 0,
+        "exfiltration_support": 3,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "microSDカード（暗号化対応）",
+      "name_en": "microSD Card (Encryption Ready)",
+      "category_ja": "通信",
+      "category_en": "Communications",
+      "purpose_short_ja": "秘匿データバックアップ",
+      "purpose_short_en": "Secure data backup",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "暗号化可能なmicroSDカード。極小サイズで隠匿性が高い。",
+      "description_en": "Encryption-capable microSD card. Extremely small and highly concealable."
+    },
+    {
+      "id": "cn_esd_wristband",
+      "weight_g": 15,
+      "volume_cm3": 10,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "ミジンコ流サイバー忍者装備リスト"
+        }
+      ],
+      "scores": {
+        "survivability": 0,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "静電気防止リストバンド",
+      "name_en": "ESD Wristband",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "電子機器保護",
+      "purpose_short_en": "Electronic device protection",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "静電気放電から電子機器を守るリストバンド。ハードウェア作業時の必需品。",
+      "description_en": "Wristband to protect electronic devices from electrostatic discharge. Essential for hardware work."
+    },
+    {
+      "id": "cn_paracord_bracelet",
+      "weight_g": 25,
+      "volume_cm3": 15,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "ミジンコ流サイバー忍者装備リスト"
+        }
+      ],
+      "scores": {
+        "survivability": 2,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 3,
+        "legality_penalty": 0
+      },
+      "name_ja": "パラコードブレスレット",
+      "name_en": "Paracord Bracelet",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "緊急用ロープ・結束",
+      "purpose_short_en": "Emergency rope and binding",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "腕輪型のパラコード。緊急時にほどいてロープとして使用可能。",
+      "description_en": "Bracelet-style paracord. Can be unraveled for use as rope in emergencies."
+    }
+  ],
+  "name_ja": "ミジンコ流",
+  "name_en": "Daphnia Style"
+}

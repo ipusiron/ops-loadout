@@ -24,6 +24,10 @@
     "hacker": {
       "ja": "IT・ハッカー",
       "en": "IT/Hacker"
+    },
+    "cyber_ninja": {
+      "ja": "サイバー忍者",
+      "en": "Cyber Ninja"
     }
   },
   "presets": {
@@ -166,6 +170,13 @@
       "name_en": "Bushcraft Extended",
       "item_count": 27,
       "file": "disaster/bushcraft_extended.json"
+    },
+    "mijinko": {
+      "category": "cyber_ninja",
+      "name_ja": "ミジンコ流",
+      "name_en": "Daphnia Style",
+      "item_count": 24,
+      "file": "cyber_ninja/mijinko.json"
     }
   }
 }
