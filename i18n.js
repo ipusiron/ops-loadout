@@ -19,6 +19,7 @@ const I18N = {
     "cat.security": "Security",
     "cat.disaster": "Disaster",
     "cat.hacker": "IT",
+    "cat.cyber_ninja": "Ninja",
 
     // Controls - Preset
     "label.preset": "Preset",
@@ -231,6 +232,7 @@ const I18N = {
     "cat.security": "警備",
     "cat.disaster": "災害",
     "cat.hacker": "IT",
+    "cat.cyber_ninja": "忍者",
 
     // Controls - Preset
     "label.preset": "プリセット",
