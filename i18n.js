@@ -186,6 +186,7 @@ const I18N = {
     "optgroup.security": "Security",
     "optgroup.disaster": "Disaster",
     "optgroup.hacker": "Hacker/IT",
+    "optgroup.cyber_ninja": "Cyber Ninja",
 
     // PDF
     "pdf.generatedAt": "Generated at:",
@@ -399,6 +400,7 @@ const I18N = {
     "optgroup.security": "警備・防犯系 (Security)",
     "optgroup.disaster": "災害対応系 (Disaster)",
     "optgroup.hacker": "ハッカー・IT系 (Hacker/IT)",
+    "optgroup.cyber_ninja": "サイバー忍者系 (Cyber Ninja)",
 
     // PDF
     "pdf.generatedAt": "生成日時:",

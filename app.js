@@ -1718,7 +1718,8 @@
         rescue: '🚒 ' + t('optgroup.rescue'),
         security: '🛡️ ' + t('optgroup.security'),
         disaster: '⚠️ ' + t('optgroup.disaster'),
-        hacker: '💻 ' + t('optgroup.hacker')
+        hacker: '💻 ' + t('optgroup.hacker'),
+        cyber_ninja: '🥷 ' + t('optgroup.cyber_ninja')
       };
 
       Object.keys(presetsByCategory).forEach(cat => {
