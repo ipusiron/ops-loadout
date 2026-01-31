@@ -1,0 +1,249 @@
+{
+  "category": "disaster",
+  "name_ja": "マタギ型（七つ道具）",
+  "name_en": "Matagi Style (Seven Tools)",
+  "items": [
+    {
+      "id": "matagi_nagasa",
+      "weight_g": 300,
+      "volume_cm3": 150,
+      "dual_use": true,
+      "hazard_flag": true,
+      "sources": [
+        {
+          "title": "マタギに学ぶ登山技術",
+          "url": ""
+        }
+      ],
+      "scores": {
+        "survivability": 5,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 1,
+        "legality_penalty": 3
+      },
+      "name_ja": "ナガサ（マタギナイフ）",
+      "name_en": "Nagasa (Matagi Knife)",
+      "category_ja": "工具",
+      "category_en": "Tools",
+      "purpose_short_ja": "万能ナイフ・薪割り・獲物解体・チシマザサ刈り",
+      "purpose_short_en": "Universal knife, wood splitting, game processing, bamboo cutting",
+      "legality_notes_ja": {
+        "JP": "刃物所持規制対象、正当理由（狩猟・登山）必要",
+        "US": "州により規制あり"
+      },
+      "legality_notes_en": {
+        "JP": "Subject to blade possession regulations, lawful purpose (hunting, mountaineering) required",
+        "US": "Regulations vary by state"
+      },
+      "description_ja": "マタギが持ち歩く道具のなかで最も重要な万能ナイフ。薪割り、獲物の解体、チシマザサなどの刈り取りに使用。",
+      "description_en": "The most important tool carried by Matagi hunters. Universal knife for wood splitting, game processing, and cutting bamboo."
+    },
+    {
+      "id": "matagi_match",
+      "weight_g": 30,
+      "volume_cm3": 20,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "マタギに学ぶ登山技術",
+          "url": ""
+        }
+      ],
+      "scores": {
+        "survivability": 5,
+        "signalability": 1,
+        "exfiltration_support": 0,
+        "concealability": 4,
+        "legality_penalty": 0
+      },
+      "name_ja": "マッチ（ビニール袋入り）",
+      "name_en": "Matches (in Vinyl Bag)",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "火起こし（火種は現場調達）",
+      "purpose_short_en": "Fire starting (tinder sourced on-site)",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "雨や汗に濡れないようにビニール袋に入れて携帯。火種は現場で入手するのがマタギ流。",
+      "description_en": "Stored in vinyl bag to protect from rain and sweat. Matagi tradition sources tinder on-site."
+    },
+    {
+      "id": "matagi_vinyl_sheet",
+      "weight_g": 500,
+      "volume_cm3": 400,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "マタギに学ぶ登山技術",
+          "url": ""
+        }
+      ],
+      "scores": {
+        "survivability": 5,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "農業用ビニール（2m×3m）",
+      "name_en": "Agricultural Vinyl Sheet (2m x 3m)",
+      "category_ja": "シェルター",
+      "category_en": "Shelter",
+      "purpose_short_ja": "ビバーク・雨雪対策・テント代替",
+      "purpose_short_en": "Bivouac, rain/snow protection, tent alternative",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "ビニルハウス用のものを縦2m横3mほどに切って使用。身体に巻いて一夜を過ごす。重いテントが不要になり、雨や雪が降ったときにすぐビバーグ態勢に入れる。チシマザサを敷いたり被せたりすると暖かく、霜除けにもなる。",
+      "description_en": "Cut from greenhouse vinyl, approximately 2m x 3m. Wrap around body to spend the night. Eliminates need for heavy tent. Quick bivouac setup in rain or snow. Adding bamboo grass underneath provides warmth and frost protection."
+    },
+    {
+      "id": "matagi_mess_tin",
+      "weight_g": 350,
+      "volume_cm3": 800,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "マタギに学ぶ登山技術",
+          "url": ""
+        }
+      ],
+      "scores": {
+        "survivability": 4,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 1,
+        "legality_penalty": 0
+      },
+      "name_ja": "飯ごう",
+      "name_en": "Mess Tin (Hango)",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "炊飯・湯沸かし・皿・コップ",
+      "purpose_short_en": "Rice cooking, boiling water, plate, cup",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "ご飯を炊き、湯を沸かす。蓋や中蓋は皿にもコップにもなる。洗うときは洗剤を使用しないのがマタギの原則。",
+      "description_en": "For cooking rice and boiling water. Lids serve as plates and cups. Matagi principle: never use detergent when cleaning."
+    },
+    {
+      "id": "matagi_rope",
+      "weight_g": 200,
+      "volume_cm3": 150,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "マタギに学ぶ登山技術",
+          "url": ""
+        }
+      ],
+      "scores": {
+        "survivability": 4,
+        "signalability": 0,
+        "exfiltration_support": 2,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "ロープ（8mm×5m）",
+      "name_en": "Rope (8mm x 5m)",
+      "category_ja": "サバイバル",
+      "category_en": "Survival",
+      "purpose_short_ja": "獲物運搬・崖下降・汎用",
+      "purpose_short_en": "Game transport, cliff descent, general purpose",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "約8mmのロープ（木引きでも可）を5mほど携帯。熊を棒に吊るしたり、崖を下りるときに使用。",
+      "description_en": "Approximately 8mm rope (lumber hauling rope acceptable), about 5m length. Used for suspending game on poles and descending cliffs."
+    },
+    {
+      "id": "matagi_rubber_boots",
+      "weight_g": 1200,
+      "volume_cm3": 3000,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "マタギに学ぶ登山技術",
+          "url": ""
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 0,
+        "exfiltration_support": 1,
+        "concealability": 0,
+        "legality_penalty": 0
+      },
+      "name_ja": "長靴",
+      "name_en": "Rubber Boots (Nagagutsu)",
+      "category_ja": "衣類",
+      "category_en": "Clothing",
+      "purpose_short_ja": "渡渉・ローインパクト移動・植生保護",
+      "purpose_short_en": "Stream crossing, low-impact travel, vegetation protection",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "簡単な渡渉なら濡れずに済む。雨具のズボンを長靴に覆い被せ紐で縛ると深い沢でも水が入らない。山の植物や土壌を痛めないローインパクト移動が可能。斜面はジグザグに歩きショートカットはしない。",
+      "description_en": "Allows dry passage through shallow streams. For deeper water, cover with rain pants and tie. Enables low-impact travel that protects mountain vegetation and soil. Walk zigzag on slopes, never shortcut."
+    },
+    {
+      "id": "matagi_onigiri",
+      "weight_g": 360,
+      "volume_cm3": 450,
+      "quantity": 3,
+      "recommended_quantity": 3,
+      "dual_use": false,
+      "hazard_flag": false,
+      "sources": [
+        {
+          "title": "マタギに学ぶ登山技術",
+          "url": ""
+        }
+      ],
+      "scores": {
+        "survivability": 3,
+        "signalability": 0,
+        "exfiltration_support": 0,
+        "concealability": 2,
+        "legality_penalty": 0
+      },
+      "name_ja": "おにぎり",
+      "name_en": "Onigiri (Rice Ball)",
+      "category_ja": "食料",
+      "category_en": "Food",
+      "purpose_short_ja": "日帰り山行の基本食料",
+      "purpose_short_en": "Basic food for day trips",
+      "legality_notes_ja": {
+        "JP": "許可"
+      },
+      "legality_notes_en": {
+        "JP": "Allowed"
+      },
+      "description_ja": "マタギが日帰りで山に入るときの基本食料。3個を基本とし、若干の非常食を用意することも多い。",
+      "description_en": "Basic food when Matagi enter mountains for day trips. Three rice balls as standard, often supplemented with small emergency rations."
+    }
+  ]
+}

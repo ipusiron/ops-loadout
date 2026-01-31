@@ -171,6 +171,13 @@
       "item_count": 27,
       "file": "disaster/bushcraft_extended.json"
     },
+    "matagi": {
+      "category": "disaster",
+      "name_ja": "マタギ型（七つ道具）",
+      "name_en": "Matagi Style (Seven Tools)",
+      "item_count": 7,
+      "file": "disaster/matagi.json"
+    },
     "mijinko": {
       "category": "cyber_ninja",
       "name_ja": "ミジンコ流",
