@@ -7,6 +7,7 @@
   'use strict';
   const object = x => x !== null && typeof x === 'object' && !Array.isArray(x);
   const textFields = ['name', 'category', 'purpose_short', 'description', 'recommended_location_on_body'];
+  const IMPORT_LIMITS = Object.freeze({ maxBytes: 5 * 1024 * 1024, maxDepth: 32, maxNodes: 250000 });
 
   function number(value, fallback = 0, max = 1e9, integer = false) {
     if (value === undefined || value === null) return fallback;
@@ -54,6 +55,52 @@
     const result = items.map(normalizeItem);
     if (new Set(result.map(x => x.id)).size !== result.length) throw new TypeError('duplicateItem');
     return result;
+  }
+
+  function parseChecklistJSON(text) {
+    if (typeof text !== 'string') throw new TypeError('importFormat');
+    if (text.length > IMPORT_LIMITS.maxBytes || new TextEncoder().encode(text).byteLength > IMPORT_LIMITS.maxBytes) {
+      throw new TypeError('importTooLarge');
+    }
+    let data;
+    try { data = JSON.parse(text.replace(/^\ufeff/, '')); }
+    catch { throw new TypeError('importSyntax'); }
+
+    // Inspect every JSON value, including metadata that is not part of the saved list.
+    // Iteration keeps the depth limit independent of the JavaScript call stack.
+    const pending = [{ value: data, depth: 0 }];
+    let nodes = 1;
+    while (pending.length) {
+      const { value, depth } = pending.pop();
+      if (typeof value === 'number' && !Number.isFinite(value)) throw new TypeError('importNonFinite');
+      if (value === null || typeof value !== 'object') continue;
+      for (const key of Object.keys(value)) {
+        if (['__proto__', 'constructor', 'prototype'].includes(key)) throw new TypeError('importUnsafeKey');
+        if (depth + 1 > IMPORT_LIMITS.maxDepth) throw new TypeError('importTooDeep');
+        if (++nodes > IMPORT_LIMITS.maxNodes) throw new TypeError('importTooComplex');
+        pending.push({ value: value[key], depth: depth + 1 });
+      }
+    }
+    if (!object(data) || typeof data.checklistName !== 'string' || data.checklistName.length > 20000 ||
+        !Array.isArray(data.items) || (Object.hasOwn(data, 'createdAt') && typeof data.createdAt !== 'string')) {
+      throw new TypeError('importFormat');
+    }
+    return { name: data.checklistName, items: normalizeItems(data.items) };
+  }
+
+  function itemReview(item) {
+    const quantity = number(item.quantity, 1, 999, true);
+    const recommended = number(item.recommended_quantity, 1, 999, true);
+    const unchecked = item.checked === false;
+    const belowRecommended = quantity < recommended;
+    return { unchecked, belowRecommended, shortfall: Math.max(0, recommended - quantity), needsReview: unchecked || belowRecommended };
+  }
+
+  function matchesReview(item, mode) {
+    if (!['all', 'unchecked', 'below', 'either'].includes(mode)) throw new TypeError('invalidReviewMode');
+    const review = itemReview(item);
+    return mode === 'all' || (mode === 'unchecked' && review.unchecked) ||
+      (mode === 'below' && review.belowRecommended) || (mode === 'either' && review.needsReview);
   }
 
   function normalizeChecklists(value) {
@@ -122,5 +169,5 @@
     const rows = normalizeItems(items).map(it => [it.id, localized(it, 'name', lang), localized(it, 'category', lang), it.weight_g, it.volume_cm3, localized(it, 'purpose_short', lang), it.dual_use ? 1 : 0, it.hazard_flag ? 1 : 0, JSON.stringify(localized(it, 'legality_notes', lang) || {}), it.quantity, it.recommended_quantity, it.checked ? 1 : 0]);
     return '\ufeff' + [header, ...rows].map(row => row.map(csvCell).join(',')).join('\r\n') + '\r\n';
   }
-  return { number, normalizeItem, normalizeItems, normalizeChecklists, localized, editItem, totals, safeUrl, categoryColor, csvCell, csv };
+  return { IMPORT_LIMITS, parseChecklistJSON, itemReview, matchesReview, number, normalizeItem, normalizeItems, normalizeChecklists, localized, editItem, totals, safeUrl, categoryColor, csvCell, csv };
 });
