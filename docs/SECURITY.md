@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-This is a client-side application with no backend. All data is stored locally in the browser's localStorage.
+This is a client-side application with no application backend. The supported release is the code published from the repository's main branch. Editing takes place in memory; explicitly saved checklists and preferences use the browser's localStorage.
 
 | Version | Supported          |
 | ------- | ------------------ |
@@ -11,21 +11,22 @@ This is a client-side application with no backend. All data is stored locally in
 ## Security Features
 
 ### 1. XSS (Cross-Site Scripting) Protection
-- All user inputs are sanitized using `escapeHtml()` function
-- innerHTML usage is carefully controlled and escaped
-- No `eval()` or `Function()` constructor usage
-- URL sanitization blocks `javascript:`, `data:`, and `vbscript:` schemes via `sanitizeUrl()` function
+- Text inserted into HTML templates is escaped with `escapeHtml()`; plain text is assigned with `textContent` where applicable. Stored strings are not treated as trusted HTML.
+- Item IDs, category tags, checklist names, source titles, and legal notes are escaped at their HTML output locations.
+- Application code does not use `eval()` or the `Function()` constructor.
+- `sanitizeUrl()` delegates to `LoadoutCore.safeUrl()`. It allows only absolute HTTP(S) URLs without embedded credentials, whitespace, or control characters. Invalid source URLs are not made into links. An allowed URL is not a guarantee that its destination is safe or accurate.
 
 ### 2. Data Safety
-- All data stored in localStorage (client-side only)
-- No sensitive data transmission to external servers
-- JSON parsing with error handling
-- localStorage quota exceeded handling
+- `LoadoutCore` validates item and checklist shapes, numeric ranges, flags, and duplicate IDs. Quantity and recommended quantity are integers from 0 to 999; weight and volume are finite numbers from 0 to 1,000,000,000.
+- `LoadoutStore` catches parsing, access, validation, and write failures. An unreadable saved collection is not replaced with an empty one. Failed saves do not clear the unsaved state or display a success confirmation.
+- Before overwriting a saved checklist, the app compares it with the loaded snapshot. The store also compares the raw collection immediately before writing. This detects some concurrent changes, but localStorage has no atomic compare-and-swap transaction; simultaneous writes can still race. Avoid editing one collection in multiple tabs.
+- CSV export quotes every cell, doubles embedded quotes, and prefixes potentially formula-like values with an apostrophe. It includes a UTF-8 BOM and uses CRLF row endings. Spreadsheet behavior varies, and editing or re-saving CSV can remove protections; review imported cells before using them.
+- Saved data is not encrypted. This tool does not authenticate users, maintain a tamper-evident audit log, or certify safety, preparedness, ownership, or legality.
 
 ### 3. External Resources
-- CDN scripts include Subresource Integrity (SRI) hashes
-- CORS and referrer policies configured
-- Integrity checks for jsPDF and html2canvas libraries
+- jsPDF and html2canvas are fetched from cdnjs with fixed versions, SRI hashes, `crossorigin="anonymous"`, and `referrerpolicy="no-referrer"`.
+- SRI checks the received script bytes against the expected hash. It does not establish that a library has no vulnerabilities.
+- Styles and preset data are local files. Opening the page can still contact GitHub Pages and cdnjs; a browser or CDN may cache those resources. PDF export requires the PDF libraries to be available.
 
 ### 4. Content Security Policy (CSP)
 
@@ -34,11 +35,11 @@ CSP meta tag configured with restrictive policy:
 | Directive | Value | Purpose |
 |:---|:---|:---|
 | `default-src` | `'self'` | Only same-origin resources by default |
-| `script-src` | `'self'` + CDN hosts | No `unsafe-inline` - all scripts are external files |
-| `style-src` | `'self' 'unsafe-inline'` + Tailwind | Required by Tailwind CSS CDN JIT compiler |
+| `script-src` | `'self' https://cdnjs.cloudflare.com` | No `unsafe-inline` or `unsafe-eval`; scripts are external files |
+| `style-src` | `'self' 'unsafe-inline'` | Local stylesheets plus dynamic progress and PDF styles |
 | `img-src` | `'self' data:` | Canvas export support, no external https: |
-| `connect-src` | `'self'` | Only same-origin fetch requests |
-| `frame-ancestors` | `'none'` | Prevents clickjacking |
+| `font-src` | `'self'` | No remote web-font source |
+| `connect-src` | `'self' https://cdnjs.cloudflare.com` | Same-origin preset requests and cdnjs source-map requests |
 | `base-uri` | `'self'` | Prevents base tag hijacking |
 | `form-action` | `'self'` | Forms submit only to same-origin |
 
@@ -46,45 +47,49 @@ Additional measures:
 - External link targets use `rel="noopener noreferrer"` to prevent tabnabbing
 - Referrer-Policy set to `strict-origin-when-cross-origin`
 
-**Known Limitations**:
-- `style-src 'unsafe-inline'` is required by Tailwind CSS CDN's JIT compiler
-- GitHub Pages does not support custom HTTP headers (X-Frame-Options, X-Content-Type-Options)
+Known limitations:
+
+- Inline styles remain allowed for dynamic UI and PDF rendering. CSP is an additional restriction, not a replacement for output escaping and input validation.
+- `frame-ancestors`, `X-Frame-Options`, and `X-Content-Type-Options` require HTTP response headers; a meta tag cannot enforce them. This repository cannot configure those custom response headers on GitHub Pages. Do not describe the meta policy as clickjacking protection.
+- The file-opening mode uses a generated preset script. Browser storage, clipboard permissions, and CSP behavior can differ between `file://` and HTTP(S); use a local HTTP server for development comparisons.
 
 ## Reporting a Vulnerability
 
 If you discover a security vulnerability, please report it by:
 
-1. **DO NOT** create a public GitHub issue
+1. DO NOT create a public GitHub issue
 2. Contact the repository owner directly through GitHub
 3. Provide detailed information about the vulnerability
 4. Allow reasonable time for a fix before public disclosure
 
-We take security seriously and will respond promptly to legitimate security concerns.
+Include reproduction steps, the browser version, and a minimal non-sensitive example. Do not send personal equipment lists, credentials, or confidential organizational procedures. No response-time guarantee is provided.
 
 ## Best Practices for Users
 
-1. **Local Storage Only**: All data is stored in your browser. Clear browser data will delete all checklists.
-2. **No Account Required**: This tool runs entirely in your browser with no user authentication.
-3. **Backup Important Data**: Export your checklists as JSON files for backup purposes.
-4. **Browser Security**: Keep your browser updated for the latest security patches.
-5. **Public Computer Warning**: Do not use this tool on public/shared computers for sensitive equipment lists.
+1. Local storage: clearing site data removes saved checklists. Private browsing, storage policy, or quota limits can prevent persistence. Check for a successful save before closing the page.
+2. No account: the app does not provide authentication, account recovery, cross-device synchronization, or access control between people sharing a browser profile.
+3. External copies: export important checklists as JSON and retain the files securely. There is no JSON/CSV import or automatic restore interface; an exported copy is not a one-click recovery mechanism.
+4. Browser security: keep the browser updated. Avoid simultaneous editing in multiple tabs and retain the in-memory version if a storage conflict is reported.
+5. Shared computers: do not enter sensitive equipment lists or personal information on public/shared computers. Downloaded files and copied graph images remain outside the app's storage controls.
+6. Equipment decisions: verify actual weights, volumes, suitability, and applicable rules independently. Missing warning flags do not imply unrestricted possession, transport, or use. Sample radar ratings are not measurements of safety or legality.
 
 ## Dependencies
 
 This application uses:
-- Tailwind CSS (CDN) - Styling framework
-- jsPDF (CDN with SRI) - PDF generation
-- html2canvas (CDN with SRI) - HTML to canvas conversion
+- Local CSS files, including `css/utilities.css` and `css/accessibility.css`
+- jsPDF 4.2.1 (cdnjs with SRI) for PDF generation
+- html2canvas 1.4.1 (cdnjs with SRI) for HTML-to-canvas conversion
 
-All dependencies are loaded from trusted CDNs with integrity checks where possible.
+There are no npm runtime or test dependencies. Review library changes and update both the pinned URL and its matching SRI hash together. Run `npm test` and browser export checks before publishing; a passing test suite is not a security certification.
 
 ## Privacy
 
-- **No Analytics**: This application does not use Google Analytics or any tracking.
-- **No Cookies**: No cookies are set by this application.
-- **No External Data Transmission**: All data remains in your browser's localStorage.
-- **GitHub Pages Hosting**: Standard GitHub Pages privacy policy applies.
+- No analytics: the application does not install an analytics or tracking service.
+- No cookies: application code does not set cookies.
+- Checklist processing: the application has no upload endpoint and does not intentionally send entered checklist contents to a server. Exporting, copying, or sharing a file is a separate user action.
+- External requests: GitHub Pages serves the app and cdnjs serves the two PDF libraries. These services receive ordinary request metadata. Following source links opens the selected external site.
+- Local retention: in-memory edits, saved browser data, downloads, and clipboard images have different lifetimes. Clearing browser storage does not erase downloaded files or clipboard contents.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License; see [LICENSE](../LICENSE). The PDF libraries retain their own license notices.

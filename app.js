@@ -2,26 +2,20 @@
  * app.js — OpsLoadout - 緊急脱出キットのチェックリストツール
  *
  * アーキテクチャ: Vanilla JavaScript (フレームワーク不使用)
- * スタイリング: Tailwind CSS (CDN)
+ * スタイリング: css/ 配下のローカルCSS
  * データ保存: localStorage (ブラウザーローカル)
  *
  * 主要機能:
- * - 18種類のビルトインプリセット管理
- * - カスタムプリセット作成・編集・削除
+ * - 22種類のビルトインプリセット管理
+ * - 保存済みチェックリストの再利用・名前変更・削除
  * - チェックリスト保存・読み込み（上書き/別名保存対応）
  * - アイテム追加・編集・削除
  * - PDF/CSV/JSONエクスポート
  * - カテゴリフィルタリング
  * - XSS対策・localStorage検証
  *
- * ファイル構成:
- * - Lines 7-360: PRESETS定義（18種類）
- * - Lines 361-419: DOM要素参照
- * - Lines 420-699: ユーティリティ関数
- * - Lines 700-906: レンダリング関数
- * - Lines 907-992: モーダル管理
- * - Lines 993-1086: エクスポート関数
- * - Lines 1087-1400: イベントリスナー
+ * 共通処理: loadout-core.js（検証・集計・CSV）、loadout-store.js（保存）
+ * プリセット: HTTP(S)ではJSON、file://ではpresets-bundle.jsから読み込み
  */
 
 (() => {
@@ -1030,10 +1024,10 @@
     ctx.textAlign = 'left';
 
     // Footer
-    ctx.fillStyle = '#475569';
+    ctx.fillStyle = '#94a3b8';
     ctx.font = '12px system-ui, sans-serif';
     const dateStr = new Date().toLocaleDateString(currentLang === 'ja' ? 'ja-JP' : 'en-US');
-    ctx.fillText(`Generated: ${dateStr}  |  github.com/ipusiron/ops-loadout`, 50, H - 25);
+    ctx.fillText(`${t('pdf.generatedAt')} ${dateStr}  |  github.com/ipusiron/ops-loadout`, 50, H - 46);
   }
 
   // View 1: Pie Chart

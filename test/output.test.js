@@ -3,6 +3,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const C=require('../loadout-core');
+const vm=require('node:vm');
 // Independent parser tests actual CSV syntax, including embedded newlines and quotes.
 function parse(csv) {
   const rows=[]; let row=[],cell='',quoted=false;
@@ -39,4 +40,27 @@ test('weights are shared by screen, graph, PDF and print; no quantity zero fallb
   assert.doesNotMatch(app, /(?:it|item)\.quantity\s*\|\|\s*1/);
   assert.ok((app.match(/LoadoutCore\.totals\(state.items\)/g)||[]).length>=5);
   assert.doesNotMatch(app,/return categoryColors\[cat\].*Math\.random/);
+});
+
+test('graph date footer stays above the limitation band in both languages',()=>{
+  const app=fs.readFileSync(path.join(__dirname,'../app.js'),'utf8');
+  const source=app.match(/function drawGraphHeader\(ctx, W, H, stats\) \{[\s\S]*?\n  \}/)[0];
+  for(const lang of ['ja','en']) {
+    const calls=[];
+    const ctx={
+      createLinearGradient:()=>({addColorStop(){}}), fillRect(){}, beginPath(){}, arc(){}, fill(){},
+      measureText:text=>({width:text.length*8}),
+      fillText(text,x,y){calls.push({text,x,y,color:this.fillStyle});}
+    };
+    const label=lang==='ja'?'生成日時:':'Generated at:';
+    const env={ctx,state:{checklistName:'Sample'},currentLang:lang,t:key=>{
+      assert.equal(key,'pdf.generatedAt'); return label;
+    }};
+    vm.runInNewContext(source+'; drawGraphHeader(ctx,1200,675,{totalQty:5,totalWeight:1280,totalVolume:1730});',env);
+    const footer=calls.find(call=>call.text.includes('github.com/ipusiron/ops-loadout'));
+    assert.ok(footer.text.startsWith(label));
+    assert.equal(footer.y,629);
+    assert.ok(footer.y+12 < 645, 'footer leaves space above the bottom 30px band');
+    assert.equal(footer.color,'#94a3b8');
+  }
 });
