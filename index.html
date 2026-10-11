@@ -108,6 +108,19 @@
           </label>
         </div>
       </div>
+      <div class="review-controls">
+        <div class="control-group">
+          <label for="reviewFilter" class="control-label" data-i18n="review.label">見直し</label>
+          <select id="reviewFilter" class="form-select" aria-describedby="reviewNote">
+            <option value="all" data-i18n="review.all">すべて</option>
+            <option value="unchecked" data-i18n="review.unchecked">未チェック</option>
+            <option value="below" data-i18n="review.below">推奨数未満</option>
+            <option value="either" data-i18n="review.either">いずれか</option>
+          </select>
+        </div>
+        <button id="resetFilters" class="btn btn-secondary" data-i18n="review.reset">検索・絞り込みを解除</button>
+      </div>
+      <p id="reviewNote" class="scope-note" data-i18n="review.notice"></p>
     </div>
   </section>
 
@@ -135,6 +148,7 @@
         </div>
       </div>
       <p id="importStatus" class="import-status" role="status" aria-live="polite"></p>
+      <p id="reviewSummary" class="review-summary" role="status" aria-live="polite"></p>
       <div class="table-toolbar">
         <div class="table-toolbar-left">
           <div id="itemCountDisplay" class="item-count"></div>
@@ -145,12 +159,14 @@
         </div>
         <button id="addItemBtn" class="btn btn-secondary btn-sm" data-i18n="button.add">＋ アイテム追加</button>
       </div>
+      <p class="scope-note" data-i18n="review.scope"></p>
       <div id="itemTable" class="item-table"></div>
       <div id="itemDetail" class="item-detail-accordion hidden"></div>
 
       <!-- Print Summary (visible only when printing) -->
       <div class="print-summary" style="display: none;">
         <span id="printSummary"></span>
+        <p id="printScope"></p>
       </div>
     </section>
 

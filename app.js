@@ -84,6 +84,7 @@
   const globalSearch = document.getElementById('globalSearch');
   const filterDual = document.getElementById('filterDual');
   const filterHazard = document.getElementById('filterHazard');
+  const reviewFilter = document.getElementById('reviewFilter');
   const newChecklistBtn = document.getElementById('newChecklist');
   const saveConfirmModal = document.getElementById('saveConfirmModal');
   const saveConfirmOk = document.getElementById('saveConfirmOk');
@@ -318,6 +319,7 @@
     globalSearch.value = '';
     filterDual.checked = false;
     filterHazard.checked = false;
+    reviewFilter.value = 'all';
     markDirty();
     renderAll();
     renderPresetOptions(currentCategory);
@@ -532,6 +534,7 @@
     return state.items.filter(it=>{
       if (filterDual.checked && !it.dual_use) return false;
       if (filterHazard.checked && !it.hazard_flag) return false;
+      if (!LoadoutCore.matchesReview(it, reviewFilter.value)) return false;
       if (!q) return true;
       const name = getL(it, 'name').toLowerCase();
       const purpose = getL(it, 'purpose_short').toLowerCase();
@@ -540,9 +543,33 @@
   }
 
   function renderList() {
+    const focused = document.activeElement;
+    const focusClass = ['item-check', 'qty-input', 'detailBtn', 'editBtn', 'delBtn'].find(cls => focused?.classList.contains(cls));
+    const focusedId = itemTable.contains(focused) && focusClass ? focused.dataset.id : null;
+    const previousIds = [...itemTable.querySelectorAll('.item-check')].map(el => el.dataset.id);
     const list = filteredItems();
     const totalItems = state.items.length;
     const itemCountDisplay = document.getElementById('itemCountDisplay');
+    const reviewCounts = state.items.reduce((counts, item) => {
+      const review = LoadoutCore.itemReview(item);
+      counts.unchecked += Number(review.unchecked);
+      counts.below += Number(review.belowRecommended);
+      counts.either += Number(review.needsReview);
+      return counts;
+    }, { unchecked: 0, below: 0, either: 0 });
+    document.getElementById('reviewSummary').textContent = t('review.summary', { ...reviewCounts, shown: list.length, total: totalItems });
+    if (state.selectedItemId && !list.some(item => item.id === state.selectedItemId)) {
+      state.selectedItemId = null;
+      renderDetail(null);
+    }
+    function restoreRowFocus() {
+      if (!focusedId) return;
+      const controls = [...itemTable.querySelectorAll('.' + focusClass)];
+      const same = controls.find(el => el.dataset.id === focusedId);
+      const oldIndex = previousIds.indexOf(focusedId);
+      const next = controls.find(el => previousIds.indexOf(el.dataset.id) > oldIndex);
+      (same || next || reviewFilter).focus();
+    }
 
     // Update item count display
     if (itemCountDisplay) {
@@ -565,6 +592,7 @@
         </svg>
         <p class="text-sm text-gray-500">${totalItems === 0 ? t('msg.noItems') : t('msg.noMatchingItems')}</p>
       </div>`;
+      restoreRowFocus();
       return;
     }
 
@@ -586,6 +614,12 @@
     list.forEach(it => {
       const row = document.createElement('div');
       row.className = 'item-table-row';
+      const review = LoadoutCore.itemReview(it);
+      const reasons = [];
+      if (review.unchecked) reasons.push(t('review.unchecked'));
+      if (review.belowRecommended) reasons.push(t('review.difference', {
+        quantity: it.quantity, recommended: it.recommended_quantity, shortfall: review.shortfall
+      }));
 
       const badges = [];
       if (it.dual_use) {
@@ -599,7 +633,7 @@
         <div class="col-check">
           <input type="checkbox" data-id="${escapeHtml(it.id)}" aria-label="${escapeHtml(t('item.check', {name: getL(it, 'name')}))}" ${it.checked ? 'checked' : ''} class="item-check cursor-pointer focus:ring-2 focus:ring-blue-500"/>
         </div>
-        <div class="col-name">${escapeHtml(getL(it, 'name'))}</div>
+        <div class="col-name-cell"><div class="col-name">${escapeHtml(getL(it, 'name'))}</div><p class="review-reason">${escapeHtml(reasons.join(' / '))}</p></div>
         <div class="col-category">${escapeHtml(getL(it, 'category'))}</div>
         <div class="col-weight" data-label="${escapeHtml(t('th.weight'))}"><span class="weight-badge weight-${getWeightClass(it.weight_g || 0)}">${it.weight_g ?? 0}</span></div>
         <div class="col-qty" data-quantity="${it.quantity ?? 1}">
@@ -633,7 +667,7 @@
       cb.addEventListener('change', e=>{
         const id = e.target.dataset.id;
         const it = state.items.find(x=>x.id===id);
-        if (it) { it.checked = e.target.checked; markDirty(); renderTotals(); }
+        if (it) { it.checked = e.target.checked; markDirty(); renderAll(); }
       });
     });
     itemTable.querySelectorAll('.qty-input').forEach(input=>{
@@ -651,8 +685,7 @@
           e.target.closest('.col-qty').dataset.quantity = newQty;
           e.target.value = newQty;
           markDirty();
-          renderTotals();
-          renderDetail(state.selectedItemId);
+          renderAll();
         }
       });
     });
@@ -679,6 +712,7 @@
         }
       });
     });
+    restoreRowFocus();
   }
 
   function renderDetail(id) {
@@ -927,7 +961,7 @@
     renderAll();
     closeModal();
     const savedButton = [...itemTable.querySelectorAll('.editBtn')].find(button => button.dataset.id === payload.id);
-    if (editingId && savedButton) savedButton.focus();
+    if (editingId) (savedButton || reviewFilter).focus();
   });
 
   addItemBtn.addEventListener('click', ()=> openItemModal('add'));
@@ -1879,6 +1913,23 @@
   globalSearch.addEventListener('input', ()=> renderList());
   filterDual.addEventListener('change', ()=> renderList());
   filterHazard.addEventListener('change', ()=> renderList());
+  reviewFilter.addEventListener('change', () => renderList());
+  document.getElementById('resetFilters').addEventListener('click', () => {
+    globalSearch.value = '';
+    filterDual.checked = false;
+    filterHazard.checked = false;
+    reviewFilter.value = 'all';
+    renderList();
+  });
+
+  function filterDescription() {
+    const filters = [];
+    if (globalSearch.value.trim()) filters.push(t('label.search') + '=' + globalSearch.value.trim());
+    if (filterDual.checked) filters.push(t('filter.dualUseOnly'));
+    if (filterHazard.checked) filters.push(t('filter.hazardOnly'));
+    if (reviewFilter.value !== 'all') filters.push(t('review.label') + '=' + reviewFilter.selectedOptions[0].textContent);
+    return filters.join('; ') || t('review.none');
+  }
 
   // Category filter functionality
   let currentCategory = 'all';
@@ -2080,10 +2131,13 @@
       const totalWeight = totals.weight;
       const totalVolume = totals.volume;
       const summaryText = currentLang === 'ja'
-        ? `合計: ${state.items.length}アイテム | チェック済み: ${checkedItems.length}アイテム | 重量: ${totalWeight}g | 体積: ${totalVolume}cm³`
-        : `Total: ${state.items.length} items | Checked: ${checkedItems.length} items | Weight: ${totalWeight}g | Volume: ${totalVolume}cm³`;
+        ? `リスト全体: ${state.items.length}アイテム | チェック済み: ${checkedItems.length}アイテム | 重量: ${totalWeight}g | 体積: ${totalVolume}cm³`
+        : `Whole list: ${state.items.length} items | Checked: ${checkedItems.length} items | Weight: ${totalWeight}g | Volume: ${totalVolume}cm³`;
       printSummary.textContent = summaryText;
     }
+    document.getElementById('printScope').textContent = t('review.printScope', {
+      shown: filteredItems().length, total: state.items.length, filters: filterDescription()
+    });
   });
 
   // アプリケーション起動
