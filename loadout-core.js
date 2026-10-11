@@ -144,6 +144,49 @@
     }, { weight: 0, volume: 0, quantity: 0, rows: 0 });
   }
 
+  // Compare normalized fields by exact ID, never by a name or translated label.
+  // Both effective languages participate, so the result does not depend on UI language.
+  // Metadata (including flags, sources, scores and descriptions) is not compared.
+  // Rows follow current order, then reference-only order; absent sides are null.
+  // Added/removed rows have no field changes: changes describes matched IDs only.
+  function compareItems(currentItems, referenceItems) {
+    const current = normalizeItems(currentItems);
+    const reference = normalizeItems(referenceItems);
+    const currentById = new Map(current.map(item => [item.id, item]));
+    const referenceById = new Map(reference.map(item => [item.id, item]));
+    const fields = ['quantity', 'recommended_quantity', 'checked', 'weight_g', 'volume_cm3'];
+    const translatedFields = ['name', 'category', 'purpose_short'];
+    const rows = [];
+    const counts = { added: 0, removed: 0, changed: 0, unchanged: 0 };
+    for (const item of current) {
+      const other = referenceById.get(item.id) ?? null;
+      const changes = [];
+      if (other) {
+        for (const field of fields) {
+          if (item[field] !== other[field]) changes.push(field);
+        }
+        for (const field of translatedFields) {
+          for (const lang of ['ja', 'en']) {
+            if (localized(item, field, lang) !== localized(other, field, lang)) changes.push(field + '_' + lang);
+          }
+        }
+      }
+      const status = !other ? 'added' : changes.length ? 'changed' : 'unchanged';
+      rows.push({ id: item.id, status, current: item, reference: other, changes });
+      counts[status]++;
+    }
+    for (const item of reference) {
+      if (currentById.has(item.id)) continue;
+      rows.push({ id: item.id, status: 'removed', current: null, reference: item, changes: [] });
+      counts.removed++;
+    }
+    const currentTotals = totals(current);
+    const referenceTotals = totals(reference);
+    const delta = {};
+    for (const field of ['weight', 'volume', 'quantity', 'rows']) delta[field] = currentTotals[field] - referenceTotals[field];
+    return { rows, counts, currentTotals, referenceTotals, delta };
+  }
+
   function safeUrl(value) {
     if (typeof value !== 'string' || /[\u0000-\u0020\u007f]/.test(value)) return '';
     try {
@@ -169,5 +212,5 @@
     const rows = normalizeItems(items).map(it => [it.id, localized(it, 'name', lang), localized(it, 'category', lang), it.weight_g, it.volume_cm3, localized(it, 'purpose_short', lang), it.dual_use ? 1 : 0, it.hazard_flag ? 1 : 0, JSON.stringify(localized(it, 'legality_notes', lang) || {}), it.quantity, it.recommended_quantity, it.checked ? 1 : 0]);
     return '\ufeff' + [header, ...rows].map(row => row.map(csvCell).join(',')).join('\r\n') + '\r\n';
   }
-  return { IMPORT_LIMITS, parseChecklistJSON, itemReview, matchesReview, number, normalizeItem, normalizeItems, normalizeChecklists, localized, editItem, totals, safeUrl, categoryColor, csvCell, csv };
+  return { IMPORT_LIMITS, parseChecklistJSON, itemReview, matchesReview, number, normalizeItem, normalizeItems, normalizeChecklists, localized, editItem, totals, compareItems, safeUrl, categoryColor, csvCell, csv };
 });
