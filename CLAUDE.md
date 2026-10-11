@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-OpsLoadout is a browser-based packing checklist tool for planning examples across SERE, embassy, organizational, disaster-preparedness, and everyday-carry scenarios. It includes 28 presets with 398 item entries. It supports defensive education and lawful preparation, but does not determine whether equipment is safe, sufficient, or legal.
+OpsLoadout is a browser-based packing checklist tool for planning examples across SERE, embassy, organizational, disaster-preparedness, everyday-carry, travel, and event scenarios. It includes 9 categories and 28 presets with 398 item entries. It supports defensive education and lawful preparation, but does not determine whether equipment is safe, sufficient, or legal.
 
 Expanded Packing Features:
 - Quantity Management: Track current and recommended quantities as integers from 0 to 999; preserve zero
@@ -26,6 +26,7 @@ Design Principles:
 - Educational use: support checklist preparation and equipment review, not certification or operational instructions.
 - Legal caution: `dual_use` and `hazard_flag` provide prompts for review. Absence of a flag does not imply unrestricted use.
 - Numeric limits: weights and volumes are estimates. Radar values are unvalidated sample ratings, not survival, readiness, or legality measurements.
+- Illustrative data: the six commuting/work/travel/event presets contain 64 entries with explicitly illustrative weights and volumes. They are not measurements or packing standards. Keep their warnings, adjustable quantities, absent scores, and title-only example sources; do not invent verification or source URLs.
 - Data validation: fill documented missing-field defaults and reject invalid shapes, ranges, and duplicate IDs.
 
 Critical Security Policy: keep the tool focused on defensive and lawful uses. Do not add instructions for misuse or imply that historical references authorize possession, transport, or use. Preserve the safety and legal limitations in both languages and in exported output.
@@ -36,7 +37,9 @@ This is a vanilla JavaScript single-page application. The application requires n
 
 - index.html: Main UI structure, local styles, CSP meta policy, and pinned PDF scripts
 - app.js: Core application logic with lazy-loaded presets (vanilla JS, no frameworks)
-- loadout-core.js: DOM-independent validation, JSON restoration, review conditions, localization-aware edits, totals, URLs, colors, and CSV
+- loadout-core.js: DOM-independent validation, JSON restoration, review conditions, ID-based comparison, localization-aware edits, totals, URLs, colors, and CSV
+- loadout-catalog.js: Catalog validation and bilingual name/purpose search
+- comparison-view.js: Read-only, text-based comparison rendering with 50-row pagination
 - loadout-store.js: Validated checklist reads and writes with conflict checks
 - i18n.js: Internationalization module (Japanese/English)
 - css/: Modular CSS files (main.css as entry point)
@@ -118,9 +121,13 @@ Rendering Pipeline:
 
 Preset Loading:
 - `loadPresets()`: Loads metadata over HTTP(S), or the generated preset script under `file://`
-- `loadFromPreset(key)`: Loads and validates preset items on demand, ignoring superseded requests
-- `PRESETS_META`: Metadata cache (name, category, file path)
+- `readPresetData(key)`: Reads validated preset data into the cache only; never applies it to working or saved data
+- `loadFromPreset(key)`: Loads on an explicit load action, then applies only if the request is still current; initial embassy loading uses the same path
+- `PRESETS_META`: Metadata cache (bilingual name/purpose, category, count, file path)
+- `PRESET_CATEGORIES`: Category labels from `presets/index.json`, the single source for category buttons and option groups
 - `PRESETS`: Full preset data cache (loaded on demand)
+
+Candidate selection is not loading. Search and category changes update options and previews without replacing the working list. Out-of-filter candidates are deselected; saved lists are searched by name but not filtered by preset category. Rename/delete must target the loaded saved ID and its matching selected candidate. Catalog validation requires safe IDs, a known category string, bilingual labels/descriptions, integer counts, and the exact `category/id.json` relative path.
 
 Data Management:
 - `saveCurrentChecklist()`: Persists state to localStorage
@@ -131,6 +138,7 @@ Data Management:
 - `LoadoutCore.editItem()`: Applies form fields without discarding hidden metadata
 - `LoadoutCore.parseChecklistJSON(text)`: Validates a single exported checklist and returns `{ name, items }`
 - `LoadoutCore.itemReview(item)` / `matchesReview(item, mode)`: Pure unchecked and below-recommended conditions
+- `LoadoutCore.compareItems(currentItems, referenceItems)`: Validated, non-mutating ID-based differences and whole-list totals
 
 JSON Restoration:
 - Accept UTF-8 files up to 5 MiB (5,242,880 bytes, including BOM), allowing one leading BOM; reject invalid UTF-8
@@ -149,6 +157,18 @@ Review Semantics:
 - Count an item matching both conditions once in `either`; summary counts describe the whole list and separately show filtered rows
 - Reasons and counts update after every relevant mutation and language change; filters do not certify sufficiency, safety, or legality
 - Bulk check/uncheck acts on all items, including hidden ones; clearing item filters does not change the preset category
+
+Comparison Semantics:
+- Match by ID only; same names with different IDs are separate items, not automatically merged
+- Compare quantity, recommended quantity, checked state, unit weight/volume, and effective names/categories/purposes in both languages
+- Exclude descriptions, sources, flags, scores, and other metadata; unchanged means only the compared fields are unchanged
+- Report added/removed/changed/unchanged in current order followed by reference-only rows; never claim an audit history or proof of identity
+- Totals use checked quantities across each whole list; checked quantity-zero rows count as checked rows; deltas are current minus reference
+- Snapshot current data when opening the dialog and reference data when selected. Reload the reference for another tab's saved changes; reopen for a new current snapshot
+- Use a separate sequence to ignore stale reference reads after selection changes or closing; clear old results on failure or no selection
+- Keep comparison read-only: no writes to storage, auto-merging, or replacement of current data. Language changes re-render the same snapshots
+- Render text safely and at most 50 item rows per page; difference-only filtering never changes whole-list counts or totals
+- Do not score safety, sufficiency, or the relative quality of configurations
 
 Modal System:
 - `openItemModal(mode, item)`: Opens add/edit modal
@@ -204,6 +224,8 @@ The Test workflow runs `npm test` on Node.js 22 for pushes and pull requests. Te
 7. Test JSON preview/apply/cancel, invalid UTF-8 and structural boundaries, metadata/zero/false preservation, stale reads, and saving as a distinct list.
 8. Test all review modes with AND filters, overlapping counts, every mutation/language update, whole-list exports/bulk operations, and displayed-row printing.
 9. Commit inline quantity edits using actual Tab, Shift+Tab, Enter, mouse/touch clicks, long holds, and cancelled pointers. Immediate state updates must not move the click target mid-gesture or steal focus from dialogs.
+10. Test catalog search in both languages, category intersections, empty matches, previews, explicit loading, and cancellation of pending requests after candidate/search/category/edit/dialog changes.
+11. Test read-only comparison with exact positive/negative/zero deltas, translation-only changes, same-name different-ID items, excluded metadata, 50-row boundaries, stale responses, failed reads, snapshots, language changes, and unchanged working/saved data. Renderer DOM-stub tests do not replace real-browser layout/focus checks.
 
 ### Deployment
 GitHub Pages serves the repository root at https://ipusiron.github.io/ops-loadout/. Use a reviewed branch and pull request rather than a direct push to main:
@@ -251,11 +273,12 @@ Example field structure (illustrative values, not validated legal advice or equi
 - Modal backdrops use `.modal-backdrop.active`; the dialog helpers manage focus and inert backgrounds
 - Items with `dual_use=true` show yellow badge
 - Items with `hazard_flag=true` show red badge
-- Category filter buttons at the top for preset filtering (evasion/edc/rescue/security/disaster/hacker/cyber_ninja)
+- Category filter buttons and option groups generated from index.json (evasion/edc/rescue/security/disaster/hacker/cyber_ninja/travel/event)
+- Preview the selected preset's purpose and item count before explicit loading; show the illustrative-measurement warning when applicable
 - Inline quantity editing in the table view
 - Save flow: prompts for overwrite vs new-save if checklist already exists
 - Inputs use readable mobile font sizes; responsive rows retain labels and zero quantities
-- `langchange` redraws current content and an open graph without loading a saved checklist
+- `langchange` redraws current content, preview, and open graph/comparison without replacing the working list or comparison snapshots
 
 ## Important Files
 
@@ -263,8 +286,9 @@ Example field structure (illustrative values, not validated legal advice or equi
 - app.js: Core logic with lazy-loaded presets, state management, rendering, graph visualization
 - i18n.js: Internationalization (Japanese/English), language resources, UI translation
 - loadout-core.js / loadout-store.js: Testable data operations and storage access
+- loadout-catalog.js / comparison-view.js: Catalog validation/search and safe paginated comparison display
 - css/main.css: Entry point for modular CSS (@import for base, layout, controls, etc.)
-- presets/index.json: Preset metadata (name, category, file path for lazy loading)
+- presets/index.json: Category labels and preset metadata (name, purpose, category, count, file path for lazy loading)
 - presets/{category}/{preset}.json: Individual preset data with items
 - presets-bundle.js / scripts/build-presets.cjs: Generated file-opening data and its generator
 - test/ / package.json / .github/workflows/test.yml: Dependency-free tests and CI
