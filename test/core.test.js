@@ -16,6 +16,7 @@ test('quantity rejects fractions, negative, nonfinite, coercion and excessive va
   for (const quantity of [-1, 0.5, Infinity, NaN, '1', false, 1000]) assert.throws(() => C.normalizeItem(item({quantity})));
 });
 test('weights and structured fields are validated', () => {
+  for (const concealability of [Infinity, -Infinity, NaN, null, {}]) assert.throws(() => C.normalizeItem(item({concealability})));
   for (const bad of [{weight_g:-1}, {volume_cm3:'10'}, {name:{}}, {checked:1}, {category_tags:'x'}, {sources:[{title:3}]}, {legality_notes:[]}, {scores:{x:6}}]) assert.throws(() => C.normalizeItem(item(bad)));
 });
 test('duplicates and wrong roots are rejected', () => {

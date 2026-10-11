@@ -22,3 +22,14 @@ test('unsupported stored language does not become active',()=>{
   const context=run({getItem:()=>'<invalid>'});
   assert.equal(vm.runInContext('getLang()',context),'ja');
 });
+test('all literal translation references in scripts and HTML exist',()=>{
+  const context=run({getItem:()=>null});
+  const keys=new Set(JSON.parse(vm.runInContext('JSON.stringify(Object.keys(I18N.en))',context)));
+  const path=require('node:path');
+  for (const filename of ['app.js','i18n.js','index.html']) {
+    const text=fs.readFileSync(path.join(__dirname,'..',filename),'utf8');
+    for (const match of text.matchAll(/\bt\(['"]([^'"]+)['"]|data-i18n(?:-placeholder|-title)?="([^"]+)"/g)) {
+      assert.ok(keys.has(match[1] || match[2]), `${filename}: ${match[1] || match[2]}`);
+    }
+  }
+});

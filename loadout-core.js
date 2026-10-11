@@ -43,7 +43,8 @@
     }
     result.sources = item.sources ?? [];
     if (!Array.isArray(result.sources) || result.sources.some(s => !object(s) || typeof s.title !== 'string' || (s.url !== undefined && typeof s.url !== 'string'))) throw new TypeError('invalidSources');
-    if (item.concealability !== undefined && typeof item.concealability !== 'string' && typeof item.concealability !== 'number') throw new TypeError('invalidText');
+    if (item.concealability !== undefined && typeof item.concealability !== 'string' &&
+        (typeof item.concealability !== 'number' || !Number.isFinite(item.concealability))) throw new TypeError('invalidText');
     if (item.scores !== undefined && (!object(item.scores) || Object.values(item.scores).some(x => typeof x !== 'number' || !Number.isFinite(x) || x < 0 || x > 5))) throw new TypeError('invalidScores');
     return result;
   }

@@ -4,7 +4,7 @@
  * このファイルは、分割されたCSSモジュールを統合します。
  *
  * アーキテクチャ:
- * - Tailwind CSS (CDN) をベースとして使用
+ * - ローカルの基本スタイルとレイアウト補助
  * - カスタムコンポーネントで不足部分を補完
  * - レスポンシブデザイン（モバイルファースト）
  * - アクセシビリティ対応（focus-visible、ARIA）
@@ -23,6 +23,7 @@
  * 11. print.css    - 印刷スタイル
  */
 
+@import url('utilities.css');
 @import url('base.css');
 @import url('layout.css');
 @import url('controls.css');
@@ -34,3 +35,4 @@
 @import url('filters.css');
 @import url('saved.css');
 @import url('print.css');
+@import url('accessibility.css');
