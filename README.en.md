@@ -8,8 +8,8 @@ title: "OpsLoadout"
 subtitle_ja: "緊急脱出キットのチェックリストツール"
 subtitle_en: "Operations Packing Checklist Tool"
 
-description_ja: "装備構成（Loadout）を計画・編集・確認・出力するチェックリストツール。数量とチェック状態から重量・体積を集計し、軍民両用・危険物フラグ、出典、国別の注意を記録します。22種類のプリセットを収録。安全性・合法性や必要物資の充足は判定しません。"
-description_en: "A checklist tool for planning, editing, reviewing, and exporting equipment loadouts. Calculates weight and volume from quantities and checked items, and records dual-use/hazard flags, sources, and country-specific notes. Includes 22 presets. Does not determine safety, legality, or whether supplies are sufficient."
+description_ja: "装備構成（Loadout）を計画・編集・確認・出力するチェックリストツール。数量とチェック状態から重量・体積を集計し、軍民両用・危険物フラグ、出典、国別の注意を記録します。28種類のプリセットを収録。安全性・合法性や必要物資の充足は判定しません。"
+description_en: "A checklist tool for planning, editing, reviewing, and exporting equipment loadouts. Calculates weight and volume from quantities and checked items, and records dual-use/hazard flags, sources, and country-specific notes. Includes 28 presets. Does not determine safety, legality, or whether supplies are sufficient."
 
 category_ja:
   - 物理的セキュリティ
@@ -88,6 +88,10 @@ You can use the tool directly in your browser. The button at the top right switc
 >
 >*Import preview of JSON exported from the state above: 5 items, 4 checked (including 2 with quantity 0), 850 g, and 1000 cm³.*
 
+>![Edited list compared with its preset](assets/en/screenshot4.png)
+>
+>*The same input example compared with the original Bushcraft Minimal preset: 0 added, 0 removed, 4 changed, and 1 with compared fields unchanged. Every reference row is unchecked, so its totals are 0. Current minus reference is +850 g, +1000 cm³, quantity +2, and checked rows +4.*
+
 ---
 
 ## 🎯 Main Design Principles
@@ -95,7 +99,7 @@ You can use the tool directly in your browser. The button at the top right switc
 - Record sources: Display book titles, document names, and URLs from the presets, without guaranteeing that the entries match the source text or that the information is current
 - Support education and preparation: Help review equipment lists, without providing procedures for dangerous activities or illegal acts
 - Distinguish cautions: Display indicators for `dual_use` and `hazard_flag` and refer to the country-specific notes entered in the data
-- State source limitations: The 22 presets contain 334 item entries with source titles; 7 have URL-bearing sources and 327 do not. The entries have not all been checked against their source texts
+- State source limitations: The 28 presets contain 398 item entries with source titles; 7 have URL-bearing sources and 391 do not. The entries have not all been checked against their source texts
 
 ---
 
@@ -135,18 +139,26 @@ The tool is intended for individuals and organizations such as the following:
 
 ### 1. Preset Management
 
-- Built-in presets: 22 scenario-based presets
+- Built-in presets: 28 scenario-based presets
   - Evasion/escape: Embassy Escape, SERE
-  - Everyday carry: Urban Personal
+  - Everyday carry: Urban Personal, Commuting to Work or School, Working on a Laptop Away from Home
   - Rescue/fire: Firefighter, SAR
   - Security: Security Guard, Locksmith
   - Disaster preparedness: Disaster, Prepper, Bushcraft (Minimal/Standard/Extended), Matagi
   - Hacker/IT: Digital Nomad, Pentester, Network Engineer, Digital Forensics, Hardware Developer, SysAdmin, Data Recovery, RF Tech
   - Cyber ninja: Daphnia Style
+  - Travel/business trips: Overnight Business Trip, Two- to Three-Night Trip
+  - Events/organizing: Presentations and Workshops, Exhibitions and Booths
 - Saved checklists: Store and reuse lists in the browser with localStorage
-  - Rename: Edit the name of the selected saved checklist
-  - Delete: Confirm and delete an unwanted saved checklist
-- Category filters: Narrow the preset choices by 7 categories: evasion, everyday carry, rescue, security, disaster, IT, and cyber ninja
+  - Rename: Edit a saved list's name when the loaded list is also the selected candidate
+  - Delete: Confirm and delete a saved list when the loaded list is also the selected candidate
+- Category filters: Narrow the preset choices by 9 categories: evasion, everyday carry, rescue, security, disaster, IT, cyber ninja, travel/business trips, and events/organizing
+
+“Find a preset” searches names and purpose descriptions in both Japanese and English, regardless of the display language. Selecting a candidate shows its description and item count. Neither the working list nor saved data changes until you select “Load selected list.” If there are unsaved edits, loading proceeds only after you confirm that they can be discarded.
+
+Matching preset and saved-list counts are shown separately. Saved lists are searched by name and are not excluded by the category above. A candidate is deselected when it no longer matches the search or category; with no matches, only the selection prompt is shown. Empty the search field to clear the search condition. Switching languages retains a selected candidate if it still matches.
+
+The categories above the selector classify presets. They are separate from item categories and the item search in the list. Searching or changing preset categories does not filter the working list.
 
 ### 2. Checklist Management
 
@@ -209,7 +221,7 @@ These are targets for the progress display, not the actual weights of presets or
 
 ### 9. Lazy Preset Loading
 
-- On-demand loading: Fetch preset JSON when selected over HTTP(S)
+- On-demand loading: Over HTTP(S), fetch the JSON needed for the initial list, an explicit load, or a comparison reference; selecting a candidate in the main selector alone does not fetch it
 - Cache management: Keep loaded presets in memory
 - Local-file support: Load the generated `presets-bundle.js` under `file://`; fetching the PDF libraries requires a network connection
 
@@ -274,6 +286,32 @@ These 5 rows contain 3 unchecked items, 2 below their recommended quantity, and 
 
 The ☑ and ☐ bulk controls check or uncheck the whole list, including hidden rows. Review filters compare the entered reference values; they do not determine safety, legality, or whether required supplies are sufficient.
 
+### 12. Loadout Comparison (Read-Only)
+
+1. Select “Compare lists” while working on a list.
+2. Use “Choose a reference list” to select a preset or saved checklist.
+3. Review additions, removals, changes, and differences in checked totals from the reference to the current list. “Only items with differences” hides rows whose compared fields are unchanged.
+4. Select “Close” to return to the working list. Comparison does not save, merge, or replace either list.
+
+The current side is a snapshot taken when the comparison dialog opens; the reference is a copy read when selected. Use “Reload reference” to read a saved list changed in another tab. To refresh the current snapshot, close and reopen the dialog. A failed or cancelled reference read preserves the working list and saved data.
+
+Items with the same ID are matched. Items with the same name but different IDs are not matched automatically: an item present only in the current list is added, and one present only in the reference is removed. Compared fields are quantity, recommended quantity, checked state, unit weight and volume, and names, categories, and purposes in both Japanese and English. A Japanese-only change is detected even with the English UI, and vice versa. When a language-specific value is missing, comparison uses the shared value, or an empty string if that is also absent.
+
+Descriptions, sources, flags, scores, tags, repack frequency, and other metadata are excluded. “Compared fields unchanged” means only that the fields listed above match; it does not guarantee that all data or the physical items are identical.
+
+Differences are current minus reference. Weight, volume, and quantity totals cover all checked items × quantity in each list. Checked-row counts include checked rows with quantity 0. The main list's search and review filters and “Only items with differences” do not affect totals or the counts of added, removed, and changed items. Results are displayed in pages of 50 rows; use “Previous” and “Next” to move between pages.
+
+For the screenshot example, check all 5 rows of `bushcraft_minimal`, set `bc_ferro_rod` and `bc_paracord` to quantity 0, and uncheck `bc_metal_bottle`. Every row in the original preset is unchecked. The result is 0 added, 0 removed, 4 changed, and 1 with compared fields unchanged, with the following totals.
+
+| Metric | Reference | Current | Difference (current − reference) |
+|---|---:|---:|---:|
+| Weight (g) | 0 | 850 | +850 |
+| Volume (cm³) | 0 | 1000 | +1000 |
+| Quantity | 0 | 2 | +2 |
+| Checked rows | 0 | 4 | +4 |
+
+Weights and volumes are estimates or illustrative calculation values, not verified measurements. The size of a difference cannot determine safety, legality, or whether required supplies are sufficient. There is no dedicated export of comparison results or automatic application of the reference to the working list.
+
 ---
 
 ## 💡 Use Cases
@@ -288,7 +326,7 @@ The following are input examples, not reports of actual operational results or e
 | How much weight is removed by leaving spare camera equipment behind? | Change the quantity of a 50 g spare from 3 to 0 | That row's contribution changes from 150 g to 0 g, while the row remains in the list |
 | How can I count only the tools already prepared for an exhibition? | Check 50 g × 3 and leave 100 g × 2 unchecked | Both rows remain visible, but the total is 150 g; this can help track exhibition preparation |
 | How can I revisit the references for a research or practical-training kit? | Enter source titles, HTTP(S) links, and caution notes for each item | Review references in the details panel, without proving their accuracy or history |
-| How can I keep separate configurations for families or departments? | Edit the same list, save a new copy, and export separate CSV files | Keep separate records, without automatic synchronization or comparison of differences between lists |
+| How can I keep separate configurations for families or departments? | Edit the same list, save a new copy, and choose a saved list in “Compare lists” | Compare quantities, checked states, and other compared fields for matching IDs, without merging or automatic synchronization |
 
 The tool can organize equipment for classes, work, everyday life, and hobbies. The following 3 scenarios are also examples of using the interface; they do not establish evacuation procedures, required supplies, or legal compliance.
 
@@ -449,6 +487,8 @@ Benefits:
 
 The following describes the bundled data. Source names and durations describe the presets; they are not official equipment standards or evidence that a configuration is sufficient for everyone.
 
+The six presets Commuting to Work or School, Working on a Laptop Away from Home, Overnight Business Trip, Two- to Three-Night Trip, Presentations and Workshops, and Exhibitions and Booths contain 64 example entries in total. Their weights and volumes are illustrative calculation values, not measurements. Their source fields also identify the data as examples, not verified references or product specifications. Replace the values with measurements of your own items and adjust quantities for your plans. They do not guarantee safety, legality, or sufficient supplies.
+
 ### Evasion/Escape
 
 - Embassy Escape
@@ -464,6 +504,11 @@ The following describes the bundled data. Source names and durations describe th
 - Urban Personal
   A small amount of emergency cash, power bank, small bandage kit, collapsible water bottle, masks, and other items.
   An input example for everyday carry. Users must separately check the conditions for possession and use.
+
+| Preset ID | Name | Items | Purpose |
+|---|---|---:|---|
+| `commute` | Commuting to Work or School | 10 | A daily journey to work or school; adjust for classes, work, transport, and weather |
+| `mobile_work` | Working on a Laptop Away from Home | 11 | A laptop and peripherals for work away from home; check connectors, power, and desk space |
 
 ### Rescue/Fire
 
@@ -544,6 +589,20 @@ The following totals result from checking every row and retaining the preset qua
   An equipment set emphasizing light weight, multiple uses, and a low profile, for urban reconnaissance, exploration of dark spaces, and general tasks.
   A shock-resistant USB drive, water-resistant notebook, infrared light, night-vision scope, tactical pen, Faraday bag, laptop, multitool, small recording device, and other items.
   Source: Daphnia Style Cyber Ninja Equipment List.
+
+### Travel/Business Trips
+
+| Preset ID | Name | Items | Purpose |
+|---|---|---:|---|
+| `business_overnight` | Overnight Business Trip | 12 | Work equipment and a change of clothing; adjust for appointments and supplies at the accommodation |
+| `travel_short` | Two- to Three-Night Trip | 12 | Clothing and personal items; adjust quantities for the schedule, season, and laundry plans |
+
+### Events/Organizing
+
+| Preset ID | Name | Items | Purpose |
+|---|---|---:|---|
+| `presentation` | Presentations and Workshops | 10 | A presenter's equipment; check the venue and attendee count, and add handouts or activity supplies separately |
+| `exhibition` | Exhibitions and Booths | 9 | A tabletop exhibit; adjust for the display, visitor count, and organizer's setup guidance |
 
 > Caution: Flags for special tools and other items, and country-specific notes, are cautions recorded in the data. The absence of a warning does not mean possession or use is lawful or safe. A source attribution does not guarantee accuracy either.
 
@@ -860,8 +919,10 @@ ops-loadout/            # Project root
 ├── index.html          # Main HTML: UI structure and meta CSP
 ├── app.js              # Application logic with lazy loading
 ├── i18n.js             # Japanese/English language support
-├── loadout-core.js     # Validation, JSON restore, review, edits, totals, CSV
+├── loadout-core.js     # Validation, JSON restore, review, comparison, edits, totals, CSV
 ├── loadout-store.js    # Storage reads/writes and conflict checks
+├── loadout-catalog.js  # Preset category validation and bilingual search
+├── comparison-view.js # Comparison rendering and 50-row pagination
 ├── presets-bundle.js   # Generated presets for file://
 ├── css/                # Modular stylesheets
 │   ├── main.css        # Entry point using @import
@@ -879,12 +940,20 @@ ops-loadout/            # Project root
 │   ├── saved.css       # Saved checklists
 │   └── print.css       # Print styles
 ├── presets/            # Preset JSON data, loaded on demand
-│   ├── index.json      # Preset list and metadata
+│   ├── index.json      # Metadata for 9 categories and 28 presets
 │   ├── evasion/        # Evasion/escape
 │   │   ├── embassy.json # Embassy Escape
 │   │   └── sere.json  # SERE Aircrew
 │   ├── edc/            # Everyday carry
-│   │   └── urban.json # Urban Personal
+│   │   ├── urban.json # Urban Personal
+│   │   ├── commute.json # Commuting to Work or School
+│   │   └── mobile_work.json # Working on a Laptop Away from Home
+│   ├── travel/         # Travel/business trips
+│   │   ├── business_overnight.json # Overnight Business Trip
+│   │   └── travel_short.json # Two- to Three-Night Trip
+│   ├── event/          # Events/organizing
+│   │   ├── presentation.json # Presentations and Workshops
+│   │   └── exhibition.json # Exhibitions and Booths
 │   ├── rescue/         # Rescue/fire
 │   │   ├── firefighter.json # Firefighter
 │   │   └── sar.json   # Search and rescue
@@ -912,6 +981,9 @@ ops-loadout/            # Project root
 ├── scripts/            # Development scripts
 │   └── build-presets.cjs # Generate and verify the JSON bundle
 ├── test/               # Node regression tests
+│   ├── catalog.test.js # Categories, bilingual search, and example-data contract
+│   ├── comparison.test.js # ID matching, compared fields, totals, and immutability
+│   ├── comparison-view.test.js # Comparison DOM structure and pagination
 │   ├── core.test.js    # Validation, edits, totals, and storage
 │   ├── i18n.test.js    # Dictionary keys and their references
 │   ├── import.test.js  # JSON restoration validation and boundaries
@@ -926,10 +998,12 @@ ops-loadout/            # Project root
 │   ├── screenshot.png # Japanese: Pentester
 │   ├── screenshot2.png # Japanese: Minimal review
 │   ├── screenshot3.png # Japanese: JSON import preview
+│   ├── screenshot4.png # Japanese: loadout comparison
 │   └── en/            # English screenshots
 │       ├── screenshot.png # Pentester
 │       ├── screenshot2.png # Minimal review
-│       └── screenshot3.png # JSON import preview
+│       ├── screenshot3.png # JSON import preview
+│       └── screenshot4.png # Loadout comparison
 ├── package.json        # Dependency-free test command
 ├── README.md           # Japanese project documentation
 ├── README.en.md        # English documentation (this file)
@@ -958,9 +1032,10 @@ Topics include:
 - Checklist saving logic: overwrite and save as new
 - JSON import validation and application to an unsaved list
 - Review conditions and the scope of displayed rows and whole-list totals
+- Read-only ID-based comparison, compared fields, and pagination
 - PDF export implementation with html2canvas and jsPDF
 - Security measures, including XSS protection and localStorage validation
-- Category filtering
+- Preset categories, bilingual search, candidate preview, and explicit loading
 - Performance optimization
 
 For local use, open `index.html` directly, or run `python -m http.server 8000` from the repository root and open `http://localhost:8000/`. There is no feature that automatically saves the public page for offline use. Storage and clipboard availability under `file://` depend on the browser.

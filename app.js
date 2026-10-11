@@ -6,7 +6,7 @@
  * データ保存: localStorage (ブラウザーローカル)
  *
  * 主要機能:
- * - 22種類のビルトインプリセット管理
+ * - ビルトインプリセットの検索・事前確認・読み込み
  * - 保存済みチェックリストの再利用・名前変更・削除
  * - チェックリスト保存・読み込み（上書き/別名保存対応）
  * - アイテム追加・編集・削除
@@ -29,6 +29,7 @@
   // PRESETS: 実際のプリセットデータ（アイテム含む）- 遅延ロード
   let PRESETS_META = {};  // index.json から読み込むメタデータ
   let PRESETS = {};       // 遅延ロードされた完全なプリセットデータのキャッシュ
+  let PRESET_CATEGORIES = {};
 
   // ============================================================
   // アプリケーションステート (In-Memory State Management)
@@ -49,6 +50,19 @@
   // ============================================================
   // 頻繁にアクセスする要素を事前に取得してパフォーマンス向上
   const presetSelect = document.getElementById('presetSelect');
+  const presetSearch = document.getElementById('presetSearch');
+  const loadPresetBtn = document.getElementById('loadPresetBtn');
+  const presetCategories = document.getElementById('presetCategories');
+  const compareBtn = document.getElementById('compareBtn');
+  const comparisonModal = document.getElementById('comparisonModal');
+  const comparisonReference = document.getElementById('comparisonReference');
+  const comparisonOnlyChanges = document.getElementById('comparisonOnlyChanges');
+  let comparisonSequence = 0;
+  let comparisonCurrent = null;
+  let comparisonTarget = null;
+  let comparisonResult = null;
+  let comparisonPageIndex = 0;
+  let comparisonStatusKey = 'comparison.choose';
   const itemTable = document.getElementById('itemTable');
   const itemDetail = document.getElementById('itemDetail');
   const currentChecklistName = document.getElementById('currentChecklistName');
@@ -134,6 +148,12 @@
     (dialog.querySelector('input:not([type=checkbox]), button') || dialog).focus();
   }
   function closeDialog(dialog) {
+    if (dialog === comparisonModal) {
+      comparisonSequence++;
+      comparisonCurrent = comparisonTarget = comparisonResult = null;
+      comparisonStatusKey = 'comparison.choose';
+      renderComparison();
+    }
     if (dialog === importModal) {
       importCandidate = null;
       importSequence++;
@@ -366,7 +386,7 @@
     reviewFilter.value = 'all';
     markDirty();
     renderAll();
-    renderPresetOptions(currentCategory);
+    renderPresetOptions(currentCategory, currentPresetKey);
     setImportStatus('import.applied');
   });
   // Typing a quantity invalidates a pending file read before the change event commits it.
@@ -434,7 +454,7 @@
     currentSavedSnapshot = JSON.stringify({ ...payload, items: LoadoutCore.normalizeItems(payload.items) });
     state.isDirty = false;
     updateDirtyIndicator();
-    renderPresetOptions(currentCategory);
+    renderPresetOptions(currentCategory, currentPresetKey);
     return true;
   }
 
@@ -451,6 +471,7 @@
       state.selectedItemId = null;
       state.isDirty = false;
       renderAll();
+      renderPresetOptions(currentCategory, currentPresetKey);
     }
   }
 
@@ -480,7 +501,7 @@
     state.selectedItemId = null;
     state.isDirty = false;
     renderAll();
-    renderPresetOptions(currentCategory);
+    renderPresetOptions(currentCategory, currentPresetKey);
   }
 
   /**
@@ -489,28 +510,8 @@
    */
   async function loadFromPreset(key) {
     const request = ++loadRequest;
-    // Check cache first
-    if (PRESETS[key]) {
-      applyPreset(key, PRESETS[key]);
-      return;
-    }
-
-    // Get metadata
-    const meta = PRESETS_META[key];
-    if (!meta) {
-      console.error('Preset not found:', key);
-      return;
-    }
-
-    // Fetch individual preset file
     try {
-      const response = await fetch(`presets/${meta.file}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const presetData = await response.json();
-      presetData.items = LoadoutCore.normalizeItems(presetData.items);
-      PRESETS[key] = presetData;  // Cache it
+      const presetData = await readPresetData(key);
       if (request !== loadRequest) return;
       applyPreset(key, presetData);
     } catch (error) {
@@ -519,6 +520,116 @@
       alert(t('msg.presetLoadFailed'));
     }
   }
+
+  // Read into the data cache only; comparison must never apply a preset to state.
+  async function readPresetData(key) {
+    if (!Object.hasOwn(PRESETS_META, key)) throw new TypeError('unknownPreset');
+    if (Object.hasOwn(PRESETS, key)) return PRESETS[key];
+    const response = await fetch(`presets/${PRESETS_META[key].file}`);
+    if (!response.ok) throw new Error('presetLoadFailed');
+    const data = await response.json();
+    data.items = LoadoutCore.normalizeItems(data.items);
+    if (data.items.length !== PRESETS_META[key].item_count ||
+        ['ja', 'en'].some(lang => typeof data['name_' + lang] !== 'string')) throw new TypeError('invalidPreset');
+    PRESETS[key] = data;
+    return data;
+  }
+
+  function renderComparisonOptions() {
+    const selected = comparisonReference.value;
+    comparisonReference.replaceChildren(new Option(t('comparison.choose'), ''));
+    const saved = getAllChecklists();
+    if (saved.length) {
+      const group = document.createElement('optgroup');
+      group.label = t('optgroup.saved');
+      for (const list of saved) group.appendChild(new Option(list.name, 'saved-' + list.id));
+      comparisonReference.appendChild(group);
+    }
+    for (const [category, labels] of Object.entries(PRESET_CATEGORIES)) {
+      const group = document.createElement('optgroup');
+      group.label = labels[getLang()];
+      for (const [key, meta] of Object.entries(PRESETS_META)) {
+        if (meta.category === category) group.appendChild(new Option(getL(meta, 'name'), key));
+      }
+      comparisonReference.appendChild(group);
+    }
+    if (selected && comparisonTarget && ![...comparisonReference.options].some(option => option.value === selected)) {
+      comparisonReference.add(new Option(getL(comparisonTarget, 'name') + ' ' + t('comparison.unavailable'), selected));
+    }
+    comparisonReference.value = selected;
+    document.getElementById('comparisonReload').disabled = !comparisonReference.value;
+  }
+
+  function renderComparison() {
+    document.getElementById('comparisonStatus').textContent = comparisonStatusKey ? t(comparisonStatusKey) : '';
+    document.getElementById('comparisonResults').hidden = !comparisonResult;
+    if (!comparisonResult) {
+      for (const id of ['comparisonNames', 'comparisonSummary', 'comparisonStats', 'comparisonRows', 'comparisonPage']) {
+        document.getElementById(id).replaceChildren();
+      }
+      document.getElementById('comparisonPrev').disabled = true;
+      document.getElementById('comparisonNext').disabled = true;
+      return;
+    }
+    const paging = LoadoutComparisonView.render(comparisonResult, {
+      currentName: comparisonCurrent.name, referenceName: getL(comparisonTarget, 'name'),
+      onlyChanges: comparisonOnlyChanges.checked, pageIndex: comparisonPageIndex
+    });
+    comparisonPageIndex = paging.pageIndex;
+  }
+
+  async function readComparisonReference() {
+    const sequence = ++comparisonSequence;
+    const value = comparisonReference.value;
+    comparisonResult = comparisonTarget = null;
+    comparisonPageIndex = 0;
+    comparisonStatusKey = value ? 'comparison.loading' : 'comparison.choose';
+    document.getElementById('comparisonReload').disabled = !value;
+    renderComparison();
+    if (!value) return;
+    try {
+      let target;
+      if (value.startsWith('saved-')) {
+        const read = readChecklists();
+        if (!read.ok) throw new Error('storageRead');
+        target = read.lists.find(list => 'saved-' + list.id === value);
+        if (!target) throw new Error('missingReference');
+      } else {
+        target = await readPresetData(value);
+      }
+      if (sequence !== comparisonSequence || !comparisonModal.classList.contains('active')) return;
+      comparisonTarget = JSON.parse(JSON.stringify(target));
+      comparisonReference.selectedOptions[0].textContent = getL(comparisonTarget, 'name');
+      comparisonResult = LoadoutCore.compareItems(comparisonCurrent.items, comparisonTarget.items);
+      comparisonStatusKey = '';
+    } catch {
+      if (sequence !== comparisonSequence || !comparisonModal.classList.contains('active')) return;
+      comparisonResult = comparisonTarget = null;
+      comparisonStatusKey = 'comparison.failed';
+    }
+    renderComparison();
+  }
+
+  compareBtn.addEventListener('click', () => {
+    finishPointerRender();
+    comparisonSequence++;
+    comparisonCurrent = JSON.parse(JSON.stringify({ name: state.checklistName, items: state.items }));
+    comparisonResult = comparisonTarget = null;
+    comparisonPageIndex = 0;
+    comparisonStatusKey = 'comparison.choose';
+    comparisonReference.value = '';
+    renderComparisonOptions();
+    renderComparison();
+    openDialog(comparisonModal);
+    comparisonReference.focus();
+  });
+  comparisonReference.addEventListener('change', readComparisonReference);
+  document.getElementById('comparisonReload').addEventListener('click', readComparisonReference);
+  comparisonOnlyChanges.addEventListener('change', () => { comparisonPageIndex = 0; renderComparison(); });
+  document.getElementById('comparisonPrev').addEventListener('click', () => { comparisonPageIndex--; renderComparison(); });
+  document.getElementById('comparisonNext').addEventListener('click', () => { comparisonPageIndex++; renderComparison(); });
+  document.getElementById('comparisonClose').addEventListener('click', () => closeDialog(comparisonModal));
+  comparisonModal.addEventListener('click', event => { if (event.target === comparisonModal) closeDialog(comparisonModal); });
 
   /**
    * プリセットデータを適用
@@ -532,7 +643,7 @@
     state.selectedItemId = null;
     state.isDirty = false;
     renderAll();
-    renderPresetOptions(currentCategory);
+    renderPresetOptions(currentCategory, currentPresetKey);
   }
 
   function escapeHtml(s) {
@@ -1957,12 +2068,13 @@
   });
 
   // Preset loading
-  presetSelectEl.addEventListener('change', async (e)=>{
-    const value = e.target.value;
-    if (!value || (state.isDirty && !confirm(t('msg.discard')))) {
-      presetSelectEl.value = currentPresetKey;
-      return;
-    }
+  presetSelectEl.addEventListener('change', () => {
+    loadRequest++;
+    renderPresetPreview();
+  });
+  loadPresetBtn.addEventListener('click', async () => {
+    const value = presetSelectEl.value;
+    if (!value || (state.isDirty && !confirm(t('msg.discard')))) return;
     // Check if it's a saved checklist
     if (value.startsWith('saved-')) {
       const selectedOption = presetSelectEl.options[presetSelectEl.selectedIndex];
@@ -1979,7 +2091,7 @@
   // Delete saved checklist button
   deletePresetBtn.addEventListener('click', ()=> {
     const value = presetSelectEl.value;
-    if (value.startsWith('saved-')) {
+    if (value.startsWith('saved-') && value === currentPresetKey) {
       const selectedOption = presetSelectEl.options[presetSelectEl.selectedIndex];
       const checklistId = selectedOption.dataset.checklistId;
       const checklist = getAllChecklists().find(c => c.id === checklistId);
@@ -1994,7 +2106,7 @@
   // Rename saved checklist button
   renamePresetBtn.addEventListener('click', ()=> {
     const value = presetSelectEl.value;
-    if (value.startsWith('saved-')) {
+    if (value.startsWith('saved-') && value === currentPresetKey) {
       showNameEditModal('renameSaved');
     }
   });
@@ -2023,35 +2135,13 @@
   // Category filter functionality
   let currentCategory = 'all';
 
-  function renderPresetOptions(category = 'all') {
-    // Build presetsByCategory dynamically from PRESETS_META
-    const presetsByCategory = {
-      evasion: [],
-      edc: [],
-      rescue: [],
-      security: [],
-      disaster: [],
-      hacker: [],
-      cyber_ninja: []
-    };
-
-    // Group presets by category from metadata
-    Object.keys(PRESETS_META).forEach(key => {
-      const cat = PRESETS_META[key].category;
-      if (presetsByCategory[cat]) {
-        presetsByCategory[cat].push(key);
-      }
-    });
-
-    presetSelectEl.innerHTML = '';
-    presetSelectEl.add(new Option(t('preset.current'), ''));
-
-    // Add saved checklists at the top (always shown)
-    const savedChecklists = getAllChecklists();
+  function renderPresetOptions(category = 'all', selection = presetSelectEl.value) {
+    const candidates = LoadoutCatalog.find({ presets: PRESETS_META }, category, presetSearch.value);
+    const savedChecklists = getAllChecklists().filter(list => LoadoutCatalog.matches(list, presetSearch.value));
+    presetSelectEl.replaceChildren(new Option(t('catalog.choose'), ''));
     if (savedChecklists.length > 0) {
       const savedOptgroup = document.createElement('optgroup');
       savedOptgroup.label = '💾 ' + t('optgroup.saved');
-
       savedChecklists.forEach(checklist => {
         const option = document.createElement('option');
         option.value = 'saved-' + checklist.id;
@@ -2062,68 +2152,65 @@
 
       presetSelectEl.appendChild(savedOptgroup);
     }
-
-    if (category === 'all') {
-      // Show all with optgroups
-      const categoryLabels = {
-        evasion: '🏃 ' + t('optgroup.evasion'),
-        edc: '🎒 ' + t('optgroup.edc'),
-        rescue: '🚒 ' + t('optgroup.rescue'),
-        security: '🛡️ ' + t('optgroup.security'),
-        disaster: '⚠️ ' + t('optgroup.disaster'),
-        hacker: '💻 ' + t('optgroup.hacker'),
-        cyber_ninja: '✴️ ' + t('optgroup.cyber_ninja')
-      };
-
-      Object.keys(presetsByCategory).forEach(cat => {
-        if (presetsByCategory[cat].length === 0) return; // Skip empty categories
-        const optgroup = document.createElement('optgroup');
-        optgroup.label = categoryLabels[cat];
-
-        presetsByCategory[cat].forEach(presetKey => {
-          const option = document.createElement('option');
-          option.value = presetKey;
-          option.textContent = getL(PRESETS_META[presetKey], 'name');
-          optgroup.appendChild(option);
-        });
-
-        presetSelectEl.appendChild(optgroup);
-      });
-    } else {
-      // Show only selected category
-      const presetsToShow = presetsByCategory[category] || [];
-      presetsToShow.forEach(presetKey => {
-        const option = document.createElement('option');
-        option.value = presetKey;
-        option.textContent = getL(PRESETS_META[presetKey], 'name');
-        presetSelectEl.appendChild(option);
-      });
+    for (const [id, labels] of Object.entries(PRESET_CATEGORIES)) {
+      const entries = candidates.filter(([, meta]) => meta.category === id);
+      if (!entries.length) continue;
+      const group = document.createElement('optgroup');
+      group.label = labels[getLang()];
+      for (const [key, meta] of entries) group.appendChild(new Option(getL(meta, 'name'), key));
+      presetSelectEl.appendChild(group);
     }
-
-    // Updating candidate labels never loads data or discards edits.
-    if (currentPresetKey && ![...presetSelectEl.options].some(o => o.value === currentPresetKey)) {
-      const option = new Option(state.checklistName, currentPresetKey);
-      if (currentChecklistId) option.dataset.checklistId = currentChecklistId;
-      presetSelectEl.add(option);
-    }
-    presetSelectEl.value = currentPresetKey;
-    renamePresetBtn.classList.toggle('hidden', !currentChecklistId);
-    deletePresetBtn.classList.toggle('hidden', !currentChecklistId);
+    presetSelectEl.value = [...presetSelectEl.options].some(option => option.value === selection) ? selection : '';
+    document.getElementById('presetMatches').textContent = t('catalog.matches', { presets: candidates.length, saved: savedChecklists.length });
+    renderPresetPreview(savedChecklists);
   }
 
-  // Category filter button event listeners
-  document.querySelectorAll('.category-filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const category = btn.dataset.category;
-      currentCategory = category;
+  function renderPresetPreview(saved = getAllChecklists()) {
+    const value = presetSelectEl.value;
+    const list = value.startsWith('saved-') ? saved.find(entry => 'saved-' + entry.id === value) : null;
+    const meta = Object.hasOwn(PRESETS_META, value) ? PRESETS_META[value] : null;
+    const preview = document.getElementById('presetPreview');
+    loadPresetBtn.disabled = !list && !meta;
+    const currentSaved = !!list && value === currentPresetKey && !!currentChecklistId;
+    renamePresetBtn.classList.toggle('hidden', !currentSaved);
+    deletePresetBtn.classList.toggle('hidden', !currentSaved);
+    if (!list && !meta) {
+      preview.textContent = t('catalog.noSelection');
+      return;
+    }
+    preview.textContent = t('catalog.preview', { count: list ? list.items.length : meta.item_count,
+      description: list ? t('catalog.saved') : getL(meta, 'description') });
+    if (meta?.measurement_basis === 'illustrative') preview.textContent += '\n' + t('catalog.illustrative');
+  }
 
-      // Update active state
-      document.querySelectorAll('.category-filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      // Render filtered presets
-      renderPresetOptions(category);
-    });
+  function renderPresetCategories() {
+    // Keep the existing focused button when only labels/pressed state change.
+    const entries = [['all', { ja: t('cat.all'), en: t('cat.all') }], ...Object.entries(PRESET_CATEGORIES)];
+    for (const [id, labels] of entries) {
+      let button = [...presetCategories.children].find(el => el.dataset.category === id);
+      if (!button) {
+        button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'category-filter-btn';
+        button.dataset.category = id;
+        presetCategories.appendChild(button);
+      }
+      button.textContent = labels[getLang()];
+      button.classList.toggle('active', id === currentCategory);
+      button.setAttribute('aria-pressed', String(id === currentCategory));
+    }
+  }
+  presetCategories.addEventListener('click', event => {
+    const button = event.target.closest('.category-filter-btn');
+    if (!button) return;
+    loadRequest++;
+    currentCategory = button.dataset.category;
+    renderPresetCategories();
+    renderPresetOptions(currentCategory);
+  });
+  presetSearch.addEventListener('input', () => {
+    loadRequest++;
+    renderPresetOptions(currentCategory);
   });
 
   // ============================================================
@@ -2142,13 +2229,16 @@
           script.onerror = reject;
           document.head.appendChild(script);
         });
-        PRESETS_META = window.LoadoutPresets.index.presets;
+        const indexData = LoadoutCatalog.validate(window.LoadoutPresets.index);
+        PRESETS_META = indexData.presets;
+        PRESET_CATEGORIES = indexData.categories;
         PRESETS = window.LoadoutPresets.presets;
       } else {
         const response = await fetch('presets/index.json');
         if (!response.ok) throw new Error('presetLoadFailed');
-        const indexData = await response.json();
+        const indexData = LoadoutCatalog.validate(await response.json());
         PRESETS_META = indexData.presets;
+        PRESET_CATEGORIES = indexData.categories;
       }
       initApp(startingRequest === loadRequest);
     } catch (error) {
@@ -2159,10 +2249,13 @@
           category: "edc",
           name_ja: t('msg.newChecklist'),
           name_en: "New Checklist",
+          description_ja: "空のチェックリスト",
+          description_en: "Empty checklist",
           item_count: 0,
           file: ""
         }
       };
+      PRESET_CATEGORIES = { edc: { ja: '日常携帯', en: 'EDC' } };
       PRESETS['empty'] = { name_ja: t('msg.newChecklist'), name_en: "New Checklist", items: [] };
       initApp(startingRequest === loadRequest);
     }
@@ -2170,6 +2263,7 @@
 
   async function initApp(autoLoad = true) {
     // Render preset options first (using metadata)
+    renderPresetCategories();
     renderPresetOptions('all');
     if (!autoLoad) return;
 
@@ -2184,9 +2278,11 @@
   // i18n.jsからのlangchangeイベントを受け取り、動的コンテンツを再描画
   document.addEventListener('langchange', () => {
     renderAll();
+    renderPresetCategories();
     renderPresetOptions(currentCategory);
     renderImportPreview();
     setImportStatus(importStatusKey);
+    if (comparisonModal.classList.contains('active')) { renderComparisonOptions(); renderComparison(); }
     if (graphModal.classList.contains('active')) drawGraphImage();
   });
   window.addEventListener('beforeunload', event => {

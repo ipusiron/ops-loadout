@@ -4,6 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const C = require('../loadout-core');
+const Catalog = require('../loadout-catalog');
 const root = path.join(__dirname, '..');
 const read = file => fs.readFileSync(path.join(root, file), 'utf8').replace(/\r\n/g, '\n');
 const docs = ['README.md', 'README.en.md'];
@@ -11,6 +12,10 @@ const texts = docs.map(read);
 const index = JSON.parse(read('presets/index.json'));
 const presets = Object.fromEntries(Object.entries(index.presets).map(([key, meta]) =>
   [key, JSON.parse(read('presets/' + meta.file))]));
+const languageContext = vm.createContext({localStorage: {getItem: () => null}, document: {addEventListener(){}}});
+vm.runInContext(read('i18n.js'), languageContext);
+const dictionaries = JSON.parse(vm.runInContext('JSON.stringify(I18N)', languageContext));
+const feature = (text, number) => text.split('\n### ' + number + '. ')[1]?.split(/\n(?:### |## |---)/)[0];
 
 test('README metadata is shared and preserves series identifiers', () => {
   const metadata = texts.map(text => text.match(/^<!--\n([\s\S]+?)\n-->/)?.[1]);
@@ -29,17 +34,64 @@ test('README metadata is shared and preserves series identifiers', () => {
 test('README preset totals and source coverage match every bundled item', () => {
   const allItems = Object.values(presets).flatMap(preset => preset.items);
   const urlCount = allItems.filter(item => item.sources.some(source => C.safeUrl(source.url))).length;
-  assert.equal(Object.keys(presets).length, 22);
-  assert.equal(allItems.length, 334);
+  assert.equal(Object.keys(presets).length, 28);
+  assert.equal(allItems.length, 398);
   assert.ok(allItems.every(item => item.sources.length > 0));
   assert.equal(urlCount, 7);
-  assert.equal(allItems.length - urlCount, 327);
-  assert.match(texts[0], /22プリセット・334アイテム/);
-  assert.match(texts[0], /URL付きは7件、URLなしは327件/);
+  assert.equal(allItems.length - urlCount, 391);
+  assert.match(texts[0], /28プリセット・398アイテム/);
+  assert.match(texts[0], /URL付きは7件、URLなしは391件/);
   // Numbers alone are not enough: require them in the source-coverage paragraph.
-  const coverage = texts[1].split('\n').find(line => /334/.test(line) && /327/.test(line));
+  const coverage = texts[1].split('\n').find(line => /398/.test(line) && /391/.test(line));
   assert.ok(coverage, 'English source coverage paragraph');
-  for (const value of [22, 334, 7, 327]) assert.match(coverage, new RegExp('\\b' + value + '\\b'));
+  for (const value of [28, 398, 7, 391]) assert.match(coverage, new RegExp('\\b' + value + '\\b'));
+});
+
+test('README lists all six everyday, travel and event examples with actual names and counts', () => {
+  const examples = {commute: 10, mobile_work: 11, business_overnight: 12, travel_short: 12, presentation: 10, exhibition: 9};
+  assert.equal(Object.keys(Catalog.validate(index).categories).length, 9);
+  assert.equal(Object.values(examples).reduce((a, b) => a + b, 0), 64);
+  for (const [id, count] of Object.entries(examples)) {
+    assert.equal(index.presets[id].item_count, count);
+    assert.equal(presets[id].items.length, count);
+    assert.equal(index.presets[id].measurement_basis, 'illustrative');
+    for (const [i, lang] of ['ja', 'en'].entries()) {
+      const line = texts[i].split('\n').find(row => row.startsWith('| `' + id + '` |'));
+      assert.ok(line, docs[i] + ': ' + id);
+      const cells = line.split('|').slice(1, -1).map(cell => cell.trim());
+      assert.equal(cells[1], index.presets[id]['name_' + lang]);
+      assert.equal(Number(cells[2]), count);
+      assert.ok(cells[3].length > 15, 'purpose description: ' + id);
+    }
+  }
+  assert.match(texts[0], /6種類は、合計64件の入力例/);
+  assert.match(texts[1], /six presets[^\n]+64 example entries/);
+  assert.match(texts[0], /重量と体積は計算用の例示値で、実測値ではありません/);
+  assert.match(texts[1], /weights and volumes are illustrative calculation values, not measurements/);
+  assert.match(texts[0], /出典欄も例示データ[^\n]+検証済みの資料や製品仕様を意味しません/);
+  assert.match(texts[1], /source fields also identify the data as examples, not verified references or product specifications/);
+});
+
+test('README catalog workflow uses real labels and distinguishes preview, loading and item filters', () => {
+  const sections = texts.map(text => feature(text, 1));
+  for (const [i, lang] of ['ja', 'en'].entries()) {
+    for (const key of ['catalog.search', 'catalog.load']) {
+      assert.ok(sections[i].includes(dictionaries[lang][key]), lang + ': ' + key);
+    }
+    assert.match(sections[i], /9/);
+  }
+  assert.match(sections[0], /画面の言語に関係なく日英の名前と用途説明を検索/);
+  assert.match(sections[1], /names and purpose descriptions in both Japanese and English, regardless of the display language/);
+  assert.match(sections[0], /押すまで、作業中のリストも保存データも変わりません/);
+  assert.match(sections[1], /Neither the working list nor saved data changes until/);
+  assert.match(sections[0], /保存リストは名前で検索し、上段のカテゴリでは除外しません/);
+  assert.match(sections[1], /Saved lists are searched by name and are not excluded by the category/);
+  assert.match(sections[0], /0件なら選択を促す項目だけ/);
+  assert.match(sections[1], /with no matches, only the selection prompt/);
+  assert.match(sections[0], /候補の検索やカテゴリ切り替えで現在のリストを絞り込むことはありません/);
+  assert.match(sections[1], /Searching or changing preset categories does not filter the working list/);
+  assert.match(feature(texts[0], 9), /上段の候補を選ぶだけでは取得しない/);
+  assert.match(feature(texts[1], 9), /selecting a candidate in the main selector alone does not fetch it/);
 });
 
 test('both README tables use actual core weight, volume and quantity totals', () => {
@@ -152,7 +204,7 @@ test('README review and JSON preview screenshot captions use the actual preset a
   assert.equal(items.length, 5);
   for (const text of texts) {
     const captions = text.split('\n').filter(line => line.startsWith('>*'));
-    assert.equal(captions.length, 3);
+    assert.equal(captions.length, 4);
     for (const caption of captions.slice(1)) {
       assert.match(caption, /850\s*g/);
       assert.match(caption, /1000\s*cm³/);
@@ -163,10 +215,77 @@ test('README review and JSON preview screenshot captions use the actual preset a
   }
 });
 
+test('README comparison example and fourth screenshot caption use actual core counts and deltas', () => {
+  const reference = C.normalizeItems(presets.bushcraft_minimal.items);
+  const current = reference.map(item => ({...item, checked: item.id !== 'bc_metal_bottle',
+    quantity: ['bc_ferro_rod', 'bc_paracord'].includes(item.id) ? 0 : item.quantity}));
+  assert.ok(reference.every(item => item.checked === false));
+  const result = C.compareItems(current, reference);
+  assert.deepEqual(result.counts, {added: 0, removed: 0, changed: 4, unchanged: 1});
+  assert.deepEqual(result.currentTotals, {weight: 850, volume: 1000, quantity: 2, rows: 4});
+  assert.deepEqual(result.referenceTotals, {weight: 0, volume: 0, quantity: 0, rows: 0});
+  assert.deepEqual(result.delta, result.currentTotals);
+  const labels = [['重量（g）', '体積（cm³）', '数量', 'チェック済み行数'],
+    ['Weight (g)', 'Volume (cm³)', 'Quantity', 'Checked rows']];
+  for (let i = 0; i < texts.length; i++) {
+    const section = feature(texts[i], 12);
+    assert.ok(section, docs[i] + ': comparison section');
+    for (const [j, metric] of ['weight', 'volume', 'quantity', 'rows'].entries()) {
+      const row = section.split('\n').find(line => line.startsWith('| ' + labels[i][j] + ' |'));
+      assert.ok(row, labels[i][j]);
+      const values = row.split('|').slice(2, -1).map(cell => cell.trim());
+      assert.deepEqual(values, [String(result.referenceTotals[metric]), String(result.currentTotals[metric]), '+' + result.delta[metric]]);
+    }
+    for (const id of ['bushcraft_minimal', 'bc_ferro_rod', 'bc_paracord', 'bc_metal_bottle']) assert.ok(section.includes('`' + id + '`'));
+    const caption = texts[i].split('\n').filter(line => line.startsWith('>*'))[3];
+    const countPattern = i === 0 ? /追加0件、削除0件、変更4件、比較項目の変更なし1件/ : /0 added, 0 removed, 4 changed, and 1 with compared fields unchanged/;
+    assert.match(caption, countPattern);
+    assert.match(section, countPattern);
+    assert.match(caption, /\+850\s*g/);
+    assert.match(caption, /\+1000\s*cm³/);
+    assert.match(caption, /(?:数量|quantity)\s*\+2/);
+    assert.match(caption, /(?:チェック行数|checked rows)\s*\+4/);
+  }
+});
+
+test('README comparison contract matches real labels, ID-only matching, excluded metadata and paging', () => {
+  const sections = texts.map(text => feature(text, 12));
+  for (const [i, lang] of ['ja', 'en'].entries()) {
+    for (const key of ['comparison.button', 'comparison.choose', 'comparison.onlyChanges', 'comparison.close',
+      'comparison.reload', 'comparison.status.unchanged', 'comparison.prev', 'comparison.next']) {
+      assert.ok(sections[i].includes(dictionaries[lang][key]), lang + ': ' + key);
+    }
+  }
+  const claims = [
+    [/保存、統合、置き換えを行わない/, /does not save, merge, or replace either list/],
+    [/現在側は比較画面を開いた時点、比較先は選択時/, /current side is a snapshot taken when the comparison dialog opens; the reference is a copy read when selected/],
+    [/現在側を更新するには比較画面を閉じて開き直します/, /refresh the current snapshot, close and reopen the dialog/],
+    [/同名でもIDが異なる項目は自動では対応づけず/, /same name but different IDs are not matched automatically/],
+    [/日英両方の名前、カテゴリ、用途/, /names, categories, and purposes in both Japanese and English/],
+    [/数量、推奨数、チェック状態、単位重量と体積/, /quantity, recommended quantity, checked state, unit weight and volume/],
+    [/説明、出典、フラグ、スコア、タグ、入替頻度などのメタデータは比較対象外/, /Descriptions, sources, flags, scores, tags, repack frequency, and other metadata are excluded/],
+    [/全データの一致や実物が同じであることを保証しません/, /does not guarantee that all data or the physical items are identical/],
+    [/差は現在側から比較先を引いた値/, /Differences are current minus reference/],
+    [/各リスト全体のチェック済み項目×数量/, /all checked items × quantity in each list/],
+    [/チェック済み行数には数量0の行も含めます/, /Checked-row counts include checked rows with quantity 0/],
+    [/合計や追加・削除・変更の件数に影響しません/, /do not affect totals or the counts of added, removed, and changed items/],
+    [/1ページ50行/, /pages of 50 rows/],
+    [/検証された実測値ではありません/, /not verified measurements/],
+    [/安全性、合法性、必要物資の充足を判定することはできません/, /cannot determine safety, legality, or whether required supplies are sufficient/]
+  ];
+  for (const patterns of claims) for (let i = 0; i < sections.length; i++) assert.match(sections[i], patterns[i]);
+  const item = {id: 'shared', name: 'A', quantity: 0, checked: true};
+  const changed = C.compareItems([{...item, name: 'B'}], [item]);
+  assert.deepEqual(changed.rows[0].changes, ['name_ja', 'name_en']);
+  assert.deepEqual(C.compareItems([{...item, id: 'other'}], [item]).counts,
+    {added: 1, removed: 1, changed: 0, unchanged: 0});
+  assert.deepEqual(C.compareItems([{...item, sources: [{title: 'Example'}], description: 'Different'}], [item]).counts,
+    {added: 0, removed: 0, changed: 0, unchanged: 1});
+  assert.match(read('comparison-view.js'), /const PAGE_SIZE = 50;/);
+  for (const text of texts) assert.doesNotMatch(text, /リスト間の差分比較や自動同期は行わない|without automatic synchronization or comparison of differences between lists/);
+});
+
 test('README restoration instructions use the actual language labels and keep scope cautions', () => {
-  const context = vm.createContext({localStorage: {getItem: () => null}, document: {addEventListener(){}}});
-  vm.runInContext(read('i18n.js'), context);
-  const dictionaries = JSON.parse(vm.runInContext('JSON.stringify(I18N)', context));
   for (const [i, lang] of ['ja', 'en'].entries()) {
     for (const key of ['import.button', 'import.apply', 'review.all', 'review.unchecked', 'review.below', 'review.either', 'review.reset']) {
       assert.ok(texts[i].includes(dictionaries[lang][key]), lang + ': ' + key);
@@ -203,7 +322,7 @@ test('documented UL, STD and HVY targets match the actual buttons', () => {
   }
 });
 
-test('README relative links resolve and each language uses three real screenshots', () => {
+test('README relative links resolve and each language uses four real screenshots', () => {
   for (let i = 0; i < texts.length; i++) {
     const text = texts[i];
     for (const match of text.matchAll(/\]\(([^)\s]+)\)/g)) {
@@ -214,7 +333,7 @@ test('README relative links resolve and each language uses three real screenshot
     }
     const images = [...text.matchAll(/!\[[^\]]*\]\((assets\/[^)]+)\)/g)].map(match => match[1]);
     const prefix = i === 0 ? 'assets/' : 'assets/en/';
-    assert.deepEqual(images, ['screenshot.png', 'screenshot2.png', 'screenshot3.png'].map(name => prefix + name));
+    assert.deepEqual(images, ['screenshot.png', 'screenshot2.png', 'screenshot3.png', 'screenshot4.png'].map(name => prefix + name));
     for (const file of images) {
       const png = fs.readFileSync(path.join(root, file));
       assert.equal(png.subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
@@ -227,6 +346,32 @@ test('README relative links resolve and each language uses three real screenshot
     .filter(target => !/^[a-z]+:|^#/i.test(target))
     .map(target => target.replace(/^assets\/en\//, 'assets/').replace(/^README(?:\.en)?\.md$/, 'README.language.md')).sort();
   assert.deepEqual(relativeTargets(texts[0]), relativeTargets(texts[1]));
+});
+
+test('README directory trees match each other and contain real catalog, comparison and example files', () => {
+  const trees = texts.map(text => {
+    const block = text.match(/```\nops-loadout\/[\s\S]*?\n```/)?.[0];
+    assert.ok(block);
+    const directories = [];
+    const files = [];
+    for (const line of block.split('\n')) {
+      const match = line.match(/^([│ ]*)(?:├──|└──) ([^ #]+)/);
+      if (!match) continue;
+      assert.equal(match[1].length % 4, 0);
+      const depth = match[1].length / 4;
+      const entry = match[2];
+      const relative = [...directories.slice(0, depth), entry].join('/');
+      assert.ok(fs.existsSync(path.join(root, relative)), relative);
+      if (entry.endsWith('/')) directories[depth] = entry.slice(0, -1);
+      files.push(relative);
+    }
+    return files;
+  });
+  assert.deepEqual(trees[0], trees[1]);
+  for (const file of ['loadout-catalog.js', 'comparison-view.js', 'test/catalog.test.js', 'test/comparison.test.js',
+    'test/comparison-view.test.js', 'assets/screenshot4.png', 'assets/en/screenshot4.png',
+    ...['commute', 'mobile_work', 'business_overnight', 'travel_short', 'presentation', 'exhibition']
+      .map(id => 'presets/' + index.presets[id].file)]) assert.ok(trees[0].includes(file), file);
 });
 
 test('READMEs keep emphasis restrained and describe current behavior', () => {
@@ -263,6 +408,7 @@ const headingPairs = [
   ["### 9. プリセット遅延読込み","### 9. Lazy Preset Loading"],
   ["### 10. JSONバックアップの読み戻し","### 10. Restoring a JSON Backup"],
   ["### 11. 未チェック・推奨数未満の見直し","### 11. Reviewing Unchecked Items and Quantities Below the Recommendation"],
+  ["### 12. 構成の比較（読み取り専用）","### 12. Loadout Comparison (Read-Only)"],
   ["## 💡 活用シナリオ（Use Cases）","## 💡 Use Cases"],
   ["### このツールならではの使い方","### Uses Specific to This Tool"],
   ["### シナリオ1：海外駐在員の緊急脱出準備（企業・組織向け）","### Scenario 1: Emergency Evacuation Preparation for Overseas Employees (Companies and Organizations)"],
@@ -276,6 +422,8 @@ const headingPairs = [
   ["### 災害対応系（Disaster）","### Disaster Preparedness"],
   ["### ハッカー・IT系（Hacker/IT）","### Hacker/IT"],
   ["### サイバー忍者系（Cyber Ninja）","### Cyber Ninja"],
+  ["### 旅行・出張系（Travel/Business Trips）","### Travel/Business Trips"],
+  ["### イベント・運営系（Events/Organizing）","### Events/Organizing"],
   ["## 🗂️ データモデル（JSON スキーマ）","## 🗂️ Data Model (JSON Schema)"],
   ["### プリセットファイル構造","### Preset File Structure"],
   ["### アイテムスキーマ（多言語対応）","### Item Schema (Multilingual)"],
@@ -307,7 +455,7 @@ const headingPairs = [
 ];
 
 test('Japanese and English README headings correspond exactly in order and level', () => {
-  assert.equal(headingPairs.length, 61);
+  assert.equal(headingPairs.length, 64);
   for (let lang = 0; lang < texts.length; lang++) {
     const prose = texts[lang].replace(/```[\s\S]*?```/g, '');
     const headings = prose.match(/^#{1,6} .+$/gm);

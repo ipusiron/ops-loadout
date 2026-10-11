@@ -26,11 +26,24 @@ test('all literal translation references in scripts and HTML exist',()=>{
   const context=run({getItem:()=>null});
   const keys=new Set(JSON.parse(vm.runInContext('JSON.stringify(Object.keys(I18N.en))',context)));
   const path=require('node:path');
-  for (const filename of ['app.js','i18n.js','index.html']) {
+  for (const filename of ['app.js','i18n.js','index.html','comparison-view.js']) {
     const text=fs.readFileSync(path.join(__dirname,'..',filename),'utf8');
-    for (const match of text.matchAll(/\bt\(['"]([^'"]+)['"]|data-i18n(?:-placeholder|-title)?="([^"]+)"/g)) {
+    for (const match of text.matchAll(/\bt\(['"]([^'"]+)['"](?=\s*[,\)])|data-i18n(?:-placeholder|-title)?="([^"]+)"/g)) {
       assert.ok(keys.has(match[1] || match[2]), `${filename}: ${match[1] || match[2]}`);
     }
+  }
+});
+
+test('every computed comparison translation key exists in both languages',()=>{
+  const context=run({getItem:()=>null});
+  const dictionaries=JSON.parse(vm.runInContext('JSON.stringify(I18N)',context));
+  const groups={metric:['weight','volume','quantity','rows'],status:['added','removed','changed','unchanged'],
+    field:['name','category','purpose_short','quantity','recommended_quantity','checked','weight_g','volume_cm3']};
+  for(const dictionary of Object.values(dictionaries)) {
+    for(const [group,fields] of Object.entries(groups)) for(const field of fields) {
+      assert.ok(dictionary['comparison.'+group+'.'+field]?.length>0,group+'.'+field);
+    }
+    for(const key of ['reference','current','delta','checked','unchecked']) assert.ok(dictionary['comparison.'+key]?.length>0,key);
   }
 });
 

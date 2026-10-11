@@ -15,8 +15,8 @@ test('all preset metadata item counts match data', () => {
     assert.equal(meta.item_count, data.items.length, meta.file);
     total += data.items.length;
   }
-  assert.equal(Object.keys(index.presets).length, 22);
-  assert.equal(total, 334);
+  assert.equal(Object.keys(index.presets).length, 28);
+  assert.equal(total, 398);
 });
 test('external scripts have SRI and runtime CSS is local', () => {
   const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');

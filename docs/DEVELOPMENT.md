@@ -16,14 +16,15 @@ OpsLoadout - 開発者向け技術詳細
 8. [PDFエクスポート実装](#pdfエクスポート実装)
 9. [JSONバックアップの読み戻し](#jsonバックアップの読み戻し)
 10. [見直しフィルター](#見直しフィルター)
-11. [セキュリティ対策](#セキュリティ対策)
-12. [カテゴリフィルタリング](#カテゴリフィルタリング)
-13. [モーダルシステム](#モーダルシステム)
-14. [パフォーマンス最適化](#パフォーマンス最適化)
-15. [ユーティリティ関数](#ユーティリティ関数)
-16. [デバッグとトラブルシューティング](#デバッグとトラブルシューティング)
-17. [今後の拡張ポイント](#今後の拡張ポイント)
-18. [ライセンス](#ライセンス)
+11. [構成の比較](#構成の比較)
+12. [セキュリティ対策](#セキュリティ対策)
+13. [カテゴリフィルタリング](#カテゴリフィルタリング)
+14. [モーダルシステム](#モーダルシステム)
+15. [パフォーマンス最適化](#パフォーマンス最適化)
+16. [ユーティリティ関数](#ユーティリティ関数)
+17. [デバッグとトラブルシューティング](#デバッグとトラブルシューティング)
+18. [今後の拡張ポイント](#今後の拡張ポイント)
+19. [ライセンス](#ライセンス)
 
 ---
 
@@ -43,7 +44,9 @@ OpsLoadout - 開発者向け技術詳細
 ops-loadout/
 ├── index.html          # UI構造、CSPメタタグ、PDF用CDNスクリプト
 ├── app.js              # コアロジック（プリセット遅延読み込み、レンダリング、グラフ）
-├── loadout-core.js      # 入力検証、JSON復元、見直し判定、編集、集計、URL、CSV
+├── loadout-core.js      # 入力検証、JSON復元、見直し、構成比較、編集、集計、URL、CSV
+├── loadout-catalog.js   # カタログ検証、日英のプリセット検索
+├── comparison-view.js  # 読み取り専用の比較表示、50行ページング
 ├── loadout-store.js     # 保存データの検証と競合確認
 ├── i18n.js             # 多言語対応（日本語/英語リソース、切り替えロジック）
 ├── css/                # モジュール化されたスタイルシート
@@ -67,7 +70,7 @@ ops-loadout/
 ├── test/               # Node.js標準テスト
 ├── package.json        # npm testの定義（依存パッケージなし）
 ├── .github/workflows/test.yml # pushとpull_requestのCI
-└── presets/            # 22プリセット、334アイテムのJSON
+└── presets/            # 28プリセット、398アイテムのJSON
     ├── index.json      # メタデータ一覧
     ├── evasion/        # 脱出・回避系
     ├── edc/            # 日常携行系
@@ -75,20 +78,23 @@ ops-loadout/
     ├── security/       # 警備・防犯系
     ├── disaster/       # 災害対応系（ブッシュクラフト、マタギ含む）
     ├── cyber_ninja/    # サイバー忍者系
-    └── hacker/         # ハッカー・IT系
+    ├── hacker/         # ハッカー・IT系
+    ├── travel/         # 旅行・出張
+    └── event/          # イベント・運営
 ```
 
 ### app.jsの構成
 
 ```
 app.js
-├── PRESETS_META / PRESETS  # プリセットメタデータ・キャッシュ
+├── PRESETS_META / PRESET_CATEGORIES / PRESETS # メタデータ・分類・キャッシュ
 ├── State Management        # シングルステートオブジェクト
 ├── DOM Element References  # 頻繁アクセス要素のキャッシュ
 ├── Utility Functions       # escapeHtml, normalizeItem, uid等
 ├── localStorage Helpers    # 保存・読み込み・エラーハンドリング
 ├── Preset Loading          # 遅延読み込みロジック
 ├── JSON Import             # ファイル検証、確認画面、未保存リストへの適用
+├── Comparison              # 独立したスナップショット、参照読込、差分の描画
 ├── Rendering Pipeline      # renderAll, renderList, renderDetail, renderTotals
 ├── Graph Visualization     # drawPieView, drawRadarView, drawItemsView
 ├── Modal System            # アイテム編集、保存オプション、グラフ表示
@@ -123,7 +129,7 @@ localStorageのキー：
 
 - `state`はapp.jsのIIFE内に保持し、画面操作で更新する。
 - 選択中の保存ID、保存時点のコピー、プリセットキー、読み込み番号、フォームの未保存状態は別の変数で管理する。
-- 更新内容に応じて一覧、詳細、合計、選択肢を再描画する。言語やカテゴリの変更だけでは保存データを読み直さない。
+- 更新内容に応じて一覧、詳細、合計、選択肢を再描画する。言語やカテゴリの変更では保存済み候補を読み直すが、作業中のリストを置き換えない。
 
 `currentSavedSnapshot`は読み込み時の保存データを比較するための文字列です。履歴や監査証跡ではありません。`markDirty()`は未保存状態を立てると同時に読み込み番号を進めるため、遅れて届いたプリセットが利用者の編集を置き換えることを防ぎます。
 
@@ -158,7 +164,7 @@ function normalizeItem(it) {
 
 ### 概要
 
-プリセットデータは`presets/`フォルダーに分割されています。HTTP(S)では起動時にメタデータを読み、選択されたプリセットのJSONを取得します。初期選択の大使館脱出型もこの処理を使用します。
+プリセットデータは`presets/`フォルダーに分割されています。HTTP(S)では起動時にメタデータを読み、通常画面では「選択した構成を読み込む」を押したときに個別JSONを取得します。候補選択だけでは取得・適用せず、説明と件数を表示します。初期表示の大使館脱出型は自動で読み込みます。比較画面では、比較先の選択時に同じ取得処理を使いますが、現在のリストへは適用しません。
 
 ```
 presets/
@@ -185,7 +191,9 @@ index.jsonのメタデータ抜粋：
       "name_en": "Embassy Evacuation",
       "category": "evasion",
       "item_count": 20,
-      "file": "evasion/embassy.json"
+      "file": "evasion/embassy.json",
+      "description_ja": "在外滞在からの移動準備を整理する例。状況や当局の案内に合わせて確認します。",
+      "description_en": "Example for organizing departure preparations while abroad. Review it against the situation and official guidance."
     }
   }
 }
@@ -215,19 +223,16 @@ index.jsonのメタデータ抜粋：
 ### 読み込みフロー
 
 ```javascript
-// loadFromPreset()のHTTP取得部分
-const response = await fetch(`presets/${meta.file}`);
-if (!response.ok) {
-  throw new Error(`HTTP error! status: ${response.status}`);
-}
-const presetData = await response.json();
-presetData.items = LoadoutCore.normalizeItems(presetData.items);
-PRESETS[key] = presetData;
+// loadFromPreset()の適用部分。例外は呼び出し側のtry/catchで通知する
+const request = ++loadRequest;
+const presetData = await readPresetData(key);
 if (request !== loadRequest) return;
 applyPreset(key, presetData);
 ```
 
-`loadFromPreset()`は読み込み開始時の番号を保持します。ほかの選択や編集が行われた場合、取得済みデータはキャッシュに残しても画面へ適用しません。現在の読み込みが失敗した場合は通知し、選択欄を現在のリストへ戻します。
+`readPresetData()`は既知のキーだけを受け付け、キャッシュにあればそれを返します。HTTPで取得した場合はアイテムを正規化し、メタデータの件数と日英の名前の型を確認してからキャッシュへ入れます。この関数自体は現在のリストや保存領域を変更しません。
+
+`loadFromPreset()`は読み込み開始時の番号を保持します。候補・カテゴリー・検索の変更や編集、ダイアログ操作が行われた場合、取得済みデータはキャッシュに残しても画面へ適用しません。現在の読み込みが失敗した場合は通知し、選択欄に現在のキーを設定します。絞り込みによりその候補がなければ選択欄は空になります。
 
 `file://`ではJSONのfetchを使わず、`loadPresets()`が`presets-bundle.js`をスクリプトとして読み込みます。このファイルは全プリセットを含むため、HTTPの遅延読み込みとは転送量と読み込み単位が異なります。
 
@@ -299,7 +304,7 @@ function setLang(lang) {
 
 `readPreference()`と`writePreference()`はlocalStorageへのアクセスをtry/catchで保護します。保存できなくても現在のページでは切り替え、次回起動時まで保持できないことを通知します。
 
-`updateStaticTexts()`はテキスト、placeholder、title、主要操作のaria-label、`html.lang`を更新します。app.jsは`langchange`を受け、現在の一覧、詳細、合計、選択肢、開いているグラフを再描画します。保存済みリストを読み直さないため、未保存の編集は保持されます。
+`updateStaticTexts()`はテキスト、placeholder、title、主要操作のaria-label、`html.lang`を更新します。app.jsは`langchange`を受け、現在の一覧、詳細、合計、候補とプレビュー、開いているグラフや比較を再描画します。比較の選択肢は保存名を読み直しますが、比較結果には取得済みスナップショットを使います。言語変更だけで現在のリストや比較内容を読み替えないため、未保存の編集は保持されます。
 
 ---
 
@@ -409,7 +414,7 @@ currentSavedSnapshot = JSON.stringify({
 });
 state.isDirty = false;
 updateDirtyIndicator();
-renderPresetOptions(currentCategory);
+renderPresetOptions(currentCategory, currentPresetKey);
 return true;
 ```
 
@@ -435,7 +440,7 @@ function deleteChecklist(id) {
 }
 ```
 
-保存済み選択欄の名前変更は`showNameEditModal('renameSaved')`で編集し、保存処理へ進みます。画面中央の名前変更は編集中の名前を変更して未保存状態にします。名前を変えても変更履歴は作られません。
+保存済み選択欄の名前変更は`showNameEditModal('renameSaved')`で編集し、保存処理へ進みます。名前変更と削除の操作は、候補と現在読み込み済みの保存IDが一致する場合だけ表示・実行します。画面中央の名前変更は編集中の名前を変更して未保存状態にします。名前を変えても変更履歴は作られません。
 
 削除ボタンでは対象と未保存変更を確認し、保存時点のコピーと現在の保存値が異なる場合は削除を止めます。ストレージへの書き込みが成功した場合だけ、現在のリストを空の新規リストへ変更します。保存済みデータと現在の画面を別々に更新してはいけません。
 
@@ -477,7 +482,7 @@ saveBtn.addEventListener('click', () => {
 });
 ```
 
-上書き前に、選択中の保存済みリストと`currentSavedSnapshot`を比較します。ほかのタブで更新や削除があれば上書きを止め、JSON出力や別名保存を案内します。さらにストアは、読み込み時の生文字列と書き込み直前の値を比較します。
+上書き前に、現在読み込み済みの保存リストと`currentSavedSnapshot`を比較します。上段で別の候補を選んだだけでは保存先は変わりません。ほかのタブで更新や削除があれば上書きを止め、JSON出力や別名保存を案内します。さらにストアは、読み込み時の生文字列と書き込み直前の値を比較します。
 
 localStorageには原子的な比較と書き込みがないため、比較直後の同時書き込みまでは防げません。同じ保存領域を複数タブで並行編集しない運用が必要です。端末間同期や編集内容の自動統合はありません。
 
@@ -635,6 +640,27 @@ JSON、CSV、PDFの対象は常に全リストです。画面とグラフの集�
 
 ---
 
+## 構成の比較
+
+`LoadoutCore.compareItems(currentItems, referenceItems)`は両側を既存の検証器で正規化し、IDだけで対応づけます。同名でもIDが違えば別項目です。返り値の`rows`は現在側の順に並び、その後に比較先だけの項目が続きます。
+
+| 返り値 | 内容 |
+|---|---|
+| `rows` | `id`、`status`、`current`、`reference`、`changes`。存在しない側はnull |
+| `counts` | `added`、`removed`、`changed`、`unchanged`の全体件数 |
+| `currentTotals` / `referenceTotals` | `weight`、`volume`、`quantity`、`rows` |
+| `delta` | 各集計値の現在側−比較先 |
+
+比較対象は`quantity`、`recommended_quantity`、`checked`、`weight_g`、`volume_cm3`と、日英の実効値を使った`name`、`category`、`purpose_short`です。片方の言語だけの変更も検出します。説明、出典、フラグ、スコア、その他のメタデータは比較しません。`unchanged`は対象フィールドだけが同じという意味で、全データの一致や実物の同一性を証明しません。関数は入力を書き換えません。
+
+集計は各リスト全体のチェック済み数量を使います。数量0のチェック行も`rows`に数えます。一覧の検索・見直し条件や比較の「差がある項目だけ」は集計値を変えません。重量と体積は入力された目安・例示値の計算であり、差が小さい構成の安全性や必要物資の充足を保証しません。
+
+比較を開くときに`comparisonCurrent`へ現在側を複製し、比較先の選択時に保存リストまたはプリセットを読み取って`comparisonTarget`へ複製します。別タブの保存変更は「比較先を読み直す」で反映し、現在側は閉じて開き直して更新します。選択変更・閉じる操作は`comparisonSequence`を進め、古い非同期結果を破棄します。失敗・未選択時は古い結果を消し、保存領域や作業中の内容は残します。自動保存・統合・置換はありません。
+
+`comparison-view.js`の`LoadoutComparisonView.render()`は結果と表示条件を受け取り、`textContent`で安全にDOMを構築します。1ページ50行とし、ページ番号を有効範囲へ収めます。件数は全体、表示行数は絞り込み後の値です。描画処理はイベント登録、保存、通信、フォーカス移動を行いません。狭い画面では比較先と現在の値を縦に配置します。
+
+---
+
 ## セキュリティ対策
 
 ### XSS対策
@@ -690,42 +716,31 @@ CSPはindex.htmlのmetaタグで設定します。スクリプトは自サイト
 
 ## カテゴリフィルタリング
 
-### presetsByCategoryマッピング
+### カテゴリーの正本と検証
 
 ```javascript
-const presetsByCategory = {
-  evasion: [], edc: [], rescue: [], security: [],
-  disaster: [], hacker: [], cyber_ninja: []
-};
-Object.keys(PRESETS_META).forEach(key => {
-  const meta = PRESETS_META[key];
-  if (presetsByCategory[meta.category]) {
-    presetsByCategory[meta.category].push(key);
-  }
-});
+// loadPresets()で読み込んだindexを検証してから使用する
+LoadoutCatalog.validate(index);
+PRESETS_META = index.presets;
+PRESET_CATEGORIES = index.categories;
 ```
 
-カテゴリからプリセットへの対応はメタデータを使用します。カテゴリは7種類です。マタギ型は災害対応、ミジンコ流はサイバー忍者系に含まれます。アイテムのカテゴリとプリセットのカテゴリは別の情報です。
+カテゴリー名とプリセットの対応の正本は`presets/index.json`です。ボタンと選択欄は同じデータから生成し、9カテゴリー・28プリセットを扱います。`LoadoutCatalog.validate()`はID、日英の名前と説明、既知のカテゴリー文字列、0〜10,000の整数件数、`category/id.json`形式のパスを検証します。アイテムのカテゴリーとプリセットのカテゴリーは別の情報です。
+
+日常携帯に通勤通学10件・外出先PC作業11件、旅行・出張に一泊出張12件・2〜3泊旅行12件、イベント・運営に登壇とワークショップ10件・展示と出展9件を収録しています。この6種64項目の重量と体積は操作用の例示値で、実測値や公的な標準値ではありません。各説明と候補プレビューに注記し、出典URLやスコアは付けていません。数量・推奨数も利用者が調整する値です。
 
 ### 動的フィルタリング
 
 ```javascript
-// カテゴリボタンは選択肢だけを変更する
-document.querySelectorAll('.category-filter-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const category = btn.dataset.category;
-    currentCategory = category;
-    document.querySelectorAll('.category-filter-btn').forEach(b => {
-      b.classList.toggle('active', b === btn);
-    });
-    renderPresetOptions(category);
-  });
-});
+// カテゴリーと日英の名前・用途をANDで絞り込む
+const candidates = LoadoutCatalog.find(
+  { presets: PRESETS_META }, currentCategory, presetSearch.value
+);
 ```
 
-`renderPresetOptions()`は保存済みチェックリストとビルトインプリセットを並べます。現在のプリセットが絞り込み対象から外れても、その選択を表す項目は保持します。カテゴリボタンだけではリスト本体や未保存内容を切り替えません。
+`renderPresetOptions()`は検索に一致した保存リストとプリセットを並べます。プリセットは表示言語に関係なく日英の名前と説明を、大文字・小文字を区別しない部分一致で検索します。保存リストは名前だけを検索し、プリセットのカテゴリーでは絞り込みません。候補から外れた選択は解除し、件数に紛れ込ませません。現在読み込み済みのリスト本体と未保存内容は変えません。
 
-選択欄で別のリストを選んだ場合は、未保存変更があれば確認を求めます。取り消したときは選択欄を現在のリストへ戻します。検索、軍民両用、危険物、見直しフィルターは表示だけを変え、集計対象やJSON／CSV／PDFの出力対象は変えません。
+候補選択では用途と件数をプレビューし、「選択した構成を読み込む」を押したときだけ未保存確認を経てリストを切り替えます。取消では編集中の内容を保持します。プリセットの検索と、一覧の検索・軍民両用・危険物・見直し条件は別の操作です。後者も集計やJSON／CSV／PDFの出力対象を変えません。
 
 ---
 
@@ -763,7 +778,7 @@ function openDialog(dialog) {
 }
 ```
 
-アイテム編集、名前編集、保存方法、保存完了、グラフ、ヘルプ、JSON読み込み確認の7つのダイアログが共通の開閉処理を使用します。開いた要素にdialogの役割と見出しを設定し、背景のbody直下要素をinertにします。
+アイテム編集、名前編集、保存方法、保存完了、グラフ、ヘルプ、JSON読み込み確認、構成比較の8つのダイアログが共通の開閉処理を使用します。開いた要素にdialogの役割と見出しを設定し、背景のbody直下要素をinertにします。
 
 TabとShift+Tabでは表示中の操作要素の先頭と末尾を循環します。Escapeで閉じ、アイテムフォームに未保存変更がある場合は破棄を確認します。閉じたあとは起動元へフォーカスを戻し、その要素がなくなっていれば保存ボタンへ移します。
 
@@ -813,7 +828,7 @@ itemTable.querySelectorAll('.editBtn').forEach(btn => {
 });
 ```
 
-一覧を描画したあと、各行の編集、詳細、削除、チェック、数量の操作にリスナーを設定します。親要素へのイベント委譲は使用していません。再描画後の新しい要素にも操作が登録されることを、絞り込みと編集を組み合わせて確認します。
+一覧を描画したあと、各行の編集、詳細、削除、チェック、数量の確定操作に個別のリスナーを設定します。数量の`input`と`keydown`は親の`itemTable`でも監視し、古い読み込みの失効やTab移動方向の記録に使います。再描画後の新しい要素にも操作が登録されることを、絞り込みと編集を組み合わせて確認します。
 
 ---
 
@@ -874,7 +889,7 @@ node scripts/build-presets.cjs --check
 git diff --check
 ```
 
-`test/`は正規化、数量0、JSON読み戻しの境界値と情報保持、見直し判定、編集時の情報保持、保存失敗と競合、全プリセット、日英CSVの列数、i18n、UIの静的条件を検査します。READMEのJSON例は実際の読み込み関数へ渡し、日英の見直し表と画像の入力例もコア関数で検算します。`.github/workflows/test.yml`はpushとpull_requestで同じ`npm test`を実行します。テスト件数は追加時に変わるので、実行結果でpass/failを確認してください。
+`test/`は正規化、数量0、JSON読み戻しの境界値と情報保持、見直し判定、編集時の情報保持、保存失敗と競合、全プリセット、カタログ検索、構成比較、日英CSVの列数、i18n、UIの静的条件を検査します。比較表示は実コアと辞書を使った軽量DOMで、ページング・文字列表示・不変性を確認しますが、レイアウトや実際のキー操作はブラウザーで別に検証します。READMEのJSON例は実際の読み込み関数へ渡し、日英の見直し表と画像の比較例もコア関数で検算します。`.github/workflows/test.yml`はpushとpull_requestで同じ`npm test`を実行します。テスト件数は追加時に変わるので、実行結果でpass/failを確認してください。
 
 ブラウザーではJSONの確認、キャンセル、不正ファイル、保存失敗、遅れた読み込み、各見直し条件の組み合わせを確認します。数量欄は`change`を人工的に発火させる検査だけで済ませず、通常の入力からTab、Shift+Tab、Enter、外部ボタンや行内ボタンのクリック、長押し、タッチで確定しても操作が続くことを確認します。
 
