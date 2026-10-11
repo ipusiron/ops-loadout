@@ -436,6 +436,10 @@ const I18N = {
 };
 
 Object.assign(I18N.en, {
+  'graph.noWeight': 'No positive weight among checked equipment',
+  'app.limit': 'Planning examples, not a safety or legal assessment. Weights and volumes are estimates; verify actual equipment and current rules. No flag does not mean unrestricted use.',
+  'graph.limitShort': 'Sample ratings are not measurements of safety or legality. Higher regulatory caution is not better.',
+  'graph.summary': 'Checked equipment: {quantity} units, {weight} g, {volume} cm³. The list contains the underlying values.',
   'msg.discard': 'Discard unsaved changes and load another checklist?',
   'msg.storageRead': 'Saved data could not be read. It will not be overwritten. You can keep editing and export JSON.',
   'msg.storageWrite': 'The checklist was not saved. Your edits are still here. Export JSON to keep a copy.',
@@ -445,6 +449,10 @@ Object.assign(I18N.en, {
   'msg.preference': 'This preference could not be saved; it applies only to this page.',
 });
 Object.assign(I18N.ja, {
+  'graph.noWeight': 'チェック済み装備の重量合計が0です',
+  'app.limit': '準備を考えるための例です。安全性や合法性は判定しません。重量と体積は目安のため、実物と最新の規則を確認してください。フラグがなくても制限がないとは限りません。',
+  'graph.limitShort': '参考値は安全性や合法性の測定結果ではありません。法規制の注意度は高いほど良いという意味ではありません。',
+  'graph.summary': 'チェック済み：{quantity}点、{weight} g、{volume} cm³。元の値は一覧で確認できます。',
   'msg.discard': '未保存の変更を破棄して、別のチェックリストを読み込みますか？',
   'msg.storageRead': '保存データを読み込めません。上書きせず保護しています。編集を続け、JSONを書き出すことはできます。',
   'msg.storageWrite': '保存できませんでした。編集中の内容は残っています。JSONを書き出して控えを残してください。',

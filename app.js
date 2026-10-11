@@ -341,13 +341,7 @@
    * @returns {string} 安全なURLまたは空文字列
    */
   function sanitizeUrl(url) {
-    if (!url || typeof url !== 'string') return '';
-    const trimmed = url.trim().toLowerCase();
-    if (trimmed.startsWith('javascript:') || trimmed.startsWith('data:') || trimmed.startsWith('vbscript:')) {
-      console.warn('Blocked potentially dangerous URL:', url);
-      return '';
-    }
-    return url;
+    return LoadoutCore.safeUrl(url);
   }
 
   // Render functions
@@ -849,18 +843,12 @@
   }
 
   function itemsToCsv(items) {
-    const header = ['id','name','category','weight_g','volume_cm3','purpose_short','dual_use','hazard_flag','legality_notes'];
-    const rows = items.map(it => {
-      const legalityObj = getL(it, 'legality_notes') || it.legality_notes || {};
-      const leg = JSON.stringify(legalityObj);
-      return [it.id, getL(it, 'name'), getL(it, 'category'), it.weight_g||0, it.volume_cm3||0, getL(it, 'purpose_short'), it.dual_use?1:0, it.hazard_flag?1:0, `"${leg.replace(/"/g,'""')}"`];
-    });
-    return [header, ...rows].map(r => r.join(',')).join('\n');
+    return LoadoutCore.csv(items, getLang());
   }
 
   function exportCSV() {
     const csv = itemsToCsv(state.items);
-    const blob = new Blob([csv], {type: 'text/csv'});
+    const blob = new Blob([csv], {type: 'text/csv;charset=utf-8'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     const filename = `${state.checklistName.replace(/\s+/g,'_')}_${getTimestamp()}.csv`;
@@ -900,20 +888,21 @@
   };
 
   function getColorForCategory(cat) {
-    return categoryColors[cat] || '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+    return categoryColors[cat] || LoadoutCore.categoryColor(cat);
   }
 
   // Get checked items stats
   function getGraphStats() {
-    const checkedItems = state.items.filter(it => it.checked);
-    const totalWeight = checkedItems.reduce((acc, it) => acc + (Number(it.weight_g || 0) * (Number(it.quantity) || 1)), 0);
-    const totalVolume = checkedItems.reduce((acc, it) => acc + (Number(it.volume_cm3 || 0) * (Number(it.quantity) || 1)), 0);
-    const totalQty = checkedItems.reduce((acc, it) => acc + (Number(it.quantity) || 1), 0);
+    const checkedItems = state.items.filter(it => it.checked && it.quantity > 0);
+    const totals = LoadoutCore.totals(state.items);
+    const totalWeight = totals.weight;
+    const totalVolume = totals.volume;
+    const totalQty = totals.quantity;
 
     const catBreakdown = {};
     checkedItems.forEach(it => {
       const cat = getL(it, 'category') || 'Other';
-      const weight = (Number(it.weight_g || 0) * (Number(it.quantity) || 1));
+      const weight = it.weight_g * it.quantity;
       catBreakdown[cat] = (catBreakdown[cat] || 0) + weight;
     });
 
@@ -986,11 +975,11 @@
     drawGraphHeader(ctx, W, H, stats);
 
     const catEntries = Object.entries(stats.catBreakdown).sort((a, b) => b[1] - a[1]);
-    if (catEntries.length === 0) {
+    if (catEntries.length === 0 || stats.totalWeight === 0) {
       ctx.fillStyle = '#64748b';
       ctx.font = '24px system-ui, sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText(currentLang === 'ja' ? 'チェックされたアイテムがありません' : 'No checked items', W / 2, H / 2);
+      ctx.fillText(t('graph.noWeight'), W / 2, H / 2);
       ctx.textAlign = 'left';
       return;
     }
@@ -1079,8 +1068,8 @@
 
     // Define score categories for radar
     const scoreLabels = currentLang === 'ja'
-      ? ['生存性', '信号性', '脱出支援', '隠匿性', '合法性']
-      : ['Survivability', 'Signalability', 'Exfiltration', 'Concealability', 'Legality'];
+      ? ['生存性（参考）', '信号性（参考）', '脱出支援（参考）', '隠匿性（参考）', '法規制の注意度']
+      : ['Survival (sample)', 'Signaling (sample)', 'Exit support (sample)', 'Concealment (sample)', 'Regulatory caution'];
 
     // Calculate average scores from checked items
     const scoreKeys = ['survivability', 'signalability', 'exfiltration_support', 'concealability', 'legality_penalty'];
@@ -1088,10 +1077,6 @@
       const items = stats.checkedItems.filter(it => it.scores && it.scores[key] !== undefined);
       if (items.length === 0) return 0;
       const sum = items.reduce((acc, it) => acc + Number(it.scores[key] || 0), 0);
-      // For legality_penalty, invert (lower is better)
-      if (key === 'legality_penalty') {
-        return 5 - (sum / items.length);
-      }
       return sum / items.length;
     });
 
@@ -1238,7 +1223,7 @@
     const topItems = [...stats.checkedItems]
       .map(it => ({
         ...it,
-        totalWeight: (Number(it.weight_g || 0) * (Number(it.quantity) || 1))
+        totalWeight: it.weight_g * it.quantity
       }))
       .sort((a, b) => b.totalWeight - a.totalWeight);
 
@@ -1279,7 +1264,7 @@
       const cat = getL(it, 'category');
       const displayName = name.length > 45 ? name.slice(0, 43) + '…' : name;
       const displayCat = cat.length > 12 ? cat.slice(0, 11) + '…' : cat;
-      const pct = ((it.totalWeight / stats.totalWeight) * 100).toFixed(1);
+      const pct = stats.totalWeight > 0 ? ((it.totalWeight / stats.totalWeight) * 100).toFixed(1) : '0.0';
 
       // Rank
       ctx.fillStyle = '#94a3b8';
@@ -1330,6 +1315,18 @@
       case 'items': drawItemsView(); break;
       default: drawPieView();
     }
+    const totals = LoadoutCore.totals(state.items);
+    graphCanvas.setAttribute('role', 'img');
+    graphCanvas.setAttribute('aria-label', t('graph.summary', {weight: totals.weight, volume: totals.volume, quantity: totals.quantity}));
+    const ctx = graphCanvas.getContext('2d');
+    ctx.save();
+    ctx.fillStyle = '#f8fafc';
+    ctx.fillRect(0, graphCanvas.height - 30, graphCanvas.width, 30);
+    ctx.fillStyle = '#334155';
+    ctx.textAlign = 'center';
+    ctx.font = '14px system-ui, sans-serif';
+    ctx.fillText(t('graph.limitShort'), graphCanvas.width / 2, graphCanvas.height - 10);
+    ctx.restore();
   }
 
   function openGraphModal() {
@@ -1392,9 +1389,12 @@
       return;
     }
 
+    let pdfContainer;
+    const exportName = state.checklistName;
+    exportPdfBtn.disabled = true;
     try {
       // Create a temporary container for PDF content
-      const pdfContainer = document.createElement('div');
+      pdfContainer = document.createElement('div');
       pdfContainer.style.cssText = 'position: absolute; left: -9999px; top: 0; width: 800px; background: white; padding: 40px; font-family: system-ui, -apple-system, sans-serif;';
 
       // Build HTML content
@@ -1433,7 +1433,7 @@
             <td style="padding: 6px; border: 1px solid #e5e7eb;">${escapeHtml(getL(it, 'category'))}</td>
             <td style="padding: 6px; border: 1px solid #e5e7eb;">${escapeHtml(getL(it, 'name'))}</td>
             <td style="padding: 6px; text-align: right; border: 1px solid #e5e7eb;">${it.weight_g || 0}</td>
-            <td style="padding: 6px; text-align: right; border: 1px solid #e5e7eb;">${it.quantity || 1}</td>
+            <td style="padding: 6px; text-align: right; border: 1px solid #e5e7eb;">${it.quantity ?? 1}</td>
             <td style="padding: 6px; text-align: center; border: 1px solid #e5e7eb;">${badges.join(' ')}</td>
           </tr>
         `;
@@ -1443,8 +1443,9 @@
           </tbody>
         </table>
         <div style="margin-top: 20px; padding: 10px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 4px;">
-          <p style="font-size: 12px; margin: 0;"><strong>${t('pdf.totalWeight')}</strong> ${state.items.reduce((acc, it) => acc + (it.checked ? (Number(it.weight_g || 0) * Number(it.quantity || 1)) : 0), 0)} g</p>
-          <p style="font-size: 12px; margin: 5px 0 0 0;"><strong>${t('pdf.totalVolume')}</strong> ${state.items.reduce((acc, it) => acc + (it.checked ? (Number(it.volume_cm3 || 0) * Number(it.quantity || 1)) : 0), 0)} cm³</p>
+          <p style="font-size: 12px; margin: 0;"><strong>${t('pdf.totalWeight')}</strong> ${LoadoutCore.totals(state.items).weight} g</p>
+          <p style="font-size: 12px; margin: 5px 0 0 0;"><strong>${t('pdf.totalVolume')}</strong> ${LoadoutCore.totals(state.items).volume} cm³</p>
+          <p style="font-size: 12px;">${t('app.limit')}</p>
         </div>
       `;
 
@@ -1492,11 +1493,13 @@
         doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
       }
 
-      const filename = `${state.checklistName.replace(/\s+/g, '_')}_${getTimestamp()}.pdf`;
+      const filename = `${exportName.replace(/\s+/g, '_')}_${getTimestamp()}.pdf`;
       doc.save(filename);
     } catch (error) {
-      console.error('PDF generation error:', error);
-      alert(t('msg.pdfError') + error.message);
+      alert(t('msg.pdfError'));
+    } finally {
+      pdfContainer?.remove();
+      exportPdfBtn.disabled = false;
     }
   }
 
@@ -1884,8 +1887,9 @@
     }
     if (printSummary) {
       const checkedItems = state.items.filter(it => it.checked);
-      const totalWeight = checkedItems.reduce((acc, it) => acc + (Number(it.weight_g || 0) * (Number(it.quantity) || 1)), 0);
-      const totalVolume = checkedItems.reduce((acc, it) => acc + (Number(it.volume_cm3 || 0) * (Number(it.quantity) || 1)), 0);
+      const totals = LoadoutCore.totals(state.items);
+      const totalWeight = totals.weight;
+      const totalVolume = totals.volume;
       const summaryText = currentLang === 'ja'
         ? `合計: ${state.items.length}アイテム | チェック済み: ${checkedItems.length}アイテム | 重量: ${totalWeight}g | 体積: ${totalVolume}cm³`
         : `Total: ${state.items.length} items | Checked: ${checkedItems.length} items | Weight: ${totalWeight}g | Volume: ${totalVolume}cm³`;
