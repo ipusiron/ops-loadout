@@ -127,11 +127,14 @@
           <span id="dirtyIndicator" class="dirty-indicator hidden" title="未保存の変更があります">●</span>
           <button id="renameChecklistBtn" class="rename-btn" data-i18n-title="button.rename" title="名前を変更">✏️</button>
         </h2>
-        <div class="flex items-center gap-3">
+        <div class="checklist-actions flex items-center gap-3">
           <button id="newChecklist" class="btn btn-secondary" data-i18n="button.new">新規</button>
+          <button id="importJson" class="btn btn-secondary" data-i18n="import.button">JSONを読み込む</button>
+          <input id="importFile" type="file" accept=".json,application/json" hidden />
           <button id="saveBtn" class="btn btn-primary" data-i18n="button.save">保存</button>
         </div>
       </div>
+      <p id="importStatus" class="import-status" role="status" aria-live="polite"></p>
       <div class="table-toolbar">
         <div class="table-toolbar-left">
           <div id="itemCountDisplay" class="item-count"></div>
@@ -452,6 +455,21 @@
           </svg>
           <span data-i18n="graph.copy">コピー</span>
         </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="importModal" class="modal-backdrop">
+    <div class="modal-content import-preview">
+      <h3 data-i18n="import.title">JSONの読み込みを確認</h3>
+      <p data-i18n="import.name">リスト名</p>
+      <p id="importPreviewName" class="import-preview-name"></p>
+      <p id="importPreviewStats"></p>
+      <p data-i18n="import.notice"></p>
+      <p class="import-limits" data-i18n="import.limits"></p>
+      <div class="checklist-actions flex gap-3">
+        <button id="importCancel" class="btn btn-secondary" data-i18n="button.cancel">キャンセル</button>
+        <button id="importApply" class="btn btn-primary" data-i18n="import.apply">未保存の別リストとして開く</button>
       </div>
     </div>
   </div>

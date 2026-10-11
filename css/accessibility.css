@@ -12,6 +12,12 @@ input[type=checkbox] { width: 1.25rem; height: 1.25rem; accent-color: #2563eb; }
 .header-btn, .rename-btn, .action-btn-icon { outline-offset: -3px; }
 .control-group, .checklist-title, .modal-content, .col-name, .col-category { min-width: 0; overflow-wrap: anywhere; }
 .checklist-header { gap: 1rem; flex-wrap: wrap; }
+.checklist-actions { flex-wrap: wrap; }
+.import-status { margin: .75rem 0; color: #334155; overflow-wrap: anywhere; }
+.import-status:empty { margin: 0; }
+.import-preview p { margin: .75rem 0; overflow-wrap: anywhere; }
+.import-preview-name { font-weight: 600; white-space: pre-wrap; }
+.import-limits { color: #475569; font-size: .875rem; }
 .item-table-row { position: relative; }
 .item-table-row .col-name { margin-left: 2.25rem; }
 .item-table-row .col-weight::before { content: attr(data-label); margin-right: .5rem; }

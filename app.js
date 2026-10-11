@@ -105,6 +105,10 @@
   const helpModal = document.getElementById('helpModal');
   const helpCloseBtn = document.getElementById('helpCloseBtn');
   const helpOkBtn = document.getElementById('helpOkBtn');
+  const importJsonBtn = document.getElementById('importJson');
+  const importFile = document.getElementById('importFile');
+  const importModal = document.getElementById('importModal');
+  const importStatus = document.getElementById('importStatus');
 
   const dialogOpeners = new WeakMap();
   function updateDialogBackground() {
@@ -113,6 +117,7 @@
   }
   function openDialog(dialog) {
     loadRequest++; // Opening an editor/save dialog cancels pending preset replacement.
+    if (dialog !== importModal) importCandidate = null;
     renderPresetOptions(currentCategory);
     dialogOpeners.set(dialog, document.activeElement);
     dialog.classList.add('active');
@@ -128,6 +133,11 @@
     (dialog.querySelector('input:not([type=checkbox]), button') || dialog).focus();
   }
   function closeDialog(dialog) {
+    if (dialog === importModal) {
+      importCandidate = null;
+      importSequence++;
+      setImportStatus('import.cancelled');
+    }
     dialog.classList.remove('active');
     updateDialogBackground();
     const opener = dialogOpeners.get(dialog);
@@ -215,6 +225,106 @@
   let loadRequest = 0;
   let formDirty = false;
   let storageWarningShown = false;
+  let importSequence = 0;
+  let importCandidate = null;
+  let importBaseline = 0;
+  let importStatusKey = '';
+
+  function setImportStatus(key) {
+    importStatusKey = key;
+    importStatus.textContent = key ? t(key) : '';
+  }
+
+  function renderImportPreview() {
+    if (!importCandidate) return;
+    document.getElementById('importPreviewName').textContent = importCandidate.name;
+    const sum = LoadoutCore.totals(importCandidate.items);
+    document.getElementById('importPreviewStats').textContent = t('import.stats', {
+      count: importCandidate.items.length, checked: sum.rows, weight: sum.weight, volume: sum.volume
+    });
+  }
+
+  async function readImportFile(file) {
+    const sequence = ++importSequence;
+    const request = ++loadRequest;
+    importCandidate = null;
+    if (!file) { setImportStatus('import.cancelled'); return; }
+    setImportStatus('import.reading');
+    const stale = () => {
+      if (sequence !== importSequence) return true;
+      if (request === loadRequest) return false;
+      setImportStatus('import.stale');
+      return true;
+    };
+    try {
+      if (file.size > LoadoutCore.IMPORT_LIMITS.maxBytes) throw new TypeError('importTooLarge');
+      const buffer = await file.arrayBuffer();
+      if (stale()) return;
+      let text;
+      try { text = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(buffer); }
+      catch { throw new TypeError('importEncoding'); }
+      const parsed = LoadoutCore.parseChecklistJSON(text);
+      if (stale()) return;
+      importCandidate = parsed;
+      renderImportPreview();
+      setImportStatus('import.ready');
+      openDialog(importModal);
+      dialogOpeners.set(importModal, importJsonBtn);
+      importBaseline = loadRequest;
+    } catch (error) {
+      if (stale()) return;
+      const messages = {
+        importTooLarge: 'import.tooLarge', importEncoding: 'import.encoding',
+        importSyntax: 'import.syntax', importFormat: 'import.format',
+        importTooDeep: 'import.complex', importTooComplex: 'import.complex',
+        importUnsafeKey: 'import.unsafe', importNonFinite: 'import.invalid'
+      };
+      setImportStatus(Object.hasOwn(messages, error.message) ? messages[error.message] : 'import.invalid');
+    }
+  }
+
+  importJsonBtn.addEventListener('click', () => {
+    importSequence++;
+    loadRequest++;
+    importCandidate = null;
+    renderPresetOptions(currentCategory);
+    setImportStatus('');
+    importFile.value = '';
+    importFile.click();
+  });
+  importFile.addEventListener('change', () => {
+    const file = importFile.files?.[0];
+    importFile.value = ''; // Allow selecting the same file after an error or cancellation.
+    readImportFile(file);
+  });
+  importFile.addEventListener('cancel', () => setImportStatus('import.cancelled'));
+  document.getElementById('importCancel').addEventListener('click', () => closeDialog(importModal));
+  importModal.addEventListener('click', event => { if (event.target === importModal) closeDialog(importModal); });
+  document.getElementById('importApply').addEventListener('click', () => {
+    if (!importCandidate || importBaseline !== loadRequest) {
+      closeDialog(importModal);
+      setImportStatus('import.stale');
+      return;
+    }
+    if ((state.isDirty || formDirty) && !confirm(t('msg.discard'))) return;
+    const restored = importCandidate;
+    closeDialog(importModal);
+    currentChecklistId = null;
+    currentSavedSnapshot = null;
+    currentPresetKey = '';
+    state.checklistName = restored.name;
+    state.items = restored.items;
+    state.selectedItemId = null;
+    globalSearch.value = '';
+    filterDual.checked = false;
+    filterHazard.checked = false;
+    markDirty();
+    renderAll();
+    renderPresetOptions(currentCategory);
+    setImportStatus('import.applied');
+  });
+  // Typing a quantity invalidates a pending file read before the change event commits it.
+  itemTable.addEventListener('input', event => { if (event.target.matches('.qty-input')) loadRequest++; });
 
   function readChecklists() {
     let result;
@@ -1935,6 +2045,8 @@
   document.addEventListener('langchange', () => {
     renderAll();
     renderPresetOptions(currentCategory);
+    renderImportPreview();
+    setImportStatus(importStatusKey);
     if (graphModal.classList.contains('active')) drawGraphImage();
   });
   window.addEventListener('beforeunload', event => {

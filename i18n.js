@@ -484,6 +484,49 @@ Object.assign(I18N.ja, {
   'msg.preference': '設定を保存できませんでした。このページ内だけに反映します。',
 });
 
+Object.assign(I18N.en, {
+  'import.button': 'Import JSON',
+  'import.title': 'Preview JSON import',
+  'import.name': 'Checklist name',
+  'import.apply': 'Open as a new unsaved list',
+  'import.notice': 'This opens a separate unsaved checklist. Existing saved lists are not overwritten. Search and filters will be cleared. Use Save afterwards to keep it in this browser.',
+  'import.limits': 'OpsLoadout single-list JSON only. UTF-8 (BOM allowed), up to 5 MiB, 10,000 items, depth 32 and 250,000 JSON values. CSV, presets and other tools’ formats are not supported.',
+  'import.stats': '{count} rows; {checked} checked. Checked totals: {weight} g / {volume} cm³.',
+  'import.reading': 'Reading and validating JSON…',
+  'import.ready': 'Validation complete. Review the preview before applying.',
+  'import.applied': 'Opened as a new unsaved list. No saved lists were changed. Use Save to keep this list.',
+  'import.cancelled': 'Import cancelled. Your checklist has not changed.',
+  'import.stale': 'Import stopped because another operation occurred. Select the file again if needed.',
+  'import.tooLarge': 'The file exceeds 5 MiB (5,242,880 bytes). Your checklist has not changed.',
+  'import.encoding': 'The file is not valid UTF-8. Your checklist has not changed.',
+  'import.syntax': 'The file is not valid JSON. Your checklist has not changed.',
+  'import.format': 'Select single-list JSON exported by OpsLoadout, with checklistName and items. Your checklist has not changed.',
+  'import.complex': 'The file exceeds depth 32 or 250,000 JSON values. Your checklist has not changed.',
+  'import.unsafe': 'The file contains a reserved key (__proto__, constructor or prototype). Your checklist has not changed.',
+  'import.invalid': 'The file could not be read or contains invalid item data (types, ranges or duplicate IDs). Your checklist has not changed.',
+});
+Object.assign(I18N.ja, {
+  'import.button': 'JSONを読み込む',
+  'import.title': 'JSONの読み込みを確認',
+  'import.name': 'リスト名',
+  'import.apply': '未保存の別リストとして開く',
+  'import.notice': '未保存の別リストとして開きます。保存済みリストは上書きしません。検索と絞り込みは解除します。このブラウザーに残すには、読み込み後に「保存」を押してください。',
+  'import.limits': 'OpsLoadoutが出力した単一リストのJSONが対象です。UTF-8（BOM可）、5 MiB・10,000項目・深さ32・JSON値250,000個まで。CSV・プリセット・他ツールの形式は対象外です。',
+  'import.stats': '{count}行、チェック済み{checked}行。チェック済みの合計：{weight} g / {volume} cm³。',
+  'import.reading': 'JSONを読み取り、検査しています…',
+  'import.ready': '検査が完了しました。プレビューを確認してから適用してください。',
+  'import.applied': '未保存の別リストとして開きました。保存済みリストは変更していません。残すには「保存」を押してください。',
+  'import.cancelled': '読み込みを取り消しました。現在のリストは変更していません。',
+  'import.stale': '別の操作があったため、読み込みを中止しました。必要ならファイルを選び直してください。',
+  'import.tooLarge': 'ファイルが5 MiB（5,242,880バイト）を超えています。現在のリストは変更していません。',
+  'import.encoding': 'ファイルが正しいUTF-8ではありません。現在のリストは変更していません。',
+  'import.syntax': 'ファイルが正しいJSONではありません。現在のリストは変更していません。',
+  'import.format': 'OpsLoadoutが出力した、checklistNameとitemsを含む単一リストのJSONを選んでください。現在のリストは変更していません。',
+  'import.complex': '深さ32またはJSON値250,000個の上限を超えています。現在のリストは変更していません。',
+  'import.unsafe': '予約されたキー（__proto__・constructor・prototype）が含まれています。現在のリストは変更していません。',
+  'import.invalid': 'ファイルを読み取れないか、項目の型・範囲・IDなどが不正です。現在のリストは変更していません。',
+});
+
 function readPreference(key) {
   try { return localStorage.getItem(key); } catch { return null; }
 }
