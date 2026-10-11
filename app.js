@@ -53,6 +53,16 @@
   const presetSearch = document.getElementById('presetSearch');
   const loadPresetBtn = document.getElementById('loadPresetBtn');
   const presetCategories = document.getElementById('presetCategories');
+  const compareBtn = document.getElementById('compareBtn');
+  const comparisonModal = document.getElementById('comparisonModal');
+  const comparisonReference = document.getElementById('comparisonReference');
+  const comparisonOnlyChanges = document.getElementById('comparisonOnlyChanges');
+  let comparisonSequence = 0;
+  let comparisonCurrent = null;
+  let comparisonTarget = null;
+  let comparisonResult = null;
+  let comparisonPageIndex = 0;
+  let comparisonStatusKey = 'comparison.choose';
   const itemTable = document.getElementById('itemTable');
   const itemDetail = document.getElementById('itemDetail');
   const currentChecklistName = document.getElementById('currentChecklistName');
@@ -138,6 +148,12 @@
     (dialog.querySelector('input:not([type=checkbox]), button') || dialog).focus();
   }
   function closeDialog(dialog) {
+    if (dialog === comparisonModal) {
+      comparisonSequence++;
+      comparisonCurrent = comparisonTarget = comparisonResult = null;
+      comparisonStatusKey = 'comparison.choose';
+      renderComparison();
+    }
     if (dialog === importModal) {
       importCandidate = null;
       importSequence++;
@@ -494,28 +510,8 @@
    */
   async function loadFromPreset(key) {
     const request = ++loadRequest;
-    // Check cache first
-    if (PRESETS[key]) {
-      applyPreset(key, PRESETS[key]);
-      return;
-    }
-
-    // Get metadata
-    const meta = PRESETS_META[key];
-    if (!meta) {
-      console.error('Preset not found:', key);
-      return;
-    }
-
-    // Fetch individual preset file
     try {
-      const response = await fetch(`presets/${meta.file}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const presetData = await response.json();
-      presetData.items = LoadoutCore.normalizeItems(presetData.items);
-      PRESETS[key] = presetData;  // Cache it
+      const presetData = await readPresetData(key);
       if (request !== loadRequest) return;
       applyPreset(key, presetData);
     } catch (error) {
@@ -524,6 +520,116 @@
       alert(t('msg.presetLoadFailed'));
     }
   }
+
+  // Read into the data cache only; comparison must never apply a preset to state.
+  async function readPresetData(key) {
+    if (!Object.hasOwn(PRESETS_META, key)) throw new TypeError('unknownPreset');
+    if (Object.hasOwn(PRESETS, key)) return PRESETS[key];
+    const response = await fetch(`presets/${PRESETS_META[key].file}`);
+    if (!response.ok) throw new Error('presetLoadFailed');
+    const data = await response.json();
+    data.items = LoadoutCore.normalizeItems(data.items);
+    if (data.items.length !== PRESETS_META[key].item_count ||
+        ['ja', 'en'].some(lang => typeof data['name_' + lang] !== 'string')) throw new TypeError('invalidPreset');
+    PRESETS[key] = data;
+    return data;
+  }
+
+  function renderComparisonOptions() {
+    const selected = comparisonReference.value;
+    comparisonReference.replaceChildren(new Option(t('comparison.choose'), ''));
+    const saved = getAllChecklists();
+    if (saved.length) {
+      const group = document.createElement('optgroup');
+      group.label = t('optgroup.saved');
+      for (const list of saved) group.appendChild(new Option(list.name, 'saved-' + list.id));
+      comparisonReference.appendChild(group);
+    }
+    for (const [category, labels] of Object.entries(PRESET_CATEGORIES)) {
+      const group = document.createElement('optgroup');
+      group.label = labels[getLang()];
+      for (const [key, meta] of Object.entries(PRESETS_META)) {
+        if (meta.category === category) group.appendChild(new Option(getL(meta, 'name'), key));
+      }
+      comparisonReference.appendChild(group);
+    }
+    if (selected && comparisonTarget && ![...comparisonReference.options].some(option => option.value === selected)) {
+      comparisonReference.add(new Option(getL(comparisonTarget, 'name') + ' ' + t('comparison.unavailable'), selected));
+    }
+    comparisonReference.value = selected;
+    document.getElementById('comparisonReload').disabled = !comparisonReference.value;
+  }
+
+  function renderComparison() {
+    document.getElementById('comparisonStatus').textContent = comparisonStatusKey ? t(comparisonStatusKey) : '';
+    document.getElementById('comparisonResults').hidden = !comparisonResult;
+    if (!comparisonResult) {
+      for (const id of ['comparisonNames', 'comparisonSummary', 'comparisonStats', 'comparisonRows', 'comparisonPage']) {
+        document.getElementById(id).replaceChildren();
+      }
+      document.getElementById('comparisonPrev').disabled = true;
+      document.getElementById('comparisonNext').disabled = true;
+      return;
+    }
+    const paging = LoadoutComparisonView.render(comparisonResult, {
+      currentName: comparisonCurrent.name, referenceName: getL(comparisonTarget, 'name'),
+      onlyChanges: comparisonOnlyChanges.checked, pageIndex: comparisonPageIndex
+    });
+    comparisonPageIndex = paging.pageIndex;
+  }
+
+  async function readComparisonReference() {
+    const sequence = ++comparisonSequence;
+    const value = comparisonReference.value;
+    comparisonResult = comparisonTarget = null;
+    comparisonPageIndex = 0;
+    comparisonStatusKey = value ? 'comparison.loading' : 'comparison.choose';
+    document.getElementById('comparisonReload').disabled = !value;
+    renderComparison();
+    if (!value) return;
+    try {
+      let target;
+      if (value.startsWith('saved-')) {
+        const read = readChecklists();
+        if (!read.ok) throw new Error('storageRead');
+        target = read.lists.find(list => 'saved-' + list.id === value);
+        if (!target) throw new Error('missingReference');
+      } else {
+        target = await readPresetData(value);
+      }
+      if (sequence !== comparisonSequence || !comparisonModal.classList.contains('active')) return;
+      comparisonTarget = JSON.parse(JSON.stringify(target));
+      comparisonReference.selectedOptions[0].textContent = getL(comparisonTarget, 'name');
+      comparisonResult = LoadoutCore.compareItems(comparisonCurrent.items, comparisonTarget.items);
+      comparisonStatusKey = '';
+    } catch {
+      if (sequence !== comparisonSequence || !comparisonModal.classList.contains('active')) return;
+      comparisonResult = comparisonTarget = null;
+      comparisonStatusKey = 'comparison.failed';
+    }
+    renderComparison();
+  }
+
+  compareBtn.addEventListener('click', () => {
+    finishPointerRender();
+    comparisonSequence++;
+    comparisonCurrent = JSON.parse(JSON.stringify({ name: state.checklistName, items: state.items }));
+    comparisonResult = comparisonTarget = null;
+    comparisonPageIndex = 0;
+    comparisonStatusKey = 'comparison.choose';
+    comparisonReference.value = '';
+    renderComparisonOptions();
+    renderComparison();
+    openDialog(comparisonModal);
+    comparisonReference.focus();
+  });
+  comparisonReference.addEventListener('change', readComparisonReference);
+  document.getElementById('comparisonReload').addEventListener('click', readComparisonReference);
+  comparisonOnlyChanges.addEventListener('change', () => { comparisonPageIndex = 0; renderComparison(); });
+  document.getElementById('comparisonPrev').addEventListener('click', () => { comparisonPageIndex--; renderComparison(); });
+  document.getElementById('comparisonNext').addEventListener('click', () => { comparisonPageIndex++; renderComparison(); });
+  document.getElementById('comparisonClose').addEventListener('click', () => closeDialog(comparisonModal));
+  comparisonModal.addEventListener('click', event => { if (event.target === comparisonModal) closeDialog(comparisonModal); });
 
   /**
    * プリセットデータを適用
@@ -2176,6 +2282,7 @@
     renderPresetOptions(currentCategory);
     renderImportPreview();
     setImportStatus(importStatusKey);
+    if (comparisonModal.classList.contains('active')) { renderComparisonOptions(); renderComparison(); }
     if (graphModal.classList.contains('active')) drawGraphImage();
   });
   window.addEventListener('beforeunload', event => {

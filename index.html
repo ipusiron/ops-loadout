@@ -142,6 +142,7 @@
         </h2>
         <div class="checklist-actions flex items-center gap-3">
           <button id="newChecklist" class="btn btn-secondary" data-i18n="button.new">新規</button>
+          <button id="compareBtn" class="btn btn-secondary" data-i18n="comparison.button">構成を比較</button>
           <button id="importJson" class="btn btn-secondary" data-i18n="import.button">JSONを読み込む</button>
           <input id="importFile" type="file" accept=".json,application/json" hidden />
           <button id="saveBtn" class="btn btn-primary" data-i18n="button.save">保存</button>
@@ -498,6 +499,39 @@
     </div>
   </div>
 
+  <div id="comparisonModal" class="modal-backdrop">
+    <div class="modal-content comparison-content">
+      <div class="modal-header">
+        <h3 data-i18n="comparison.title">構成の比較（読み取り専用）</h3>
+        <button id="comparisonClose" class="btn btn-secondary" data-i18n="comparison.close">閉じる</button>
+      </div>
+      <p id="comparisonNotice" class="scope-note" data-i18n="comparison.notice"></p>
+      <label for="comparisonReference" class="control-label" data-i18n="comparison.reference">比較先</label>
+      <div class="preset-selection">
+        <select id="comparisonReference" class="form-select"></select>
+        <button id="comparisonReload" class="btn btn-secondary" data-i18n="comparison.reload">比較先を読み直す</button>
+      </div>
+      <p id="comparisonStatus" class="scope-note" role="status" aria-live="polite"></p>
+      <div id="comparisonResults" hidden>
+        <p id="comparisonNames" class="scope-note"></p>
+        <p id="comparisonSummary" role="status" aria-live="polite"></p>
+        <p id="comparisonTotalsNote" class="scope-note" data-i18n="comparison.totalsNote"></p>
+        <div id="comparisonStats" class="comparison-stats"></div>
+        <label class="checkbox-label comparison-filter">
+          <input id="comparisonOnlyChanges" type="checkbox" checked />
+          <span data-i18n="comparison.onlyChanges">差がある項目だけ</span>
+        </label>
+        <p id="comparisonFieldsNote" class="scope-note" data-i18n="comparison.fieldsNote"></p>
+        <div class="comparison-pagination">
+          <button id="comparisonPrev" class="btn btn-secondary" data-i18n="comparison.prev">前へ</button>
+          <p id="comparisonPage" role="status" aria-live="polite"></p>
+          <button id="comparisonNext" class="btn btn-secondary" data-i18n="comparison.next">次へ</button>
+        </div>
+        <div id="comparisonRows"></div>
+      </div>
+    </div>
+  </div>
+
   <footer class="app-footer">
     <div class="app-footer-content">
       <p class="app-footer-text">🔗 <a href="https://github.com/ipusiron/ops-loadout" target="_blank" rel="noopener noreferrer" class="app-footer-link" data-i18n="footer.github">GitHubリポジトリー</a></p>
@@ -508,6 +542,7 @@
   <script src="loadout-catalog.js"></script>
   <script src="loadout-store.js"></script>
   <script src="i18n.js"></script>
+  <script src="comparison-view.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
