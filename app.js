@@ -143,15 +143,7 @@
 
   // Normalize item with backward-compatible defaults for new packing fields
   function normalizeItem(it) {
-    return {
-      ...it,
-      quantity: it.quantity ?? 1,
-      recommended_quantity: it.recommended_quantity ?? 1,
-      packed_by_default: it.packed_by_default ?? (!!it.checked) ?? false,
-      category_tags: it.category_tags ?? (it.category ? [it.category.toLowerCase().replace(/\s+/g, '-')] : []),
-      repack_frequency: it.repack_frequency ?? 'never', // values: daily, weekly, monthly, never
-      description: it.description ?? '' // 詳細メモ（Markdown可）
-    };
+    return LoadoutCore.normalizeItem(it);
   }
 
   /**
@@ -179,45 +171,56 @@
 
   // Multiple checklist management
   let currentChecklistId = null;
+  let currentPresetKey = '';
+  let currentSavedSnapshot = null;
+  let loadRequest = 0;
+  let formDirty = false;
+  let storageWarningShown = false;
+
+  function readChecklists() {
+    let result;
+    try { result = LoadoutStore.read(localStorage); } catch { result = { ok: false }; }
+    if (!result.ok && !storageWarningShown) {
+      storageWarningShown = true;
+      alert(t('msg.storageRead'));
+    }
+    if (result.ok) storageWarningShown = false;
+    return result;
+  }
 
   function getAllChecklists() {
-    try {
-      const data = localStorage.getItem('ekc_checklists');
-      return data ? JSON.parse(data) : [];
-    } catch (error) {
-      console.error('Failed to parse checklists from localStorage:', error);
-      return [];
-    }
+    const result = readChecklists();
+    return result.ok ? result.lists : [];
   }
 
-  function saveAllChecklists(checklists) {
-    try {
-      localStorage.setItem('ekc_checklists', JSON.stringify(checklists));
-    } catch (error) {
-      if (error.name === 'QuotaExceededError') {
-        alert(t('msg.storageQuotaExceeded'));
-      } else {
-        console.error('Failed to save checklists to localStorage:', error);
-        alert(t('msg.saveFailed'));
-      }
-    }
+  function saveAllChecklists(checklists, expectedRaw) {
+    let result;
+    try { result = LoadoutStore.write(localStorage, checklists, expectedRaw); } catch { result = { ok: false }; }
+    if (!result.ok) alert(t(result.error === 'conflict' ? 'msg.storageConflict' : 'msg.storageWrite'));
+    return result.ok;
   }
 
-  function saveCurrentChecklist() {
-    const checklists = getAllChecklists();
+  function saveCurrentChecklist(saveAsNew = false) {
+    const read = readChecklists();
+    if (!read.ok) return false;
+    const checklists = read.lists;
+    const saveId = saveAsNew ? null : currentChecklistId;
+    if (saveId && JSON.stringify(checklists.find(c => c.id === saveId)) !== currentSavedSnapshot) {
+      alert(t('msg.storageConflict'));
+      return false;
+    }
     const payload = {
-      id: currentChecklistId || uid('checklist'),
+      id: saveId || uid('checklist'),
       name: state.checklistName,
       items: state.items,
-      createdAt: currentChecklistId ? (checklists.find(c => c.id === currentChecklistId)?.createdAt || new Date().toISOString()) : new Date().toISOString(),
+      createdAt: saveId ? (checklists.find(c => c.id === saveId)?.createdAt || new Date().toISOString()) : new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
 
-    if (!currentChecklistId) {
-      currentChecklistId = payload.id;
+    if (!saveId) {
       checklists.push(payload);
     } else {
-      const index = checklists.findIndex(c => c.id === currentChecklistId);
+      const index = checklists.findIndex(c => c.id === saveId);
       if (index !== -1) {
         checklists[index] = payload;
       } else {
@@ -225,40 +228,55 @@
       }
     }
 
-    saveAllChecklists(checklists);
+    if (!saveAllChecklists(checklists, read.raw)) return false;
+    currentChecklistId = payload.id;
+    currentPresetKey = 'saved-' + payload.id;
+    currentSavedSnapshot = JSON.stringify({ ...payload, items: LoadoutCore.normalizeItems(payload.items) });
     state.isDirty = false;
     updateDirtyIndicator();
     renderPresetOptions(currentCategory);
+    return true;
   }
 
   function loadChecklist(id) {
     const checklists = getAllChecklists();
     const checklist = checklists.find(c => c.id === id);
     if (checklist) {
+      loadRequest++;
       currentChecklistId = checklist.id;
       state.checklistName = checklist.name;
       state.items = JSON.parse(JSON.stringify(checklist.items)).map(normalizeItem);
+      currentSavedSnapshot = JSON.stringify(checklist);
+      currentPresetKey = 'saved-' + id;
+      state.selectedItemId = null;
       state.isDirty = false;
       renderAll();
     }
   }
 
   function deleteChecklist(id) {
-    const checklists = getAllChecklists();
-    const filtered = checklists.filter(c => c.id !== id);
-    saveAllChecklists(filtered);
+    const read = readChecklists();
+    if (!read.ok) return false;
+    const filtered = read.lists.filter(c => c.id !== id);
+    if (!saveAllChecklists(filtered, read.raw)) return false;
     if (currentChecklistId === id) {
       createNewChecklist();
     }
     renderPresetOptions(currentCategory);
+    return true;
   }
 
   function createNewChecklist() {
+    loadRequest++;
     currentChecklistId = null;
+    currentSavedSnapshot = null;
+    currentPresetKey = '';
     state.checklistName = t('msg.newChecklist');
     state.items = [];
+    state.selectedItemId = null;
     state.isDirty = false;
     renderAll();
+    renderPresetOptions(currentCategory);
   }
 
   /**
@@ -266,6 +284,7 @@
    * @param {string} key - プリセットキー
    */
   async function loadFromPreset(key) {
+    const request = ++loadRequest;
     // Check cache first
     if (PRESETS[key]) {
       applyPreset(key, PRESETS[key]);
@@ -286,11 +305,14 @@
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const presetData = await response.json();
+      presetData.items = LoadoutCore.normalizeItems(presetData.items);
       PRESETS[key] = presetData;  // Cache it
+      if (request !== loadRequest) return;
       applyPreset(key, presetData);
     } catch (error) {
-      console.error('Failed to load preset:', key, error);
-      alert(t('msg.presetLoadFailed') || 'Failed to load preset');
+      if (request !== loadRequest) return;
+      presetSelectEl.value = currentPresetKey;
+      alert(t('msg.presetLoadFailed'));
     }
   }
 
@@ -301,8 +323,12 @@
     state.checklistName = getL(presetData, 'name');
     state.items = JSON.parse(JSON.stringify(presetData.items)).map(normalizeItem);
     currentChecklistId = null; // Treat as new checklist
+    currentSavedSnapshot = null;
+    currentPresetKey = key;
+    state.selectedItemId = null;
     state.isDirty = false;
     renderAll();
+    renderPresetOptions(currentCategory);
   }
 
   function escapeHtml(s) {
@@ -329,6 +355,7 @@
    * 未保存変更をマーク
    */
   function markDirty() {
+    loadRequest++;
     if (!state.isDirty) {
       state.isDirty = true;
       updateDirtyIndicator();
@@ -467,11 +494,17 @@
         const id = e.target.dataset.id;
         const it = state.items.find(x=>x.id===id);
         if (it) {
-          const newQty = Math.max(0, parseInt(e.target.value) || 1);
+          const newQty = Number(e.target.value);
+          if (e.target.value.trim() === '' || !Number.isInteger(newQty) || newQty < 0 || newQty > 999) {
+            e.target.value = it.quantity;
+            alert(t('msg.invalidInput'));
+            return;
+          }
           it.quantity = newQty;
           e.target.value = newQty;
           markDirty();
           renderTotals();
+          renderDetail(state.selectedItemId);
         }
       });
     });
@@ -619,14 +652,7 @@
   }
 
   function renderTotals() {
-    const totals = state.items.reduce((acc, it) => {
-      if (it.checked) {
-        const qty = Number(it.quantity) || 1;
-        acc.weight += Number(it.weight_g || 0) * qty;
-        acc.volume += Number(it.volume_cm3 || 0) * qty;
-      }
-      return acc;
-    }, {weight:0, volume:0});
+    const totals = LoadoutCore.totals(state.items);
     totalWeightEl.textContent = totals.weight;
     totalVolumeEl.textContent = totals.volume;
 
@@ -648,16 +674,19 @@
   // Modal management for add/edit
   let editingId = null;
   function openItemModal(mode='add', item=null) {
+    formDirty = false;
     modalBackdrop.classList.add('active');
     if (mode === 'edit' && item) {
       modalTitle.textContent = t('modal.editItem');
       editingId = item.id;
       f_name.value = getL(item, 'name') || '';
-      f_category.value = getL(item, 'category') || 'サバイバル';
+      const category = getL(item, 'category');
+      if (![...f_category.options].some(o => o.value === category)) f_category.add(new Option(category, category));
+      f_category.value = category;
       f_weight.value = item.weight_g || 0;
       f_volume.value = item.volume_cm3 || 0;
-      f_quantity.value = item.quantity || 1;
-      f_recommended_quantity.value = item.recommended_quantity || 1;
+      f_quantity.value = item.quantity ?? 1;
+      f_recommended_quantity.value = item.recommended_quantity ?? 1;
       f_repack_frequency.value = item.repack_frequency || 'never';
       f_purpose.value = getL(item, 'purpose_short') || '';
       f_dual.checked = !!item.dual_use;
@@ -676,13 +705,15 @@
       f_quantity.value = 1;
       f_recommended_quantity.value = 1;
       f_repack_frequency.value = 'never';
-      f_legality.value = '{"US":"許可"}';
+      f_legality.value = '{}';
       f_description.value = '';
       f_sources.value = '';
     }
   }
 
   function closeModal() {
+    if (formDirty && !confirm(t('msg.discard'))) return;
+    formDirty = false;
     modalBackdrop.classList.remove('active');
   }
 
@@ -710,14 +741,15 @@
         return { title: line.trim() };
       });
 
-    const payload = normalizeItem({
+    let payload;
+    try { payload = normalizeItem({
       id: editingId || uid('item'),
       name: f_name.value.trim() || t('msg.unnamed'),
       category: f_category.value,
       weight_g: Number(f_weight.value || 0),
       volume_cm3: Number(f_volume.value || 0),
-      quantity: Number(f_quantity.value || 1),
-      recommended_quantity: Number(f_recommended_quantity.value || 1),
+      quantity: f_quantity.value.trim() === '' ? NaN : Number(f_quantity.value),
+      recommended_quantity: f_recommended_quantity.value.trim() === '' ? NaN : Number(f_recommended_quantity.value),
       repack_frequency: f_repack_frequency.value || 'never',
       purpose_short: f_purpose.value || '',
       description: f_description.value || '',
@@ -725,19 +757,23 @@
       hazard_flag: !!f_hazard.checked,
       legality_notes: legalityObj,
       sources: sourcesArr,
-      scores: {survivability:1,signalability:0,exfiltration_support:0,concealability:2,legality_penalty: (f_dual.checked?1:0)}
-    });
+    }); } catch { alert(t('msg.invalidInput')); return; }
     if (editingId) {
-      state.items = state.items.map(x => x.id === editingId ? Object.assign({}, x, payload) : x);
+      const original = state.items.find(x => x.id === editingId);
+      // Normalization defaults must not overwrite metadata absent from the form.
+      for (const field of ['checked','packed_by_default','category_tags']) delete payload[field];
+      state.items = state.items.map(x => x.id === editingId ? LoadoutCore.editItem(original, payload, getLang()) : x);
     } else {
       state.items.push(payload);
     }
     markDirty();
+    formDirty = false;
     closeModal();
     renderAll();
   });
 
   addItemBtn.addEventListener('click', ()=> openItemModal('add'));
+  itemForm.addEventListener('input', () => { formDirty = true; });
 
   // Bulk check/uncheck buttons
   const checkAllBtn = document.getElementById('checkAllBtn');
@@ -765,7 +801,7 @@
   targetWeightInput.addEventListener('input', () => {
     renderTotals();
     // Save target weight to localStorage
-    localStorage.setItem('ops_target_weight', targetWeightInput.value);
+    if (!writePreference('ops_target_weight', targetWeightInput.value)) alert(t('msg.preference'));
     // Update active button
     updateWeightPresetButtons();
   });
@@ -783,15 +819,15 @@
     btn.addEventListener('click', () => {
       const weight = btn.dataset.weight;
       targetWeightInput.value = weight;
-      localStorage.setItem('ops_target_weight', weight);
+      if (!writePreference('ops_target_weight', weight)) alert(t('msg.preference'));
       updateWeightPresetButtons();
       renderTotals();
     });
   });
 
   // Load saved target weight
-  const savedTargetWeight = localStorage.getItem('ops_target_weight');
-  if (savedTargetWeight) {
+  const savedTargetWeight = readPreference('ops_target_weight');
+  if (savedTargetWeight && Number.isFinite(Number(savedTargetWeight)) && Number(savedTargetWeight) >= 100) {
     targetWeightInput.value = savedTargetWeight;
     updateWeightPresetButtons();
   }
@@ -1516,13 +1552,16 @@
 
   nameEditSaveBtn.addEventListener('click', () => {
     const newName = nameEditInput.value.trim();
-    if (newName) {
+    if (newName && newName !== state.checklistName) {
       state.checklistName = newName;
+      markDirty();
       renderAll();
     }
     closeNameEditModal();
 
-    if (nameEditMode === 'save') {
+    if (nameEditMode === 'renameSaved') {
+      if (saveCurrentChecklist()) showSaveConfirmation();
+    } else if (nameEditMode === 'save') {
       // Continue to save flow
       if (currentChecklistId) {
         showSaveOptionsModal();
@@ -1601,13 +1640,7 @@
 
   // Perform save (overwrite or save as new)
   function performSave(saveAsNew) {
-    if (saveAsNew) {
-      // Save as new: clear currentChecklistId so it creates a new one
-      currentChecklistId = null;
-    }
-
-    saveCurrentChecklist();
-    showSaveConfirmation();
+    if (saveCurrentChecklist(saveAsNew)) showSaveConfirmation();
   }
 
   // Save button
@@ -1618,26 +1651,28 @@
 
   // New checklist button
   newChecklistBtn.addEventListener('click', ()=> {
+    if (state.isDirty && !confirm(t('msg.discard'))) return;
     createNewChecklist();
   });
 
   // Preset loading
   presetSelectEl.addEventListener('change', async (e)=>{
     const value = e.target.value;
+    if (!value || (state.isDirty && !confirm(t('msg.discard')))) {
+      presetSelectEl.value = currentPresetKey;
+      return;
+    }
     // Check if it's a saved checklist
     if (value.startsWith('saved-')) {
       const selectedOption = presetSelectEl.options[presetSelectEl.selectedIndex];
       const checklistId = selectedOption.dataset.checklistId;
       loadChecklist(checklistId);
       // Show rename and delete buttons for saved checklists
-      renamePresetBtn.classList.remove('hidden');
-      deletePresetBtn.classList.remove('hidden');
     } else {
       await loadFromPreset(value);
       // Hide rename and delete buttons for built-in presets
-      renamePresetBtn.classList.add('hidden');
-      deletePresetBtn.classList.add('hidden');
     }
+    renderPresetOptions(currentCategory);
   });
 
   // Delete saved checklist button
@@ -1649,10 +1684,8 @@
       const checklist = getAllChecklists().find(c => c.id === checklistId);
 
       if (checklist && confirm(t('msg.confirmDeleteChecklist'))) {
+        if (state.isDirty && !confirm(t('msg.discard'))) return;
         deleteChecklist(checklistId);
-        deletePresetBtn.classList.add('hidden');
-        renamePresetBtn.classList.add('hidden');
-        renderPresetOptions(currentCategory);
       }
     }
   });
@@ -1661,7 +1694,7 @@
   renamePresetBtn.addEventListener('click', ()=> {
     const value = presetSelectEl.value;
     if (value.startsWith('saved-')) {
-      showNameEditModal('rename');
+      showNameEditModal('renameSaved');
     }
   });
 
@@ -1693,6 +1726,7 @@
     });
 
     presetSelectEl.innerHTML = '';
+    presetSelectEl.add(new Option(t('preset.current'), ''));
 
     // Add saved checklists at the top (always shown)
     const savedChecklists = getAllChecklists();
@@ -1748,22 +1782,15 @@
       });
     }
 
-    // Auto-load the first preset in the filtered list
-    if (presetSelectEl.options.length > 0) {
-      const firstPresetKey = presetSelectEl.options[0].value;
-      presetSelectEl.value = firstPresetKey;
-      // Check if it's a saved checklist
-      if (firstPresetKey.startsWith('saved-')) {
-        const checklistId = presetSelectEl.options[0].dataset.checklistId;
-        loadChecklist(checklistId);
-        renamePresetBtn.classList.remove('hidden');
-        deletePresetBtn.classList.remove('hidden');
-      } else {
-        loadFromPreset(firstPresetKey);
-        renamePresetBtn.classList.add('hidden');
-        deletePresetBtn.classList.add('hidden');
-      }
+    // Updating candidate labels never loads data or discards edits.
+    if (currentPresetKey && ![...presetSelectEl.options].some(o => o.value === currentPresetKey)) {
+      const option = new Option(state.checklistName, currentPresetKey);
+      if (currentChecklistId) option.dataset.checklistId = currentChecklistId;
+      presetSelectEl.add(option);
     }
+    presetSelectEl.value = currentPresetKey;
+    renamePresetBtn.classList.toggle('hidden', !currentChecklistId);
+    deletePresetBtn.classList.toggle('hidden', !currentChecklistId);
   }
 
   // Category filter button event listeners
@@ -1829,6 +1856,11 @@
   document.addEventListener('langchange', () => {
     renderAll();
     renderPresetOptions(currentCategory);
+  });
+  window.addEventListener('beforeunload', event => {
+    if (!state.isDirty && !formDirty) return;
+    event.preventDefault();
+    event.returnValue = '';
   });
 
   // ============================================================

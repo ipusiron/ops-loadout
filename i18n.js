@@ -435,8 +435,33 @@ const I18N = {
   }
 };
 
-// Current language state
-let currentLang = localStorage.getItem('ops_lang') || 'ja';
+Object.assign(I18N.en, {
+  'msg.discard': 'Discard unsaved changes and load another checklist?',
+  'msg.storageRead': 'Saved data could not be read. It will not be overwritten. You can keep editing and export JSON.',
+  'msg.storageWrite': 'The checklist was not saved. Your edits are still here. Export JSON to keep a copy.',
+  'msg.storageConflict': 'This saved checklist changed in another tab. Export your edits or save as a new checklist.',
+  'msg.invalidInput': 'Check the input: quantities must be whole numbers from 0 to 999; weight and volume must be finite numbers from 0 to 1,000,000,000.',
+  'preset.current': 'Current checklist (no preset selected)',
+  'msg.preference': 'This preference could not be saved; it applies only to this page.',
+});
+Object.assign(I18N.ja, {
+  'msg.discard': '未保存の変更を破棄して、別のチェックリストを読み込みますか？',
+  'msg.storageRead': '保存データを読み込めません。上書きせず保護しています。編集を続け、JSONを書き出すことはできます。',
+  'msg.storageWrite': '保存できませんでした。編集中の内容は残っています。JSONを書き出して控えを残してください。',
+  'msg.storageConflict': 'この保存済みリストは別のタブで変更されています。編集中の内容をJSONで書き出すか、別名保存してください。',
+  'msg.invalidInput': '入力を確認してください。数量は0〜999の整数、重量と体積は0〜1,000,000,000の有限な数値です。',
+  'preset.current': '現在のチェックリスト（プリセット未選択）',
+  'msg.preference': '設定を保存できませんでした。このページ内だけに反映します。',
+});
+
+function readPreference(key) {
+  try { return localStorage.getItem(key); } catch { return null; }
+}
+function writePreference(key, value) {
+  try { localStorage.setItem(key, value); return true; } catch { return false; }
+}
+// Preferences are optional; storage denial must not prevent startup.
+let currentLang = readPreference('ops_lang') === 'en' ? 'en' : 'ja';
 
 /**
  * Get translated text for a key
@@ -470,11 +495,12 @@ function getLang() {
 function setLang(lang) {
   if (lang !== 'en' && lang !== 'ja') return;
   currentLang = lang;
-  localStorage.setItem('ops_lang', lang);
+  const saved = writePreference('ops_lang', lang);
   updateStaticTexts();
 
   // Dispatch custom event for dynamic content updates
   document.dispatchEvent(new CustomEvent('langchange', { detail: { lang } }));
+  if (!saved) alert(t('msg.preference'));
 }
 
 /**

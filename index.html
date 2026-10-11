@@ -309,23 +309,23 @@
           </div>
           <div>
             <label for="f_weight" class="form-label" data-i18n="form.weight">重量 (g)</label>
-            <input id="f_weight" type="number" min="0" class="form-input" />
+            <input id="f_weight" type="number" min="0" max="1000000000" step="any" class="form-input" />
           </div>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <div>
             <label for="f_volume" class="form-label" data-i18n="form.volume">体積 (cm³)</label>
-            <input id="f_volume" type="number" min="0" class="form-input" />
+            <input id="f_volume" type="number" min="0" max="1000000000" step="any" class="form-input" />
           </div>
           <div>
             <label for="f_quantity" class="form-label" data-i18n="form.quantity">数量</label>
-            <input id="f_quantity" type="number" min="1" value="1" class="form-input" />
+            <input id="f_quantity" type="number" min="0" max="999" step="1" required value="1" class="form-input" />
           </div>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <div>
             <label for="f_recommended_quantity" class="form-label" data-i18n="form.recommendedQty">推奨数</label>
-            <input id="f_recommended_quantity" type="number" min="1" value="1" class="form-input" />
+            <input id="f_recommended_quantity" type="number" min="0" max="999" step="1" required value="1" class="form-input" />
           </div>
           <div>
             <label for="f_repack_frequency" class="form-label" data-i18n="form.repackFreq">入替頻度</label>
@@ -461,6 +461,8 @@
     </div>
   </footer>
 
+  <script src="loadout-core.js"></script>
+  <script src="loadout-store.js"></script>
   <script src="i18n.js"></script>
   <script src="app.js"></script>
 </body>
