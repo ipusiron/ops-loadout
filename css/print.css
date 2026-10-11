@@ -4,6 +4,7 @@
  */
 
 @media print {
+  #printScope { overflow-wrap: anywhere; }
   /* Hide UI controls */
   .app-header,
   .controls-section,

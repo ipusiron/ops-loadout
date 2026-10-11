@@ -494,7 +494,7 @@ Object.assign(I18N.en, {
   'review.below': 'Below recommended',
   'review.either': 'Either condition',
   'review.none': 'None',
-  'review.reset': 'Clear search and filters',
+  'review.reset': 'Clear item search and filters',
   'review.notice': 'Recommended quantities are reference values in the data. These filters do not assess safety or whether actual supplies are sufficient. Unchecked does not mean a quantity of zero.',
   'review.summary': 'Whole list: {unchecked} unchecked / {below} below recommended / {either} either (categories overlap). Showing {shown} / {total} rows.',
   'review.difference': 'Quantity {quantity} / recommended {recommended}; difference {shortfall}',
@@ -529,7 +529,7 @@ Object.assign(I18N.ja, {
   'review.below': '推奨数未満',
   'review.either': 'いずれか',
   'review.none': 'なし',
-  'review.reset': '検索・絞り込みを解除',
+  'review.reset': '一覧の検索・絞り込みを解除',
   'review.notice': '推奨数はデータに登録された参考値です。安全性や実際の物資の充足は判定しません。未チェックを数量0として扱うこともありません。',
   'review.summary': 'リスト全体：未チェック{unchecked}行／推奨数未満{below}行／いずれか{either}行（分類は重複します）。表示{shown}／全体{total}行。',
   'review.difference': '数量{quantity}／推奨{recommended}・差{shortfall}',
@@ -575,7 +575,7 @@ function t(key, params = {}) {
 
   // Parameter interpolation: {name} -> value
   Object.keys(params).forEach(param => {
-    text = text.replace(new RegExp(`\\{${param}\\}`, 'g'), params[param]);
+    text = text.replace(new RegExp(`\\{${param}\\}`, 'g'), () => String(params[param]));
   });
 
   return text;

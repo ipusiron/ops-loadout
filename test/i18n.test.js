@@ -33,3 +33,38 @@ test('all literal translation references in scripts and HTML exist',()=>{
     }
   }
 });
+
+test('translations preserve interpolation tokens in both languages',()=>{
+  const context=run({getItem:()=>null});
+  const dictionaries=JSON.parse(vm.runInContext('JSON.stringify(I18N)',context));
+  const parameters=value => [...new Set(value.match(/\{[A-Za-z]+\}/g) || [])].sort();
+  for (const key of Object.keys(dictionaries.en)) {
+    assert.deepEqual(parameters(dictionaries.ja[key]),parameters(dictionaries.en[key]),key);
+  }
+});
+
+test('interpolation keeps dollar replacement patterns in imported names and filters literal',()=>{
+  const context=run({getItem:()=>null});
+  context.marker = '$& $$ $` $\' <script>';
+  for (const lang of ['ja','en']) {
+    vm.runInContext(`currentLang='${lang}'`,context);
+    const actual=vm.runInContext("t('review.printScope',{shown:1,total:3,filters:marker})",context);
+    assert.ok(actual.includes(context.marker),actual);
+    assert.doesNotMatch(actual,/\{(?:shown|total|filters)\}/);
+    assert.ok(vm.runInContext("t('item.check',{name:marker})",context).includes(context.marker));
+  }
+});
+
+test('JSON import and review labels and limits are available in both dictionaries',()=>{
+  const context=run({getItem:()=>null});
+  const dictionaries=JSON.parse(vm.runInContext('JSON.stringify(I18N)',context));
+  for (const dictionary of Object.values(dictionaries)) {
+    for (const key of ['import.button','import.notice','import.applied','import.reading','import.ready',
+      'import.stale','import.cancelled','import.tooLarge','import.encoding','import.syntax','import.format',
+      'import.complex','import.unsafe','import.invalid','review.all','review.unchecked','review.below',
+      'review.either','review.summary','review.difference','review.scope','review.printScope']) {
+      assert.ok(dictionary[key]?.length > 0,key);
+    }
+    for (const value of ['5 MiB','10,000','32','250,000']) assert.ok(dictionary['import.limits'].includes(value),value);
+  }
+});

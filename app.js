@@ -230,6 +230,50 @@
   let importCandidate = null;
   let importBaseline = 0;
   let importStatusKey = '';
+  const quantityTabDirections = new WeakMap();
+  let renderPointer = null;
+  let pendingRenderSource = null;
+  let pointerRenderTimer = null;
+
+  // A quantity change can be committed by pointer-driven blur. Keep layout
+  // stable until the native click (including its default action) has finished.
+  // Data is committed immediately; only the derived UI waits for the gesture.
+  function finishPointerRender() {
+    renderPointer = null;
+    clearTimeout(pointerRenderTimer);
+    pointerRenderTimer = null;
+    const source = pendingRenderSource;
+    pendingRenderSource = null;
+    if (source) renderAll(source);
+  }
+
+  function schedulePointerRender() {
+    clearTimeout(pointerRenderTimer);
+    pointerRenderTimer = setTimeout(finishPointerRender, 0);
+  }
+
+  document.addEventListener('pointerdown', event => {
+    if (!event.isPrimary || event.button !== 0) return;
+    finishPointerRender();
+    renderPointer = event.pointerId;
+  }, true);
+  document.addEventListener('pointerup', event => {
+    if (event.pointerId === renderPointer) schedulePointerRender();
+  }, true);
+  document.addEventListener('pointercancel', event => {
+    if (event.pointerId === renderPointer) schedulePointerRender();
+  }, true);
+  document.addEventListener('click', schedulePointerRender, true);
+  // Keyboard input may arrive before the zero-delay terminal task. It belongs
+  // to a new interaction, not to the preceding pointer gesture.
+  document.addEventListener('keydown', finishPointerRender, true);
+  document.addEventListener('pointermove', event => {
+    if (renderPointer !== null && event.buttons === 0) finishPointerRender();
+  }, true);
+  window.addEventListener('blur', schedulePointerRender);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) schedulePointerRender();
+  });
 
   function setImportStatus(key) {
     importStatusKey = key;
@@ -327,6 +371,11 @@
   });
   // Typing a quantity invalidates a pending file read before the change event commits it.
   itemTable.addEventListener('input', event => { if (event.target.matches('.qty-input')) loadRequest++; });
+  itemTable.addEventListener('keydown', event => {
+    if (!event.target.matches('.qty-input')) return;
+    if (event.key === 'Tab') quantityTabDirections.set(event.target, event.shiftKey ? -1 : 1);
+    else quantityTabDirections.delete(event.target);
+  });
 
   function readChecklists() {
     let result;
@@ -507,7 +556,7 @@
     loadRequest++;
     if (!state.isDirty) {
       state.isDirty = true;
-      updateDirtyIndicator();
+      if (renderPointer === null) updateDirtyIndicator();
     }
   }
 
@@ -521,10 +570,17 @@
     }
   }
 
-  function renderAll() {
+  function renderAll(updateSource = null) {
+    if (updateSource && renderPointer !== null) {
+      pendingRenderSource = updateSource;
+      return;
+    }
+    // A completed action (for example clearing filters) renders the latest
+    // state itself and supersedes a queued quantity-only redraw.
+    pendingRenderSource = null;
     currentChecklistName.textContent = state.checklistName;
     updateDirtyIndicator();
-    renderList();
+    renderList(updateSource);
     renderDetail(state.selectedItemId);
     renderTotals();
   }
@@ -542,8 +598,22 @@
     });
   }
 
-  function renderList() {
-    const focused = document.activeElement;
+  function reviewReasons(item) {
+    const review = LoadoutCore.itemReview(item);
+    const reasons = [];
+    if (review.unchecked) reasons.push(t('review.unchecked'));
+    if (review.belowRecommended) reasons.push(t('review.difference', {
+      quantity: item.quantity, recommended: item.recommended_quantity, shortfall: review.shortfall
+    }));
+    return reasons.join(' / ');
+  }
+
+  function renderList(updateSource = null) {
+    // Native change-on-blur can run while activeElement is body. Keep the source
+    // as a fallback, but leave surviving controls in place for natural Tab/click.
+    const focused = document.activeElement === document.body && updateSource ? updateSource : document.activeElement;
+    const direction = quantityTabDirections.get(updateSource) || 1;
+    if (updateSource) quantityTabDirections.delete(updateSource);
     const focusClass = ['item-check', 'qty-input', 'detailBtn', 'editBtn', 'delBtn'].find(cls => focused?.classList.contains(cls));
     const focusedId = itemTable.contains(focused) && focusClass ? focused.dataset.id : null;
     const previousIds = [...itemTable.querySelectorAll('.item-check')].map(el => el.dataset.id);
@@ -567,8 +637,17 @@
       const controls = [...itemTable.querySelectorAll('.' + focusClass)];
       const same = controls.find(el => el.dataset.id === focusedId);
       const oldIndex = previousIds.indexOf(focusedId);
-      const next = controls.find(el => previousIds.indexOf(el.dataset.id) > oldIndex);
-      (same || next || reviewFilter).focus();
+      const next = direction < 0
+        ? controls.filter(el => previousIds.indexOf(el.dataset.id) < oldIndex).at(-1)
+        : controls.find(el => previousIds.indexOf(el.dataset.id) > oldIndex);
+      const target = same || next || reviewFilter;
+      if (updateSource && !updateSource.isConnected) {
+        // Let a native Tab or pointer-driven blur finish first. Focusing here
+        // synchronously would steal a click intended for a surviving control.
+        requestAnimationFrame(() => {
+          if (document.activeElement === document.body && target.isConnected) target.focus();
+        });
+      } else target.focus();
     }
 
     // Update item count display
@@ -580,6 +659,22 @@
         itemCountDisplay.textContent = t('msg.itemCount', { count: totalItems });
         itemCountDisplay.classList.remove('hidden');
       }
+    }
+
+    const existingRows = new Map([...itemTable.querySelectorAll('.item-table-row')]
+      .map(row => [row.querySelector('.item-check').dataset.id, row]));
+    if (updateSource && list.length && list.every(item => existingRows.has(item.id))) {
+      const visibleIds = new Set(list.map(item => item.id));
+      for (const [id, row] of existingRows) if (!visibleIds.has(id)) row.remove();
+      for (const item of list) {
+        const row = existingRows.get(item.id);
+        row.querySelector('.item-check').checked = item.checked;
+        row.querySelector('.qty-input').value = item.quantity;
+        row.querySelector('.col-qty').dataset.quantity = item.quantity;
+        row.querySelector('.review-reason').textContent = reviewReasons(item);
+      }
+      if (focusedId && !focused.isConnected) restoreRowFocus();
+      return;
     }
 
     itemTable.className = 'item-table';
@@ -614,12 +709,6 @@
     list.forEach(it => {
       const row = document.createElement('div');
       row.className = 'item-table-row';
-      const review = LoadoutCore.itemReview(it);
-      const reasons = [];
-      if (review.unchecked) reasons.push(t('review.unchecked'));
-      if (review.belowRecommended) reasons.push(t('review.difference', {
-        quantity: it.quantity, recommended: it.recommended_quantity, shortfall: review.shortfall
-      }));
 
       const badges = [];
       if (it.dual_use) {
@@ -633,7 +722,7 @@
         <div class="col-check">
           <input type="checkbox" data-id="${escapeHtml(it.id)}" aria-label="${escapeHtml(t('item.check', {name: getL(it, 'name')}))}" ${it.checked ? 'checked' : ''} class="item-check cursor-pointer focus:ring-2 focus:ring-blue-500"/>
         </div>
-        <div class="col-name-cell"><div class="col-name">${escapeHtml(getL(it, 'name'))}</div><p class="review-reason">${escapeHtml(reasons.join(' / '))}</p></div>
+        <div class="col-name-cell"><div class="col-name">${escapeHtml(getL(it, 'name'))}</div><p class="review-reason">${escapeHtml(reviewReasons(it))}</p></div>
         <div class="col-category">${escapeHtml(getL(it, 'category'))}</div>
         <div class="col-weight" data-label="${escapeHtml(t('th.weight'))}"><span class="weight-badge weight-${getWeightClass(it.weight_g || 0)}">${it.weight_g ?? 0}</span></div>
         <div class="col-qty" data-quantity="${it.quantity ?? 1}">
@@ -667,7 +756,7 @@
       cb.addEventListener('change', e=>{
         const id = e.target.dataset.id;
         const it = state.items.find(x=>x.id===id);
-        if (it) { it.checked = e.target.checked; markDirty(); renderAll(); }
+        if (it) { it.checked = e.target.checked; markDirty(); renderAll(e.target); }
       });
     });
     itemTable.querySelectorAll('.qty-input').forEach(input=>{
@@ -685,7 +774,7 @@
           e.target.closest('.col-qty').dataset.quantity = newQty;
           e.target.value = newQty;
           markDirty();
-          renderAll();
+          renderAll(e.target);
         }
       });
     });
@@ -2111,6 +2200,7 @@
   // ============================================================
   // 印刷前にヘッダーとサマリーを更新
   window.addEventListener('beforeprint', () => {
+    finishPointerRender();
     const printTitle = document.getElementById('printTitle');
     const printDate = document.getElementById('printDate');
     const printSummary = document.getElementById('printSummary');
