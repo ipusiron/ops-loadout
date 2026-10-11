@@ -2,6 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const vm = require('node:vm');
 const C = require('../loadout-core');
 const root = path.join(__dirname, '..');
 const read = file => fs.readFileSync(path.join(root, file), 'utf8').replace(/\r\n/g, '\n');
@@ -71,12 +72,115 @@ test('README arithmetic examples use checked quantities, including zero', () => 
 test('README JSON examples parse and preserve the same schema in both languages', () => {
   const examples = texts.map(text => [...text.matchAll(/```json\n([\s\S]*?)\n```/g)]
     .map(match => JSON.parse(match[1])));
-  assert.equal(examples[0].length, 2);
+  assert.equal(examples[0].length, 3);
   assert.deepEqual(examples[0], examples[1]);
-  assert.deepEqual(C.normalizeItems(examples[0][0].items), []);
-  const item = C.normalizeItem(examples[0][1]);
+  const [backup, preset, itemExample] = examples[0];
+  const restored = C.parseChecklistJSON(JSON.stringify(backup));
+  assert.deepEqual(Object.keys(restored).sort(), ['items', 'name']);
+  assert.equal(restored.name, backup.checklistName);
+  for (const [key, value] of Object.entries(backup.items[0])) {
+    assert.deepEqual(restored.items[0][key], value, key);
+  }
+  assert.equal(restored.items[0].quantity, 0);
+  assert.equal(restored.items[0].checked, false);
+  assert.equal(restored.items[0].packed_by_default, true);
+  assert.deepEqual(restored.items[0].custom_meta, {note: 'keep'});
+  const roundTrip = C.parseChecklistJSON(JSON.stringify({
+    checklistName: restored.name, createdAt: '2026-10-13T00:00:00.000Z', items: restored.items
+  }));
+  assert.deepEqual(roundTrip, restored);
+  assert.deepEqual(C.normalizeItems(preset.items), []);
+  assert.throws(() => C.parseChecklistJSON(JSON.stringify(preset)), /importFormat/);
+  const item = C.normalizeItem(itemExample);
   assert.equal(item.quantity, 1);
   assert.equal(item.checked, false);
+});
+
+test('README import limits describe the implemented boundaries, including unused metadata', () => {
+  const labels = [
+    ['UTF-8ファイルのバイト数', 'JSONの深さ（ルートを0とする）', 'JSON内のノード数（ルートと各オブジェクト・配列・値）', 'アイテム数'],
+    ['UTF-8 file size in bytes', 'JSON depth (root at 0)', 'JSON nodes (root and each object, array, or value)', 'Item count']
+  ];
+  for (let lang = 0; lang < texts.length; lang++) {
+    const values = labels[lang].map(label => {
+      const line = texts[lang].split('\n').find(row => row.startsWith('| ' + label + ' |'));
+      assert.ok(line, label);
+      return [...line.split('|')[2].replace(/,/g, '').matchAll(/\d+/g)].map(match => Number(match[0]));
+    });
+    assert.deepEqual(values, [[5, C.IMPORT_LIMITS.maxBytes], [C.IMPORT_LIMITS.maxDepth], [C.IMPORT_LIMITS.maxNodes], [10000]]);
+  }
+  const minimal = '{"checklistName":"","items":[]}';
+  assert.deepEqual(C.parseChecklistJSON('\ufeff' + minimal), {name: '', items: []});
+  assert.throws(() => C.parseChecklistJSON('\ufeff\ufeff' + minimal), /importSyntax/);
+  assert.deepEqual(C.parseChecklistJSON(minimal + ' '.repeat(C.IMPORT_LIMITS.maxBytes - minimal.length)), {name: '', items: []});
+  assert.throws(() => C.parseChecklistJSON(minimal + ' '.repeat(C.IMPORT_LIMITS.maxBytes - minimal.length + 1)), /importTooLarge/);
+  for (const key of ['__proto__', 'constructor', 'prototype']) {
+    assert.throws(() => C.parseChecklistJSON('{"checklistName":"","items":[],"unused":{"' + key + '":0}}'), /importUnsafeKey/);
+    for (const text of texts) assert.ok(text.includes('`' + key + '`'));
+  }
+  assert.throws(() => C.parseChecklistJSON('{"checklistName":"","items":[],"unused":1e999}'), /importNonFinite/);
+});
+
+test('README review truth tables match the core and count overlapping conditions once', () => {
+  const tables = texts.map(text => text.split('\n').filter(line => /^\| [A-E] \|/.test(line))
+    .map(line => line.split('|').slice(1, -1).map(cell => cell.trim())));
+  assert.equal(tables[0].length, 5);
+  assert.deepEqual(tables[0], tables[1]);
+  const counts = {unchecked: 0, below: 0, either: 0};
+  for (const [id, checked, quantity, recommended, unchecked, below, difference, either] of tables[0]) {
+    const item = C.normalizeItem({id, checked: JSON.parse(checked), quantity: Number(quantity), recommended_quantity: Number(recommended)});
+    const expected = {unchecked: JSON.parse(unchecked), belowRecommended: JSON.parse(below), shortfall: Number(difference), needsReview: JSON.parse(either)};
+    assert.deepEqual(C.itemReview(item), expected, id);
+    assert.deepEqual(['all', 'unchecked', 'below', 'either'].map(mode => C.matchesReview(item, mode)),
+      [true, expected.unchecked, expected.belowRecommended, expected.needsReview], id);
+    counts.unchecked += Number(expected.unchecked);
+    counts.below += Number(expected.belowRecommended);
+    counts.either += Number(expected.needsReview);
+  }
+  assert.deepEqual(counts, {unchecked: 3, below: 2, either: 4});
+  assert.match(texts[0], /5行では未チェック3件、推奨数未満2件、いずれか4件/);
+  assert.match(texts[1], /5 rows contain 3 unchecked items, 2 below their recommended quantity, and 4 matching either condition/);
+});
+
+test('README review and JSON preview screenshot captions use the actual preset arithmetic', () => {
+  const items = C.normalizeItems(presets.bushcraft_minimal.items).map(item => ({...item,
+    checked: item.id !== 'bc_metal_bottle',
+    quantity: ['bc_ferro_rod', 'bc_paracord'].includes(item.id) ? 0 : item.quantity
+  }));
+  assert.deepEqual(C.totals(items), {weight: 850, volume: 1000, quantity: 2, rows: 4});
+  assert.deepEqual(['unchecked', 'below', 'either'].map(mode => items.filter(item => C.matchesReview(item, mode)).length), [1, 2, 3]);
+  assert.equal(items.length, 5);
+  for (const text of texts) {
+    const captions = text.split('\n').filter(line => line.startsWith('>*'));
+    assert.equal(captions.length, 3);
+    for (const caption of captions.slice(1)) {
+      assert.match(caption, /850\s*g/);
+      assert.match(caption, /1000\s*cm³/);
+    }
+    assert.match(captions[2], /5/);
+    assert.match(captions[2], /4/);
+    assert.match(captions[2], /2/);
+  }
+});
+
+test('README restoration instructions use the actual language labels and keep scope cautions', () => {
+  const context = vm.createContext({localStorage: {getItem: () => null}, document: {addEventListener(){}}});
+  vm.runInContext(read('i18n.js'), context);
+  const dictionaries = JSON.parse(vm.runInContext('JSON.stringify(I18N)', context));
+  for (const [i, lang] of ['ja', 'en'].entries()) {
+    for (const key of ['import.button', 'import.apply', 'review.all', 'review.unchecked', 'review.below', 'review.either', 'review.reset']) {
+      assert.ok(texts[i].includes(dictionaries[lang][key]), lang + ': ' + key);
+    }
+  }
+  assert.match(texts[0], /同名の保存済みリストも自動では上書きしない/);
+  assert.match(texts[1], /existing saved list with the same name is not automatically overwritten/);
+  assert.match(texts[0], /ブラウザーの印刷だけは表示中の行/);
+  assert.match(texts[1], /Only browser printing prints the displayed rows/);
+  assert.match(texts[0], /安全性・合法性や必要物資の充足の判定ではありません/);
+  assert.match(texts[1], /do not determine safety, legality, or whether required supplies are sufficient/);
+  for (const file of [...docs, 'docs/DEVELOPMENT.md', 'docs/SECURITY.md', 'CLAUDE.md']) {
+    assert.doesNotMatch(read(file), /no (?:JSON\/CSV )?import (?:or automatic.restore )?interface|no restore interface|読み戻す画面はありません|読み戻し画面がない|JSON\/CSVのインポートUIはない/i, file);
+  }
 });
 
 test('README CSV schema is exactly the implemented 12-column schema', () => {
@@ -116,8 +220,13 @@ test('README relative links resolve and each language uses three real screenshot
       assert.equal(png.subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
       assert.equal(png.readUInt32BE(16), 1280);
       assert.ok(png.readUInt32BE(20) >= 800 && png.readUInt32BE(20) <= 1400);
+      assert.ok(png.length <= 300 * 1024, file + ': screenshot exceeds 300 KiB');
     }
   }
+  const relativeTargets = text => [...text.matchAll(/\]\(([^)\s]+)\)/g)].map(match => match[1])
+    .filter(target => !/^[a-z]+:|^#/i.test(target))
+    .map(target => target.replace(/^assets\/en\//, 'assets/').replace(/^README(?:\.en)?\.md$/, 'README.language.md')).sort();
+  assert.deepEqual(relativeTargets(texts[0]), relativeTargets(texts[1]));
 });
 
 test('READMEs keep emphasis restrained and describe current behavior', () => {
@@ -152,6 +261,8 @@ const headingPairs = [
   ["### 7. 多言語対応（i18n）","### 7. Language Support (i18n)"],
   ["### 8. 重量目標プリセット","### 8. Target-Weight Presets"],
   ["### 9. プリセット遅延読込み","### 9. Lazy Preset Loading"],
+  ["### 10. JSONバックアップの読み戻し","### 10. Restoring a JSON Backup"],
+  ["### 11. 未チェック・推奨数未満の見直し","### 11. Reviewing Unchecked Items and Quantities Below the Recommendation"],
   ["## 💡 活用シナリオ（Use Cases）","## 💡 Use Cases"],
   ["### このツールならではの使い方","### Uses Specific to This Tool"],
   ["### シナリオ1：海外駐在員の緊急脱出準備（企業・組織向け）","### Scenario 1: Emergency Evacuation Preparation for Overseas Employees (Companies and Organizations)"],
@@ -196,7 +307,7 @@ const headingPairs = [
 ];
 
 test('Japanese and English README headings correspond exactly in order and level', () => {
-  assert.equal(headingPairs.length, 59);
+  assert.equal(headingPairs.length, 61);
   for (let lang = 0; lang < texts.length; lang++) {
     const prose = texts[lang].replace(/```[\s\S]*?```/g, '');
     const headings = prose.match(/^#{1,6} .+$/gm);

@@ -23,6 +23,14 @@ This is a client-side application with no application backend. The supported rel
 - CSV export quotes every cell, doubles embedded quotes, and prefixes potentially formula-like values with an apostrophe. It includes a UTF-8 BOM and uses CRLF row endings. Spreadsheet behavior varies, and editing or re-saving CSV can remove protections; review imported cells before using them.
 - Saved data is not encrypted. This tool does not authenticate users, maintain a tamper-evident audit log, or certify safety, preparedness, ownership, or legality.
 
+JSON import is an untrusted-input boundary. The file is read locally, with a size check before `arrayBuffer()` and strict UTF-8 decoding. `LoadoutCore.parseChecklistJSON()` accepts a single object containing `checklistName` and `items`, with an optional string `createdAt`. It returns the name and validated items, not a saved ID or the export timestamp. Raw presets, saved-list arrays, CSV, and other tools' JSON formats are not converted automatically.
+
+The limits are 5 MiB (5,242,880 bytes, including any BOM), depth 32 with the root at 0, 250,000 JSON nodes including the root and each object, array, or value, and 10,000 items. One leading UTF-8 BOM is allowed. The whole JSON is inspected, including unused root fields and additional item metadata; primitive leaf values count toward depth. Non-finite numbers and `__proto__`, `constructor`, or `prototype` keys are rejected at every depth. These limits bound accepted inputs; they do not guarantee responsive performance or enough browser storage.
+
+Validated zero/false values, translations, and additional item metadata are retained, but remain untrusted at display and export boundaries. A preview does not change the working list or saved data. Applying it creates a separate unsaved list after any required discard confirmation; a later save uses a new ID and does not automatically overwrite a same-name saved list. Superseded asynchronous reads are not applied. Invalid input, cancellation, or a failed save must preserve the relevant working and saved data. Import status messages do not echo the file contents.
+
+Review filters compare `checked === false` and `quantity < recommended_quantity`; they do not measure equipment sufficiency. Unchecked does not mean quantity zero, and overlapping conditions are counted once in their union. JSON/CSV/PDF exports, totals, graphs, and bulk check operations cover the whole list, including hidden rows. Browser printing uses displayed rows and labels its counts, filters, and whole-list totals.
+
 ### 3. External Resources
 - jsPDF and html2canvas are fetched from cdnjs with fixed versions, SRI hashes, `crossorigin="anonymous"`, and `referrerpolicy="no-referrer"`.
 - SRI checks the received script bytes against the expected hash. It does not establish that a library has no vulnerabilities.
@@ -68,7 +76,7 @@ Include reproduction steps, the browser version, and a minimal non-sensitive exa
 
 1. Local storage: clearing site data removes saved checklists. Private browsing, storage policy, or quota limits can prevent persistence. Check for a successful save before closing the page.
 2. No account: the app does not provide authentication, account recovery, cross-device synchronization, or access control between people sharing a browser profile.
-3. External copies: export important checklists as JSON and retain the files securely. There is no JSON/CSV import or automatic restore interface; an exported copy is not a one-click recovery mechanism.
+3. External copies: export important checklists as JSON and retain the files securely. “Import JSON” previews a supported backup and opens it as a new unsaved list. Review and explicitly save it; importing does not repair browser storage or restore a whole saved collection. CSV import is not supported.
 4. Browser security: keep the browser updated. Avoid simultaneous editing in multiple tabs and retain the in-memory version if a storage conflict is reported.
 5. Shared computers: do not enter sensitive equipment lists or personal information on public/shared computers. Downloaded files and copied graph images remain outside the app's storage controls.
 6. Equipment decisions: verify actual weights, volumes, suitability, and applicable rules independently. Missing warning flags do not imply unrestricted possession, transport, or use. Sample radar ratings are not measurements of safety or legality.
@@ -86,7 +94,7 @@ There are no npm runtime or test dependencies. Review library changes and update
 
 - No analytics: the application does not install an analytics or tracking service.
 - No cookies: application code does not set cookies.
-- Checklist processing: the application has no upload endpoint and does not intentionally send entered checklist contents to a server. Exporting, copying, or sharing a file is a separate user action.
+- Checklist processing: the application has no upload endpoint and does not intentionally send entered checklist contents or imported JSON to a server. Import files are processed on the device. Exporting, copying, or sharing a file is a separate user action.
 - External requests: GitHub Pages serves the app and cdnjs serves the two PDF libraries. These services receive ordinary request metadata. Following source links opens the selected external site.
 - Local retention: in-memory edits, saved browser data, downloads, and clipboard images have different lifetimes. Clearing browser storage does not erase downloaded files or clipboard contents.
 

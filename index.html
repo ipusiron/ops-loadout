@@ -399,7 +399,7 @@
           <p data-i18n="help.addingItemsDesc">「＋ アイテム追加」ボタンでアイテムを追加できます。カテゴリー、重量、数量などを入力してください。</p>
         </section>
         <section>
-          <h4 class="font-semibold text-gray-900 mb-1" data-i18n="help.customPresets">カスタムプリセット</h4>
+          <h4 class="font-semibold text-gray-900 mb-1" data-i18n="help.customPresets">保存済みチェックリスト</h4>
           <p data-i18n="help.customPresetsDesc">名前を付けて保存し、「保存済み」から選んで読み込みます。</p>
         </section>
         <section>
@@ -412,7 +412,15 @@
         </section>
         <section>
           <h4 class="font-semibold text-gray-900 mb-1" data-i18n="help.savingExporting">保存とエクスポート</h4>
-          <p data-i18n="help.savingExportingDesc">「保存」でローカルストレージに保存されます。JSON/CSV/PDF形式でエクスポートも可能です。</p>
+          <p data-i18n="help.savingExportingDesc">「保存」でローカルストレージに保存します。JSON/CSV/PDF出力と全チェック・全解除は、非表示行を含むリスト全体が対象です。合計とグラフはリスト全体のチェック済み数量を使います。ブラウザー印刷は表示行だけが対象で、絞り込み条件も記載します。</p>
+        </section>
+        <section>
+          <h4 class="font-semibold text-gray-900 mb-1" data-i18n="help.importJSON">JSONバックアップの読み戻し</h4>
+          <p data-i18n="help.importJSONDesc">本ツールで出力したJSONを選び、プレビューを確認してから未保存の別リストとして開きます。このブラウザーに残すには「保存」を押してください。保存済みリストは上書きしません。取消や不正な入力では現在のリストは変わりません。CSV、プリセット本体、他ツールのJSONは対象外です。</p>
+        </section>
+        <section>
+          <h4 class="font-semibold text-gray-900 mb-1" data-i18n="help.review">未チェックと推奨数未満の見直し</h4>
+          <p data-i18n="help.reviewDesc">「未チェック」「推奨数未満」「いずれか」を選びます。検索と軍民両用・危険物の条件も組み合わせて適用します。各行には理由と数量差を示し、件数の分類は重複します。未チェックは数量0を意味しません。推奨数は参考値であり、安全性や実際の物資の充足を判定するものではありません。全体を見るには「一覧の検索・絞り込みを解除」を押してください。</p>
         </section>
         <section>
           <h4 class="font-semibold text-gray-900 mb-1" data-i18n="help.language">言語切り替え</h4>
