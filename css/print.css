@@ -14,6 +14,7 @@
   .col-actions,
   .col-check input,
   .qty-input,
+  .qty-label,
   nav, aside, footer {
     display: none !important;
   }
@@ -91,7 +92,12 @@
   .col-check {
     width: 1.5em !important;
     text-align: center !important;
+    position: static !important;
   }
+
+  .col-qty::after { content: attr(data-quantity); }
+  .item-table-row .col-weight::before { content: none !important; }
+  .rename-btn, .dirty-indicator { display: none !important; }
 
   .col-check::before {
     content: "☐" !important;

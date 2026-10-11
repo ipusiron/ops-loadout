@@ -6,15 +6,15 @@
   <!--
     Content Security Policy:
     - script-src: No unsafe-inline (all scripts are external files)
-    - style-src: unsafe-inline required by Tailwind CSS CDN JIT compiler
+    - style-src: inline styles used for chart progress and PDF rendering
     - img-src: self + data: for canvas export
     - connect-src: self + cdnjs for source maps
     - frame-ancestors: Not supported in meta tag (HTTP header only)
   -->
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
-    script-src 'self' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com;
-    style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com;
+    script-src 'self' https://cdnjs.cloudflare.com;
+    style-src 'self' 'unsafe-inline';
     img-src 'self' data:;
     font-src 'self';
     connect-src 'self' https://cdnjs.cloudflare.com;
@@ -27,12 +27,9 @@
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>" />
 
-  <!-- Tailwind CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
   <!-- jsPDF for PDF export -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
-          integrity="sha512-qZvrmS2ekKPF2mSznTQsxqPgnpkI4DNTlrdUmTzrDgektczlKNRRhy5X5AAOnx5S09ydFYWWNSfcEqDTTHgtNA=="
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/4.2.1/jspdf.umd.min.js"
+          integrity="sha512-plOdviVmws4Y3JAvbnpfKb2hVxKM1lCwsi3vmElYRj+tiDLffZ4FVUj5a8vyKJ9pIgl8JCAHEJ4D1iUKBecswg=="
           crossorigin="anonymous"
           referrerpolicy="no-referrer"></script>
   <!-- html2canvas for HTML to PDF conversion -->
@@ -62,6 +59,7 @@
         </button>
       </div>
     </div>
+    <p class="app-note" data-i18n="app.limit"></p>
   </header>
 
   <!-- Controls Section -->
@@ -156,11 +154,11 @@
     <!-- Footer Bar -->
     <div class="footer-bar">
       <div class="footer-bar-left">
-        <div class="weight-progress-container">
+        <div class="weight-progress-container" aria-live="polite">
           <div class="weight-info">
             <span class="footer-info"><span data-i18n="total.weight">合計重量:</span> <strong id="totalWeight">0</strong> g</span>
             <span class="weight-target-wrapper">
-              / <input type="number" id="targetWeight" class="target-weight-input" value="5000" min="100" step="100" /> g
+              / <input type="number" id="targetWeight" class="target-weight-input" value="5000" min="100" max="1000000000" step="1" /> g
               <span class="weight-presets">
                 <button type="button" class="weight-preset-btn" data-weight="3000" data-i18n-title="weight.ultralight" title="ウルトラライト">UL</button>
                 <button type="button" class="weight-preset-btn active" data-weight="5000" data-i18n-title="weight.standard" title="スタンダード">STD</button>
@@ -309,23 +307,23 @@
           </div>
           <div>
             <label for="f_weight" class="form-label" data-i18n="form.weight">重量 (g)</label>
-            <input id="f_weight" type="number" min="0" class="form-input" />
+            <input id="f_weight" type="number" min="0" max="1000000000" step="any" class="form-input" />
           </div>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <div>
             <label for="f_volume" class="form-label" data-i18n="form.volume">体積 (cm³)</label>
-            <input id="f_volume" type="number" min="0" class="form-input" />
+            <input id="f_volume" type="number" min="0" max="1000000000" step="any" class="form-input" />
           </div>
           <div>
             <label for="f_quantity" class="form-label" data-i18n="form.quantity">数量</label>
-            <input id="f_quantity" type="number" min="1" value="1" class="form-input" />
+            <input id="f_quantity" type="number" min="0" max="999" step="1" required value="1" class="form-input" />
           </div>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <div>
             <label for="f_recommended_quantity" class="form-label" data-i18n="form.recommendedQty">推奨数</label>
-            <input id="f_recommended_quantity" type="number" min="1" value="1" class="form-input" />
+            <input id="f_recommended_quantity" type="number" min="0" max="999" step="1" required value="1" class="form-input" />
           </div>
           <div>
             <label for="f_repack_frequency" class="form-label" data-i18n="form.repackFreq">入替頻度</label>
@@ -383,7 +381,7 @@
         </section>
         <section>
           <h4 class="font-semibold text-gray-900 mb-1" data-i18n="help.customPresets">カスタムプリセット</h4>
-          <p data-i18n="help.customPresetsDesc">保存時に「プリセット化」にチェックを入れると、カスタムプリセットとして再利用できます。名前変更・削除も可能です。</p>
+          <p data-i18n="help.customPresetsDesc">名前を付けて保存し、「保存済み」から選んで読み込みます。</p>
         </section>
         <section>
           <h4 class="font-semibold text-gray-900 mb-1" data-i18n="help.weightTarget">重量目標</h4>
@@ -437,6 +435,9 @@
       <div class="graph-canvas-wrapper">
         <canvas id="graphCanvas" width="1200" height="675"></canvas>
       </div>
+      <p class="graph-note" data-i18n="graph.limitShort"></p>
+      <p class="graph-note" data-i18n="graph.ratingDetail"></p>
+      <p id="graphData" class="graph-data" aria-live="polite"></p>
       <div class="mt-4 flex justify-center gap-3">
         <button id="graphDownloadBtn" class="btn btn-primary">
           <svg class="inline w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -457,10 +458,12 @@
 
   <footer class="app-footer">
     <div class="app-footer-content">
-      <p class="app-footer-text">🔗 <span data-i18n="footer.github">GitHubリポジトリはこちら</span>（ <a href="https://github.com/ipusiron/ops-loadout" target="_blank" class="app-footer-link">ipusiron/ops-loadout</a> ）</p>
+      <p class="app-footer-text">🔗 <a href="https://github.com/ipusiron/ops-loadout" target="_blank" rel="noopener noreferrer" class="app-footer-link" data-i18n="footer.github">GitHubリポジトリー</a></p>
     </div>
   </footer>
 
+  <script src="loadout-core.js"></script>
+  <script src="loadout-store.js"></script>
   <script src="i18n.js"></script>
   <script src="app.js"></script>
 </body>

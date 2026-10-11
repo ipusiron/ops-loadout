@@ -2,26 +2,20 @@
  * app.js — OpsLoadout - 緊急脱出キットのチェックリストツール
  *
  * アーキテクチャ: Vanilla JavaScript (フレームワーク不使用)
- * スタイリング: Tailwind CSS (CDN)
+ * スタイリング: css/ 配下のローカルCSS
  * データ保存: localStorage (ブラウザーローカル)
  *
  * 主要機能:
- * - 18種類のビルトインプリセット管理
- * - カスタムプリセット作成・編集・削除
+ * - 22種類のビルトインプリセット管理
+ * - 保存済みチェックリストの再利用・名前変更・削除
  * - チェックリスト保存・読み込み（上書き/別名保存対応）
  * - アイテム追加・編集・削除
  * - PDF/CSV/JSONエクスポート
  * - カテゴリフィルタリング
  * - XSS対策・localStorage検証
  *
- * ファイル構成:
- * - Lines 7-360: PRESETS定義（18種類）
- * - Lines 361-419: DOM要素参照
- * - Lines 420-699: ユーティリティ関数
- * - Lines 700-906: レンダリング関数
- * - Lines 907-992: モーダル管理
- * - Lines 993-1086: エクスポート関数
- * - Lines 1087-1400: イベントリスナー
+ * 共通処理: loadout-core.js（検証・集計・CSV）、loadout-store.js（保存）
+ * プリセット: HTTP(S)ではJSON、file://ではpresets-bundle.jsから読み込み
  */
 
 (() => {
@@ -112,6 +106,51 @@
   const helpCloseBtn = document.getElementById('helpCloseBtn');
   const helpOkBtn = document.getElementById('helpOkBtn');
 
+  const dialogOpeners = new WeakMap();
+  function updateDialogBackground() {
+    const active = document.querySelector('.modal-backdrop.active');
+    for (const child of document.body.children) child.inert = !!active && child !== active;
+  }
+  function openDialog(dialog) {
+    loadRequest++; // Opening an editor/save dialog cancels pending preset replacement.
+    renderPresetOptions(currentCategory);
+    dialogOpeners.set(dialog, document.activeElement);
+    dialog.classList.add('active');
+    dialog.setAttribute('role', 'dialog');
+    dialog.setAttribute('aria-modal', 'true');
+    const heading = dialog.querySelector('h3');
+    if (heading) {
+      if (!heading.id) heading.id = dialog.id + '-heading';
+      dialog.setAttribute('aria-labelledby', heading.id);
+    }
+    dialog.tabIndex = -1;
+    updateDialogBackground();
+    (dialog.querySelector('input:not([type=checkbox]), button') || dialog).focus();
+  }
+  function closeDialog(dialog) {
+    dialog.classList.remove('active');
+    updateDialogBackground();
+    const opener = dialogOpeners.get(dialog);
+    if (opener?.isConnected && !opener.closest('[inert]')) opener.focus();
+    else saveBtn.focus();
+  }
+  document.addEventListener('keydown', event => {
+    const dialog = document.querySelector('.modal-backdrop.active');
+    if (!dialog) return;
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if (dialog === modalBackdrop) closeModal();
+      else closeDialog(dialog);
+    } else if (event.key === 'Tab') {
+      const controls = [...dialog.querySelectorAll('button, input, select, textarea, a[href], [tabindex="0"]')].filter(el => !el.disabled && el.getClientRects().length);
+      const first = controls[0], last = controls[controls.length - 1];
+      if (!first) { event.preventDefault(); dialog.focus(); }
+      else if (event.shiftKey && (document.activeElement === first || document.activeElement === dialog)) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    }
+  }, true);
+
   // ============================================================
   // ユーティリティ関数 (Utility Functions)
   // ============================================================
@@ -143,15 +182,7 @@
 
   // Normalize item with backward-compatible defaults for new packing fields
   function normalizeItem(it) {
-    return {
-      ...it,
-      quantity: it.quantity ?? 1,
-      recommended_quantity: it.recommended_quantity ?? 1,
-      packed_by_default: it.packed_by_default ?? (!!it.checked) ?? false,
-      category_tags: it.category_tags ?? (it.category ? [it.category.toLowerCase().replace(/\s+/g, '-')] : []),
-      repack_frequency: it.repack_frequency ?? 'never', // values: daily, weekly, monthly, never
-      description: it.description ?? '' // 詳細メモ（Markdown可）
-    };
+    return LoadoutCore.normalizeItem(it);
   }
 
   /**
@@ -179,45 +210,56 @@
 
   // Multiple checklist management
   let currentChecklistId = null;
+  let currentPresetKey = '';
+  let currentSavedSnapshot = null;
+  let loadRequest = 0;
+  let formDirty = false;
+  let storageWarningShown = false;
+
+  function readChecklists() {
+    let result;
+    try { result = LoadoutStore.read(localStorage); } catch { result = { ok: false }; }
+    if (!result.ok && !storageWarningShown) {
+      storageWarningShown = true;
+      alert(t('msg.storageRead'));
+    }
+    if (result.ok) storageWarningShown = false;
+    return result;
+  }
 
   function getAllChecklists() {
-    try {
-      const data = localStorage.getItem('ekc_checklists');
-      return data ? JSON.parse(data) : [];
-    } catch (error) {
-      console.error('Failed to parse checklists from localStorage:', error);
-      return [];
-    }
+    const result = readChecklists();
+    return result.ok ? result.lists : [];
   }
 
-  function saveAllChecklists(checklists) {
-    try {
-      localStorage.setItem('ekc_checklists', JSON.stringify(checklists));
-    } catch (error) {
-      if (error.name === 'QuotaExceededError') {
-        alert(t('msg.storageQuotaExceeded'));
-      } else {
-        console.error('Failed to save checklists to localStorage:', error);
-        alert(t('msg.saveFailed'));
-      }
-    }
+  function saveAllChecklists(checklists, expectedRaw) {
+    let result;
+    try { result = LoadoutStore.write(localStorage, checklists, expectedRaw); } catch { result = { ok: false }; }
+    if (!result.ok) alert(t(result.error === 'conflict' ? 'msg.storageConflict' : 'msg.storageWrite'));
+    return result.ok;
   }
 
-  function saveCurrentChecklist() {
-    const checklists = getAllChecklists();
+  function saveCurrentChecklist(saveAsNew = false) {
+    const read = readChecklists();
+    if (!read.ok) return false;
+    const checklists = read.lists;
+    const saveId = saveAsNew ? null : currentChecklistId;
+    if (saveId && JSON.stringify(checklists.find(c => c.id === saveId)) !== currentSavedSnapshot) {
+      alert(t('msg.storageConflict'));
+      return false;
+    }
     const payload = {
-      id: currentChecklistId || uid('checklist'),
+      id: saveId || uid('checklist'),
       name: state.checklistName,
       items: state.items,
-      createdAt: currentChecklistId ? (checklists.find(c => c.id === currentChecklistId)?.createdAt || new Date().toISOString()) : new Date().toISOString(),
+      createdAt: saveId ? (checklists.find(c => c.id === saveId)?.createdAt || new Date().toISOString()) : new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
 
-    if (!currentChecklistId) {
-      currentChecklistId = payload.id;
+    if (!saveId) {
       checklists.push(payload);
     } else {
-      const index = checklists.findIndex(c => c.id === currentChecklistId);
+      const index = checklists.findIndex(c => c.id === saveId);
       if (index !== -1) {
         checklists[index] = payload;
       } else {
@@ -225,40 +267,59 @@
       }
     }
 
-    saveAllChecklists(checklists);
+    if (!saveAllChecklists(checklists, read.raw)) return false;
+    currentChecklistId = payload.id;
+    currentPresetKey = 'saved-' + payload.id;
+    currentSavedSnapshot = JSON.stringify({ ...payload, items: LoadoutCore.normalizeItems(payload.items) });
     state.isDirty = false;
     updateDirtyIndicator();
     renderPresetOptions(currentCategory);
+    return true;
   }
 
   function loadChecklist(id) {
     const checklists = getAllChecklists();
     const checklist = checklists.find(c => c.id === id);
     if (checklist) {
+      loadRequest++;
       currentChecklistId = checklist.id;
       state.checklistName = checklist.name;
       state.items = JSON.parse(JSON.stringify(checklist.items)).map(normalizeItem);
+      currentSavedSnapshot = JSON.stringify(checklist);
+      currentPresetKey = 'saved-' + id;
+      state.selectedItemId = null;
       state.isDirty = false;
       renderAll();
     }
   }
 
   function deleteChecklist(id) {
-    const checklists = getAllChecklists();
-    const filtered = checklists.filter(c => c.id !== id);
-    saveAllChecklists(filtered);
+    const read = readChecklists();
+    if (!read.ok) return false;
+    const existing = read.lists.find(c => c.id === id);
+    if (currentChecklistId === id && JSON.stringify(existing) !== currentSavedSnapshot) {
+      alert(t('msg.storageConflict')); return false;
+    }
+    const filtered = read.lists.filter(c => c.id !== id);
+    if (!saveAllChecklists(filtered, read.raw)) return false;
     if (currentChecklistId === id) {
       createNewChecklist();
     }
     renderPresetOptions(currentCategory);
+    return true;
   }
 
   function createNewChecklist() {
+    loadRequest++;
     currentChecklistId = null;
+    currentSavedSnapshot = null;
+    currentPresetKey = '';
     state.checklistName = t('msg.newChecklist');
     state.items = [];
+    state.selectedItemId = null;
     state.isDirty = false;
     renderAll();
+    renderPresetOptions(currentCategory);
   }
 
   /**
@@ -266,6 +327,7 @@
    * @param {string} key - プリセットキー
    */
   async function loadFromPreset(key) {
+    const request = ++loadRequest;
     // Check cache first
     if (PRESETS[key]) {
       applyPreset(key, PRESETS[key]);
@@ -286,11 +348,14 @@
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const presetData = await response.json();
+      presetData.items = LoadoutCore.normalizeItems(presetData.items);
       PRESETS[key] = presetData;  // Cache it
+      if (request !== loadRequest) return;
       applyPreset(key, presetData);
     } catch (error) {
-      console.error('Failed to load preset:', key, error);
-      alert(t('msg.presetLoadFailed') || 'Failed to load preset');
+      if (request !== loadRequest) return;
+      presetSelectEl.value = currentPresetKey;
+      alert(t('msg.presetLoadFailed'));
     }
   }
 
@@ -301,8 +366,12 @@
     state.checklistName = getL(presetData, 'name');
     state.items = JSON.parse(JSON.stringify(presetData.items)).map(normalizeItem);
     currentChecklistId = null; // Treat as new checklist
+    currentSavedSnapshot = null;
+    currentPresetKey = key;
+    state.selectedItemId = null;
     state.isDirty = false;
     renderAll();
+    renderPresetOptions(currentCategory);
   }
 
   function escapeHtml(s) {
@@ -315,13 +384,7 @@
    * @returns {string} 安全なURLまたは空文字列
    */
   function sanitizeUrl(url) {
-    if (!url || typeof url !== 'string') return '';
-    const trimmed = url.trim().toLowerCase();
-    if (trimmed.startsWith('javascript:') || trimmed.startsWith('data:') || trimmed.startsWith('vbscript:')) {
-      console.warn('Blocked potentially dangerous URL:', url);
-      return '';
-    }
-    return url;
+    return LoadoutCore.safeUrl(url);
   }
 
   // Render functions
@@ -329,6 +392,7 @@
    * 未保存変更をマーク
    */
   function markDirty() {
+    loadRequest++;
     if (!state.isDirty) {
       state.isDirty = true;
       updateDirtyIndicator();
@@ -404,7 +468,7 @@
       <div>${t('th.weight')}</div>
       <div>${t('th.quantity')}</div>
       <div>${t('th.tags')}</div>
-      <div class="text-right">${t('th.actions')}</div>
+      <div class="col-actions text-right">${t('th.actions')}</div>
     `;
     itemTable.appendChild(header);
 
@@ -423,28 +487,28 @@
 
       row.innerHTML = `
         <div class="col-check">
-          <input type="checkbox" data-id="${it.id}" ${it.checked ? 'checked' : ''} class="item-check cursor-pointer focus:ring-2 focus:ring-blue-500"/>
+          <input type="checkbox" data-id="${escapeHtml(it.id)}" aria-label="${escapeHtml(t('item.check', {name: getL(it, 'name')}))}" ${it.checked ? 'checked' : ''} class="item-check cursor-pointer focus:ring-2 focus:ring-blue-500"/>
         </div>
         <div class="col-name">${escapeHtml(getL(it, 'name'))}</div>
         <div class="col-category">${escapeHtml(getL(it, 'category'))}</div>
-        <div class="col-weight"><span class="weight-badge weight-${getWeightClass(it.weight_g || 0)}">${it.weight_g ?? 0}</span></div>
-        <div class="col-qty">
-          <input type="number" min="0" max="999" value="${it.quantity ?? 1}" data-id="${it.id}"
-            class="qty-input w-full px-1 py-0.5 text-xs border rounded focus:ring-1 focus:ring-blue-500" />
+        <div class="col-weight" data-label="${escapeHtml(t('th.weight'))}"><span class="weight-badge weight-${getWeightClass(it.weight_g || 0)}">${it.weight_g ?? 0}</span></div>
+        <div class="col-qty" data-quantity="${it.quantity ?? 1}">
+          <label class="qty-label"><span>${t('th.quantity')}</span><input type="number" min="0" max="999" step="1" aria-label="${escapeHtml(t('item.quantity', {name: getL(it, 'name')}))}" value="${it.quantity ?? 1}" data-id="${escapeHtml(it.id)}"
+            class="qty-input w-full px-1 py-0.5 text-xs border rounded focus:ring-1 focus:ring-blue-500" /></label>
         </div>
         <div class="col-badge">${badges.join('')}</div>
         <div class="col-actions">
-          <button data-id="${it.id}" class="detailBtn action-btn-icon" title="詳細">
+          <button data-id="${escapeHtml(it.id)}" class="detailBtn action-btn-icon" title="${t('button.detail')}" aria-label="${escapeHtml(t('button.detail') + ': ' + getL(it, 'name'))}">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </button>
-          <button data-id="${it.id}" class="editBtn action-btn-icon" title="編集">
+          <button data-id="${escapeHtml(it.id)}" class="editBtn action-btn-icon" title="${t('button.edit')}" aria-label="${escapeHtml(t('button.edit') + ': ' + getL(it, 'name'))}">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
           </button>
-          <button data-id="${it.id}" class="delBtn action-btn-icon danger" title="削除">
+          <button data-id="${escapeHtml(it.id)}" class="delBtn action-btn-icon danger" title="${t('button.delete')}" aria-label="${escapeHtml(t('button.delete') + ': ' + getL(it, 'name'))}">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
@@ -467,11 +531,18 @@
         const id = e.target.dataset.id;
         const it = state.items.find(x=>x.id===id);
         if (it) {
-          const newQty = Math.max(0, parseInt(e.target.value) || 1);
+          const newQty = Number(e.target.value);
+          if (e.target.value.trim() === '' || !Number.isInteger(newQty) || newQty < 0 || newQty > 999) {
+            e.target.value = it.quantity;
+            alert(t('msg.invalidInput'));
+            return;
+          }
           it.quantity = newQty;
+          e.target.closest('.col-qty').dataset.quantity = newQty;
           e.target.value = newQty;
           markDirty();
           renderTotals();
+          renderDetail(state.selectedItemId);
         }
       });
     });
@@ -529,7 +600,7 @@
     itemDetail.innerHTML = `
       <div class="flex justify-between items-start mb-3">
         <h4 class="font-semibold text-base">${escapeHtml(getL(it, 'name'))}</h4>
-        <button id="closeDetail" class="text-gray-400 hover:text-gray-600 text-xl leading-none" aria-label="Close">×</button>
+        <button id="closeDetail" class="action-btn-icon text-xl" aria-label="${t('button.close')}">×</button>
       </div>
       <p class="text-sm text-gray-600 mb-4">${escapeHtml(getL(it, 'purpose_short'))}</p>
 
@@ -558,8 +629,8 @@
           <dl class="text-sm text-gray-700 space-y-1.5">
             <div class="flex"><dt class="w-24 flex-shrink-0 text-xs text-gray-500">${t('detail.quantity')}</dt><dd>${it.quantity ?? 1}</dd></div>
             <div class="flex"><dt class="w-24 flex-shrink-0 text-xs text-gray-500">${t('detail.recommendedQty')}</dt><dd>${it.recommended_quantity ?? 1}</dd></div>
-            <div class="flex"><dt class="w-24 flex-shrink-0 text-xs text-gray-500">${t('detail.repackFreq')}</dt><dd>${repackLabels[it.repack_frequency] || it.repack_frequency || t('freq.never')}</dd></div>
-            <div class="flex"><dt class="w-24 flex-shrink-0 text-xs text-gray-500">${t('detail.categoryTags')}</dt><dd>${(it.category_tags||[]).join(', ') || t('detail.none')}</dd></div>
+            <div class="flex"><dt class="w-24 flex-shrink-0 text-xs text-gray-500">${t('detail.repackFreq')}</dt><dd>${escapeHtml(repackLabels[it.repack_frequency] || t('freq.never'))}</dd></div>
+            <div class="flex"><dt class="w-24 flex-shrink-0 text-xs text-gray-500">${t('detail.categoryTags')}</dt><dd>${escapeHtml((it.category_tags||[]).join(', ') || t('detail.none'))}</dd></div>
           </dl>
         </div>
       </div>
@@ -572,7 +643,7 @@
         </div>
         <div class="detail-section-content">
           <dl class="text-sm text-gray-700 space-y-1.5">
-            <div class="flex"><dt class="w-24 flex-shrink-0 text-xs text-gray-500">${t('detail.concealability')}</dt><dd>${it.concealability ?? t('detail.unknown')}</dd></div>
+            <div class="flex"><dt class="w-24 flex-shrink-0 text-xs text-gray-500">${t('detail.concealability')}</dt><dd>${escapeHtml(it.concealability ?? t('detail.unknown'))}</dd></div>
             <div class="flex"><dt class="w-24 flex-shrink-0 text-xs text-gray-500">${t('detail.dualUse')}</dt><dd>${it.dual_use ? `<span class="badge badge-warning">${t('yes')}</span>` : t('no')}</dd></div>
             <div class="flex"><dt class="w-24 flex-shrink-0 text-xs text-gray-500">${t('detail.hazard')}</dt><dd>${it.hazard_flag ? `<span class="badge badge-danger">${t('yes')}</span>` : t('no')}</dd></div>
             <div><dt class="text-xs text-gray-500 mb-1">${t('detail.legality')}</dt><dd><pre class="text-xs bg-white p-2 rounded border overflow-x-auto">${escapeHtml(legalityHtml)}</pre></dd></div>
@@ -608,30 +679,30 @@
 
     // Collapsible section toggle
     itemDetail.querySelectorAll('.detail-section-header').forEach(header => {
+      header.setAttribute('role', 'button');
+      header.tabIndex = 0;
+      header.setAttribute('aria-expanded', 'true');
+      header.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); header.click(); }
+      });
       header.addEventListener('click', () => {
         const section = header.closest('.detail-section');
         const content = section.querySelector('.detail-section-content');
         const toggle = section.querySelector('.detail-section-toggle');
         content.classList.toggle('collapsed');
         toggle.classList.toggle('collapsed');
+        header.setAttribute('aria-expanded', String(!content.classList.contains('collapsed')));
       });
     });
   }
 
   function renderTotals() {
-    const totals = state.items.reduce((acc, it) => {
-      if (it.checked) {
-        const qty = Number(it.quantity) || 1;
-        acc.weight += Number(it.weight_g || 0) * qty;
-        acc.volume += Number(it.volume_cm3 || 0) * qty;
-      }
-      return acc;
-    }, {weight:0, volume:0});
+    const totals = LoadoutCore.totals(state.items);
     totalWeightEl.textContent = totals.weight;
     totalVolumeEl.textContent = totals.volume;
 
     // Update weight progress bar
-    const targetWeight = parseInt(targetWeightInput.value) || 5000;
+    const targetWeight = validTargetWeight(targetWeightInput.value) ? Number(targetWeightInput.value) : 5000;
     const percentage = Math.min(100, Math.round((totals.weight / targetWeight) * 100));
     weightProgressFill.style.width = percentage + '%';
     weightProgressPercent.textContent = percentage + '%';
@@ -648,16 +719,19 @@
   // Modal management for add/edit
   let editingId = null;
   function openItemModal(mode='add', item=null) {
-    modalBackdrop.classList.add('active');
+    formDirty = false;
+    openDialog(modalBackdrop);
     if (mode === 'edit' && item) {
       modalTitle.textContent = t('modal.editItem');
       editingId = item.id;
       f_name.value = getL(item, 'name') || '';
-      f_category.value = getL(item, 'category') || 'サバイバル';
+      const category = getL(item, 'category');
+      if (![...f_category.options].some(o => o.value === category)) f_category.add(new Option(category, category));
+      f_category.value = category;
       f_weight.value = item.weight_g || 0;
       f_volume.value = item.volume_cm3 || 0;
-      f_quantity.value = item.quantity || 1;
-      f_recommended_quantity.value = item.recommended_quantity || 1;
+      f_quantity.value = item.quantity ?? 1;
+      f_recommended_quantity.value = item.recommended_quantity ?? 1;
       f_repack_frequency.value = item.repack_frequency || 'never';
       f_purpose.value = getL(item, 'purpose_short') || '';
       f_dual.checked = !!item.dual_use;
@@ -676,14 +750,16 @@
       f_quantity.value = 1;
       f_recommended_quantity.value = 1;
       f_repack_frequency.value = 'never';
-      f_legality.value = '{"US":"許可"}';
+      f_legality.value = '{}';
       f_description.value = '';
       f_sources.value = '';
     }
   }
 
   function closeModal() {
-    modalBackdrop.classList.remove('active');
+    if (formDirty && !confirm(t('msg.discard'))) return;
+    formDirty = false;
+    closeDialog(modalBackdrop);
   }
 
   modalCancel.addEventListener('click', (e)=>{ e.preventDefault(); closeModal(); });
@@ -710,14 +786,15 @@
         return { title: line.trim() };
       });
 
-    const payload = normalizeItem({
+    let payload;
+    try { payload = normalizeItem({
       id: editingId || uid('item'),
       name: f_name.value.trim() || t('msg.unnamed'),
       category: f_category.value,
       weight_g: Number(f_weight.value || 0),
       volume_cm3: Number(f_volume.value || 0),
-      quantity: Number(f_quantity.value || 1),
-      recommended_quantity: Number(f_recommended_quantity.value || 1),
+      quantity: f_quantity.value.trim() === '' ? NaN : Number(f_quantity.value),
+      recommended_quantity: f_recommended_quantity.value.trim() === '' ? NaN : Number(f_recommended_quantity.value),
       repack_frequency: f_repack_frequency.value || 'never',
       purpose_short: f_purpose.value || '',
       description: f_description.value || '',
@@ -725,19 +802,26 @@
       hazard_flag: !!f_hazard.checked,
       legality_notes: legalityObj,
       sources: sourcesArr,
-      scores: {survivability:1,signalability:0,exfiltration_support:0,concealability:2,legality_penalty: (f_dual.checked?1:0)}
-    });
+    }); } catch { alert(t('msg.invalidInput')); return; }
     if (editingId) {
-      state.items = state.items.map(x => x.id === editingId ? Object.assign({}, x, payload) : x);
+      const original = state.items.find(x => x.id === editingId);
+      if (!original) { alert(t('msg.storageConflict')); return; }
+      // Normalization defaults must not overwrite metadata absent from the form.
+      for (const field of ['checked','packed_by_default','category_tags']) delete payload[field];
+      state.items = state.items.map(x => x.id === editingId ? LoadoutCore.editItem(original, payload, getLang()) : x);
     } else {
       state.items.push(payload);
     }
     markDirty();
-    closeModal();
+    formDirty = false;
     renderAll();
+    closeModal();
+    const savedButton = [...itemTable.querySelectorAll('.editBtn')].find(button => button.dataset.id === payload.id);
+    if (editingId && savedButton) savedButton.focus();
   });
 
   addItemBtn.addEventListener('click', ()=> openItemModal('add'));
+  itemForm.addEventListener('input', () => { formDirty = true; });
 
   // Bulk check/uncheck buttons
   const checkAllBtn = document.getElementById('checkAllBtn');
@@ -762,17 +846,27 @@
   });
 
   // Target weight input - update progress bar on change
+  function validTargetWeight(value) {
+    const weight = Number(value);
+    return Number.isInteger(weight) && weight >= 100 && weight <= 1e9;
+  }
   targetWeightInput.addEventListener('input', () => {
     renderTotals();
-    // Save target weight to localStorage
-    localStorage.setItem('ops_target_weight', targetWeightInput.value);
-    // Update active button
+    updateWeightPresetButtons();
+  });
+  targetWeightInput.addEventListener('change', () => {
+    if (!validTargetWeight(targetWeightInput.value)) {
+      alert(t('msg.invalidTarget'));
+      const saved = readPreference('ops_target_weight');
+      targetWeightInput.value = validTargetWeight(saved) ? saved : 5000;
+    } else if (!writePreference('ops_target_weight', targetWeightInput.value)) alert(t('msg.preference'));
+    renderTotals();
     updateWeightPresetButtons();
   });
 
   // Weight preset buttons
   function updateWeightPresetButtons() {
-    const currentWeight = parseInt(targetWeightInput.value) || 5000;
+    const currentWeight = Number(targetWeightInput.value);
     document.querySelectorAll('.weight-preset-btn').forEach(btn => {
       const btnWeight = parseInt(btn.dataset.weight);
       btn.classList.toggle('active', btnWeight === currentWeight);
@@ -783,15 +877,15 @@
     btn.addEventListener('click', () => {
       const weight = btn.dataset.weight;
       targetWeightInput.value = weight;
-      localStorage.setItem('ops_target_weight', weight);
+      if (!writePreference('ops_target_weight', weight)) alert(t('msg.preference'));
       updateWeightPresetButtons();
       renderTotals();
     });
   });
 
   // Load saved target weight
-  const savedTargetWeight = localStorage.getItem('ops_target_weight');
-  if (savedTargetWeight) {
+  const savedTargetWeight = readPreference('ops_target_weight');
+  if (validTargetWeight(savedTargetWeight)) {
     targetWeightInput.value = savedTargetWeight;
     updateWeightPresetButtons();
   }
@@ -813,18 +907,12 @@
   }
 
   function itemsToCsv(items) {
-    const header = ['id','name','category','weight_g','volume_cm3','purpose_short','dual_use','hazard_flag','legality_notes'];
-    const rows = items.map(it => {
-      const legalityObj = getL(it, 'legality_notes') || it.legality_notes || {};
-      const leg = JSON.stringify(legalityObj);
-      return [it.id, getL(it, 'name'), getL(it, 'category'), it.weight_g||0, it.volume_cm3||0, getL(it, 'purpose_short'), it.dual_use?1:0, it.hazard_flag?1:0, `"${leg.replace(/"/g,'""')}"`];
-    });
-    return [header, ...rows].map(r => r.join(',')).join('\n');
+    return LoadoutCore.csv(items, getLang());
   }
 
   function exportCSV() {
     const csv = itemsToCsv(state.items);
-    const blob = new Blob([csv], {type: 'text/csv'});
+    const blob = new Blob([csv], {type: 'text/csv;charset=utf-8'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     const filename = `${state.checklistName.replace(/\s+/g,'_')}_${getTimestamp()}.csv`;
@@ -864,20 +952,21 @@
   };
 
   function getColorForCategory(cat) {
-    return categoryColors[cat] || '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+    return Object.hasOwn(categoryColors, cat) ? categoryColors[cat] : LoadoutCore.categoryColor(cat);
   }
 
   // Get checked items stats
   function getGraphStats() {
-    const checkedItems = state.items.filter(it => it.checked);
-    const totalWeight = checkedItems.reduce((acc, it) => acc + (Number(it.weight_g || 0) * (Number(it.quantity) || 1)), 0);
-    const totalVolume = checkedItems.reduce((acc, it) => acc + (Number(it.volume_cm3 || 0) * (Number(it.quantity) || 1)), 0);
-    const totalQty = checkedItems.reduce((acc, it) => acc + (Number(it.quantity) || 1), 0);
+    const checkedItems = state.items.filter(it => it.checked && it.quantity > 0);
+    const totals = LoadoutCore.totals(state.items);
+    const totalWeight = totals.weight;
+    const totalVolume = totals.volume;
+    const totalQty = totals.quantity;
 
-    const catBreakdown = {};
+    const catBreakdown = Object.create(null);
     checkedItems.forEach(it => {
       const cat = getL(it, 'category') || 'Other';
-      const weight = (Number(it.weight_g || 0) * (Number(it.quantity) || 1));
+      const weight = it.weight_g * it.quantity;
       catBreakdown[cat] = (catBreakdown[cat] || 0) + weight;
     });
 
@@ -935,10 +1024,10 @@
     ctx.textAlign = 'left';
 
     // Footer
-    ctx.fillStyle = '#475569';
+    ctx.fillStyle = '#94a3b8';
     ctx.font = '12px system-ui, sans-serif';
     const dateStr = new Date().toLocaleDateString(currentLang === 'ja' ? 'ja-JP' : 'en-US');
-    ctx.fillText(`Generated: ${dateStr}  |  github.com/ipusiron/ops-loadout`, 50, H - 25);
+    ctx.fillText(`${t('pdf.generatedAt')} ${dateStr}  |  github.com/ipusiron/ops-loadout`, 50, H - 46);
   }
 
   // View 1: Pie Chart
@@ -950,11 +1039,11 @@
     drawGraphHeader(ctx, W, H, stats);
 
     const catEntries = Object.entries(stats.catBreakdown).sort((a, b) => b[1] - a[1]);
-    if (catEntries.length === 0) {
+    if (catEntries.length === 0 || stats.totalWeight === 0) {
       ctx.fillStyle = '#64748b';
       ctx.font = '24px system-ui, sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText(currentLang === 'ja' ? 'チェックされたアイテムがありません' : 'No checked items', W / 2, H / 2);
+      ctx.fillText(t('graph.noWeight'), W / 2, H / 2);
       ctx.textAlign = 'left';
       return;
     }
@@ -1043,8 +1132,8 @@
 
     // Define score categories for radar
     const scoreLabels = currentLang === 'ja'
-      ? ['生存性', '信号性', '脱出支援', '隠匿性', '合法性']
-      : ['Survivability', 'Signalability', 'Exfiltration', 'Concealability', 'Legality'];
+      ? ['生存性（参考）', '信号性（参考）', '脱出支援（参考）', '隠匿性（参考）', '法規制の注意度']
+      : ['Survival (sample)', 'Signaling (sample)', 'Exit support (sample)', 'Concealment (sample)', 'Regulatory caution'];
 
     // Calculate average scores from checked items
     const scoreKeys = ['survivability', 'signalability', 'exfiltration_support', 'concealability', 'legality_penalty'];
@@ -1052,10 +1141,6 @@
       const items = stats.checkedItems.filter(it => it.scores && it.scores[key] !== undefined);
       if (items.length === 0) return 0;
       const sum = items.reduce((acc, it) => acc + Number(it.scores[key] || 0), 0);
-      // For legality_penalty, invert (lower is better)
-      if (key === 'legality_penalty') {
-        return 5 - (sum / items.length);
-      }
       return sum / items.length;
     });
 
@@ -1202,7 +1287,7 @@
     const topItems = [...stats.checkedItems]
       .map(it => ({
         ...it,
-        totalWeight: (Number(it.weight_g || 0) * (Number(it.quantity) || 1))
+        totalWeight: it.weight_g * it.quantity
       }))
       .sort((a, b) => b.totalWeight - a.totalWeight);
 
@@ -1243,7 +1328,7 @@
       const cat = getL(it, 'category');
       const displayName = name.length > 45 ? name.slice(0, 43) + '…' : name;
       const displayCat = cat.length > 12 ? cat.slice(0, 11) + '…' : cat;
-      const pct = ((it.totalWeight / stats.totalWeight) * 100).toFixed(1);
+      const pct = stats.totalWeight > 0 ? ((it.totalWeight / stats.totalWeight) * 100).toFixed(1) : '0.0';
 
       // Rank
       ctx.fillStyle = '#94a3b8';
@@ -1294,17 +1379,30 @@
       case 'items': drawItemsView(); break;
       default: drawPieView();
     }
+    const totals = LoadoutCore.totals(state.items);
+    graphCanvas.setAttribute('role', 'img');
+    graphCanvas.setAttribute('aria-label', t('graph.summary', {weight: totals.weight, volume: totals.volume, quantity: totals.quantity}));
+    document.getElementById('graphData').textContent = graphCanvas.getAttribute('aria-label');
+    const ctx = graphCanvas.getContext('2d');
+    ctx.save();
+    ctx.fillStyle = '#f8fafc';
+    ctx.fillRect(0, graphCanvas.height - 30, graphCanvas.width, 30);
+    ctx.fillStyle = '#334155';
+    ctx.textAlign = 'center';
+    ctx.font = '14px system-ui, sans-serif';
+    ctx.fillText(t('graph.limitShort'), graphCanvas.width / 2, graphCanvas.height - 10);
+    ctx.restore();
   }
 
   function openGraphModal() {
-    graphModal.classList.add('active');
+    openDialog(graphModal);
     currentGraphView = 'pie';
     graphTabs.forEach(tab => tab.classList.toggle('active', tab.dataset.view === 'pie'));
     drawGraphImage();
   }
 
   function closeGraphModal() {
-    graphModal.classList.remove('active');
+    closeDialog(graphModal);
   }
 
   // Tab switching
@@ -1356,9 +1454,12 @@
       return;
     }
 
+    let pdfContainer;
+    const exportName = state.checklistName;
+    exportPdfBtn.disabled = true;
     try {
       // Create a temporary container for PDF content
-      const pdfContainer = document.createElement('div');
+      pdfContainer = document.createElement('div');
       pdfContainer.style.cssText = 'position: absolute; left: -9999px; top: 0; width: 800px; background: white; padding: 40px; font-family: system-ui, -apple-system, sans-serif;';
 
       // Build HTML content
@@ -1397,7 +1498,7 @@
             <td style="padding: 6px; border: 1px solid #e5e7eb;">${escapeHtml(getL(it, 'category'))}</td>
             <td style="padding: 6px; border: 1px solid #e5e7eb;">${escapeHtml(getL(it, 'name'))}</td>
             <td style="padding: 6px; text-align: right; border: 1px solid #e5e7eb;">${it.weight_g || 0}</td>
-            <td style="padding: 6px; text-align: right; border: 1px solid #e5e7eb;">${it.quantity || 1}</td>
+            <td style="padding: 6px; text-align: right; border: 1px solid #e5e7eb;">${it.quantity ?? 1}</td>
             <td style="padding: 6px; text-align: center; border: 1px solid #e5e7eb;">${badges.join(' ')}</td>
           </tr>
         `;
@@ -1407,8 +1508,9 @@
           </tbody>
         </table>
         <div style="margin-top: 20px; padding: 10px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 4px;">
-          <p style="font-size: 12px; margin: 0;"><strong>${t('pdf.totalWeight')}</strong> ${state.items.reduce((acc, it) => acc + (it.checked ? (Number(it.weight_g || 0) * Number(it.quantity || 1)) : 0), 0)} g</p>
-          <p style="font-size: 12px; margin: 5px 0 0 0;"><strong>${t('pdf.totalVolume')}</strong> ${state.items.reduce((acc, it) => acc + (it.checked ? (Number(it.volume_cm3 || 0) * Number(it.quantity || 1)) : 0), 0)} cm³</p>
+          <p style="font-size: 12px; margin: 0;"><strong>${t('pdf.totalWeight')}</strong> ${LoadoutCore.totals(state.items).weight} g</p>
+          <p style="font-size: 12px; margin: 5px 0 0 0;"><strong>${t('pdf.totalVolume')}</strong> ${LoadoutCore.totals(state.items).volume} cm³</p>
+          <p style="font-size: 12px;">${t('app.limit')}</p>
         </div>
       `;
 
@@ -1456,11 +1558,13 @@
         doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
       }
 
-      const filename = `${state.checklistName.replace(/\s+/g, '_')}_${getTimestamp()}.pdf`;
+      const filename = `${exportName.replace(/\s+/g, '_')}_${getTimestamp()}.pdf`;
       doc.save(filename);
     } catch (error) {
-      console.error('PDF generation error:', error);
-      alert(t('msg.pdfError') + error.message);
+      alert(t('msg.pdfError'));
+    } finally {
+      pdfContainer?.remove();
+      exportPdfBtn.disabled = false;
     }
   }
 
@@ -1472,11 +1576,11 @@
   // Save options modal functions
   function showSaveOptionsModal() {
     saveOptionsChecklistName.textContent = state.checklistName;
-    saveOptionsModal.classList.add('active');
+    openDialog(saveOptionsModal);
   }
 
   function closeSaveOptionsModal() {
-    saveOptionsModal.classList.remove('active');
+    closeDialog(saveOptionsModal);
   }
 
   saveOverwriteBtn.addEventListener('click', () => {
@@ -1505,24 +1609,27 @@
   function showNameEditModal(mode = 'save') {
     nameEditMode = mode;
     nameEditInput.value = state.checklistName;
-    nameEditModal.classList.add('active');
+    openDialog(nameEditModal);
     nameEditInput.focus();
     nameEditInput.select();
   }
 
   function closeNameEditModal() {
-    nameEditModal.classList.remove('active');
+    closeDialog(nameEditModal);
   }
 
   nameEditSaveBtn.addEventListener('click', () => {
     const newName = nameEditInput.value.trim();
-    if (newName) {
+    if (newName && newName !== state.checklistName) {
       state.checklistName = newName;
+      markDirty();
       renderAll();
     }
     closeNameEditModal();
 
-    if (nameEditMode === 'save') {
+    if (nameEditMode === 'renameSaved') {
+      if (saveCurrentChecklist()) showSaveConfirmation();
+    } else if (nameEditMode === 'save') {
       // Continue to save flow
       if (currentChecklistId) {
         showSaveOptionsModal();
@@ -1566,11 +1673,11 @@
       minute: '2-digit',
       second: '2-digit'
     });
-    saveConfirmModal.classList.add('active');
+    openDialog(saveConfirmModal);
   }
 
   function closeSaveConfirmation() {
-    saveConfirmModal.classList.remove('active');
+    closeDialog(saveConfirmModal);
   }
 
   saveConfirmOk.addEventListener('click', closeSaveConfirmation);
@@ -1580,11 +1687,11 @@
 
   // Help modal functions
   function openHelpModal() {
-    helpModal.classList.add('active');
+    openDialog(helpModal);
   }
 
   function closeHelpModal() {
-    helpModal.classList.remove('active');
+    closeDialog(helpModal);
   }
 
   helpBtn.addEventListener('click', openHelpModal);
@@ -1601,13 +1708,7 @@
 
   // Perform save (overwrite or save as new)
   function performSave(saveAsNew) {
-    if (saveAsNew) {
-      // Save as new: clear currentChecklistId so it creates a new one
-      currentChecklistId = null;
-    }
-
-    saveCurrentChecklist();
-    showSaveConfirmation();
+    if (saveCurrentChecklist(saveAsNew)) showSaveConfirmation();
   }
 
   // Save button
@@ -1618,26 +1719,28 @@
 
   // New checklist button
   newChecklistBtn.addEventListener('click', ()=> {
+    if (state.isDirty && !confirm(t('msg.discard'))) return;
     createNewChecklist();
   });
 
   // Preset loading
   presetSelectEl.addEventListener('change', async (e)=>{
     const value = e.target.value;
+    if (!value || (state.isDirty && !confirm(t('msg.discard')))) {
+      presetSelectEl.value = currentPresetKey;
+      return;
+    }
     // Check if it's a saved checklist
     if (value.startsWith('saved-')) {
       const selectedOption = presetSelectEl.options[presetSelectEl.selectedIndex];
       const checklistId = selectedOption.dataset.checklistId;
       loadChecklist(checklistId);
       // Show rename and delete buttons for saved checklists
-      renamePresetBtn.classList.remove('hidden');
-      deletePresetBtn.classList.remove('hidden');
     } else {
       await loadFromPreset(value);
       // Hide rename and delete buttons for built-in presets
-      renamePresetBtn.classList.add('hidden');
-      deletePresetBtn.classList.add('hidden');
     }
+    renderPresetOptions(currentCategory);
   });
 
   // Delete saved checklist button
@@ -1649,10 +1752,8 @@
       const checklist = getAllChecklists().find(c => c.id === checklistId);
 
       if (checklist && confirm(t('msg.confirmDeleteChecklist'))) {
+        if (state.isDirty && !confirm(t('msg.discard'))) return;
         deleteChecklist(checklistId);
-        deletePresetBtn.classList.add('hidden');
-        renamePresetBtn.classList.add('hidden');
-        renderPresetOptions(currentCategory);
       }
     }
   });
@@ -1661,7 +1762,7 @@
   renamePresetBtn.addEventListener('click', ()=> {
     const value = presetSelectEl.value;
     if (value.startsWith('saved-')) {
-      showNameEditModal('rename');
+      showNameEditModal('renameSaved');
     }
   });
 
@@ -1693,6 +1794,7 @@
     });
 
     presetSelectEl.innerHTML = '';
+    presetSelectEl.add(new Option(t('preset.current'), ''));
 
     // Add saved checklists at the top (always shown)
     const savedChecklists = getAllChecklists();
@@ -1748,22 +1850,15 @@
       });
     }
 
-    // Auto-load the first preset in the filtered list
-    if (presetSelectEl.options.length > 0) {
-      const firstPresetKey = presetSelectEl.options[0].value;
-      presetSelectEl.value = firstPresetKey;
-      // Check if it's a saved checklist
-      if (firstPresetKey.startsWith('saved-')) {
-        const checklistId = presetSelectEl.options[0].dataset.checklistId;
-        loadChecklist(checklistId);
-        renamePresetBtn.classList.remove('hidden');
-        deletePresetBtn.classList.remove('hidden');
-      } else {
-        loadFromPreset(firstPresetKey);
-        renamePresetBtn.classList.add('hidden');
-        deletePresetBtn.classList.add('hidden');
-      }
+    // Updating candidate labels never loads data or discards edits.
+    if (currentPresetKey && ![...presetSelectEl.options].some(o => o.value === currentPresetKey)) {
+      const option = new Option(state.checklistName, currentPresetKey);
+      if (currentChecklistId) option.dataset.checklistId = currentChecklistId;
+      presetSelectEl.add(option);
     }
+    presetSelectEl.value = currentPresetKey;
+    renamePresetBtn.classList.toggle('hidden', !currentChecklistId);
+    deletePresetBtn.classList.toggle('hidden', !currentChecklistId);
   }
 
   // Category filter button event listeners
@@ -1787,16 +1882,27 @@
   // presets/index.jsonからメタデータを読み込み、アプリケーションを初期化
 
   async function loadPresets() {
+    const startingRequest = loadRequest;
     try {
-      const response = await fetch('presets/index.json');
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      if (location.protocol === 'file:') {
+        await new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          script.src = 'presets-bundle.js';
+          script.onload = resolve;
+          script.onerror = reject;
+          document.head.appendChild(script);
+        });
+        PRESETS_META = window.LoadoutPresets.index.presets;
+        PRESETS = window.LoadoutPresets.presets;
+      } else {
+        const response = await fetch('presets/index.json');
+        if (!response.ok) throw new Error('presetLoadFailed');
+        const indexData = await response.json();
+        PRESETS_META = indexData.presets;
       }
-      const indexData = await response.json();
-      PRESETS_META = indexData.presets;
-      initApp();
+      initApp(startingRequest === loadRequest);
     } catch (error) {
-      console.error('Failed to load preset index:', error);
+      alert(t('msg.presetLoadFailed'));
       // Fallback: empty preset for initialization
       PRESETS_META = {
         empty: {
@@ -1808,18 +1914,18 @@
         }
       };
       PRESETS['empty'] = { name_ja: t('msg.newChecklist'), name_en: "New Checklist", items: [] };
-      initApp();
+      initApp(startingRequest === loadRequest);
     }
   }
 
-  async function initApp() {
+  async function initApp(autoLoad = true) {
     // Render preset options first (using metadata)
     renderPresetOptions('all');
+    if (!autoLoad) return;
 
     // Load default preset (embassy or first available)
     const defaultKey = PRESETS_META['embassy'] ? 'embassy' : Object.keys(PRESETS_META)[0];
     await loadFromPreset(defaultKey);
-    presetSelectEl.value = defaultKey;
   }
 
   // ============================================================
@@ -1829,6 +1935,12 @@
   document.addEventListener('langchange', () => {
     renderAll();
     renderPresetOptions(currentCategory);
+    if (graphModal.classList.contains('active')) drawGraphImage();
+  });
+  window.addEventListener('beforeunload', event => {
+    if (!state.isDirty && !formDirty) return;
+    event.preventDefault();
+    event.returnValue = '';
   });
 
   // ============================================================
@@ -1852,8 +1964,9 @@
     }
     if (printSummary) {
       const checkedItems = state.items.filter(it => it.checked);
-      const totalWeight = checkedItems.reduce((acc, it) => acc + (Number(it.weight_g || 0) * (Number(it.quantity) || 1)), 0);
-      const totalVolume = checkedItems.reduce((acc, it) => acc + (Number(it.volume_cm3 || 0) * (Number(it.quantity) || 1)), 0);
+      const totals = LoadoutCore.totals(state.items);
+      const totalWeight = totals.weight;
+      const totalVolume = totals.volume;
       const summaryText = currentLang === 'ja'
         ? `合計: ${state.items.length}アイテム | チェック済み: ${checkedItems.length}アイテム | 重量: ${totalWeight}g | 体積: ${totalVolume}cm³`
         : `Total: ${state.items.length} items | Checked: ${checkedItems.length} items | Weight: ${totalWeight}g | Volume: ${totalVolume}cm³`;

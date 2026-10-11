@@ -23,8 +23,8 @@ const I18N = {
 
     // Controls - Preset
     "label.preset": "Preset",
-    "preset.rename.title": "Rename selected custom preset",
-    "preset.delete.title": "Delete selected custom preset",
+    "preset.rename.title": "Rename saved checklist",
+    "preset.delete.title": "Delete saved checklist",
 
     // Controls - Search & Filter
     "label.search": "Search",
@@ -108,14 +108,14 @@ const I18N = {
     "form.recommendedQty": "Recommended Qty",
     "form.repackFreq": "Repack Frequency",
     "form.purpose": "Purpose (brief)",
-    "form.description": "Detailed Notes (Markdown)",
+    "form.description": "Detailed Notes (plain text)",
     "form.dualUse": "Dual-use",
     "form.hazard": "Hazardous",
     "form.legality": "Legal Notes (JSON)",
     "form.sources": "Sources (one per line, title URL format)",
     "placeholder.description": "Detailed description, usage, notes, etc.",
     "placeholder.sources": "US State Dept Guide https://example.gov\nAF SERE Handbook",
-    "placeholder.legality": '{"US":"Allowed","JP":"Allowed"}',
+    "placeholder.legality": '{"US":"Verify current rules","JP":"Verify current rules"}',
 
     // Repack frequency
     "freq.never": "Never",
@@ -203,8 +203,8 @@ const I18N = {
     "help.gettingStartedDesc": "Select a preset or create an empty checklist with the 'New' button.",
     "help.addingItems": "Adding Items",
     "help.addingItemsDesc": "Click '+ Add Item' to add items. Enter category, weight, quantity, etc.",
-    "help.customPresets": "Custom Presets",
-    "help.customPresetsDesc": "Check 'Save as Preset' when saving to create a reusable custom preset. Rename or delete as needed.",
+    "help.customPresets": "Saved Checklists",
+    "help.customPresetsDesc": "Save a named checklist, then select it from the Saved group. You can rename, delete, overwrite, or save it as a new checklist. Changing the category only filters the available presets.",
     "help.weightTarget": "Weight Target",
     "help.weightTargetDesc": "Set a target weight to track progress with the progress bar. Use the Graph button for detailed visualization.",
     "help.graphView": "Graph View",
@@ -417,8 +417,8 @@ const I18N = {
     "help.gettingStartedDesc": "プリセットを選択するか、「新規」ボタンで空のチェックリストを作成します。",
     "help.addingItems": "アイテムの追加",
     "help.addingItemsDesc": "「＋ アイテム追加」ボタンでアイテムを追加できます。カテゴリー、重量、数量などを入力してください。",
-    "help.customPresets": "カスタムプリセット",
-    "help.customPresetsDesc": "保存時に「プリセット化」にチェックを入れると、カスタムプリセットとして再利用できます。名前変更・削除も可能です。",
+    "help.customPresets": "保存済みチェックリスト",
+    "help.customPresetsDesc": "名前を付けて保存し、「保存済み」から選んで読み込みます。名前変更、削除、上書き、別名保存ができます。カテゴリーを変えるだけでは候補を絞り込むだけで、リストは入れ替わりません。",
     "help.weightTarget": "重量目標",
     "help.weightTargetDesc": "目標重量を設定すると、プログレスバーで達成度を確認できます。グラフボタンで詳細な可視化も可能です。",
     "help.graphView": "グラフ表示",
@@ -435,8 +435,63 @@ const I18N = {
   }
 };
 
-// Current language state
-let currentLang = localStorage.getItem('ops_lang') || 'ja';
+Object.assign(I18N.en, {
+  'item.check': 'Pack {name}',
+  'item.quantity': 'Quantity: {name}',
+  'button.detail': 'Details',
+  'button.close': 'Close',
+  'weight.target': 'Target weight in grams (user-selected guideline)',
+  'msg.unsaved': 'Unsaved changes',
+  'graph.radar': 'Sample ratings',
+  'msg.invalidTarget': 'Target weight must be a whole number from 100 to 1,000,000,000 g.',
+  'graph.ratingDetail': 'These are unvalidated values supplied with the examples. Each axis averages available values for checked rows with a positive quantity, without weighting by quantity; missing scores are excluded (0 if none are available). Regulatory caution is not inverted. The tool does not measure survival, preparedness, or legality.',
+  'graph.noWeight': 'No positive weight among checked equipment',
+  'app.limit': 'Planning examples, not a safety or legal assessment. Weights and volumes are estimates; verify actual equipment and current rules. No flag does not mean unrestricted use.',
+  'graph.limitShort': 'Sample ratings are not measurements of safety or legality. Higher regulatory caution is not better.',
+  'graph.summary': 'Checked equipment: {quantity} units, {weight} g, {volume} cm³. The list contains the underlying values.',
+  'msg.discard': 'Discard unsaved changes and load another checklist?',
+  'msg.storageRead': 'Saved data could not be read. It will not be overwritten. You can keep editing and export JSON.',
+  'msg.storageWrite': 'The checklist was not saved. Your edits are still here. Export JSON to keep a copy.',
+  'msg.storageConflict': 'This saved checklist changed in another tab. Export your edits or save as a new checklist.',
+  'msg.invalidInput': 'Check the input: quantities must be whole numbers from 0 to 999; weight and volume must be finite numbers from 0 to 1,000,000,000.',
+  'preset.current': 'Current checklist (no preset selected)',
+  'msg.preference': 'This preference could not be saved; it applies only to this page.',
+});
+Object.assign(I18N.ja, {
+  'item.check': '{name}を準備済みにする',
+  'item.quantity': '{name}の数量',
+  'button.detail': '詳細',
+  'button.close': '閉じる',
+  'weight.target': '目標重量（g、利用者が決める目安）',
+  'msg.unsaved': '未保存の変更があります',
+  'graph.radar': '登録された参考値',
+  'msg.invalidTarget': '目標重量は100〜1,000,000,000gの整数で入力してください。',
+  'graph.ratingDetail': '例に登録された未検証の値です。各軸は、数量が1以上のチェック済み行のうち、値がある行の単純平均です。数量による重み付けはせず、値のない行は除きます（全行に値がなければ0）。法規制の注意度は反転しません。生存性、防災の十分さ、合法性を測定するものではありません。',
+  'preset.rename.title': '保存済みチェックリストの名前を変更',
+  'preset.delete.title': '保存済みチェックリストを削除',
+  'form.description': '詳細メモ（プレーンテキスト）',
+  'placeholder.legality': '{"JP":"最新の規則を確認"}',
+  'graph.noWeight': 'チェック済み装備の重量合計が0です',
+  'app.limit': '準備を考えるための例です。安全性や合法性は判定しません。重量と体積は目安のため、実物と最新の規則を確認してください。フラグがなくても制限がないとは限りません。',
+  'graph.limitShort': '参考値は安全性や合法性の測定結果ではありません。法規制の注意度は高いほど良いという意味ではありません。',
+  'graph.summary': 'チェック済み：{quantity}点、{weight} g、{volume} cm³。元の値は一覧で確認できます。',
+  'msg.discard': '未保存の変更を破棄して、別のチェックリストを読み込みますか？',
+  'msg.storageRead': '保存データを読み込めません。上書きせず保護しています。編集を続け、JSONを書き出すことはできます。',
+  'msg.storageWrite': '保存できませんでした。編集中の内容は残っています。JSONを書き出して控えを残してください。',
+  'msg.storageConflict': 'この保存済みリストは別のタブで変更されています。編集中の内容をJSONで書き出すか、別名保存してください。',
+  'msg.invalidInput': '入力を確認してください。数量は0〜999の整数、重量と体積は0〜1,000,000,000の有限な数値です。',
+  'preset.current': '現在のチェックリスト（プリセット未選択）',
+  'msg.preference': '設定を保存できませんでした。このページ内だけに反映します。',
+});
+
+function readPreference(key) {
+  try { return localStorage.getItem(key); } catch { return null; }
+}
+function writePreference(key, value) {
+  try { localStorage.setItem(key, value); return true; } catch { return false; }
+}
+// Preferences are optional; storage denial must not prevent startup.
+let currentLang = readPreference('ops_lang') === 'en' ? 'en' : 'ja';
 
 /**
  * Get translated text for a key
@@ -470,11 +525,12 @@ function getLang() {
 function setLang(lang) {
   if (lang !== 'en' && lang !== 'ja') return;
   currentLang = lang;
-  localStorage.setItem('ops_lang', lang);
+  const saved = writePreference('ops_lang', lang);
   updateStaticTexts();
 
   // Dispatch custom event for dynamic content updates
   document.dispatchEvent(new CustomEvent('langchange', { detail: { lang } }));
+  if (!saved) alert(t('msg.preference'));
 }
 
 /**
@@ -488,6 +544,7 @@ function toggleLang() {
  * Update static text elements with data-i18n attributes
  */
 function updateStaticTexts() {
+  document.documentElement.lang = currentLang;
   // Text content
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.dataset.i18n;
@@ -503,6 +560,10 @@ function updateStaticTexts() {
   document.querySelectorAll('[data-i18n-title]').forEach(el => {
     el.title = t(el.dataset.i18nTitle);
   });
+  const labels = {helpBtn:'button.help', nameEditInput:'modal.editName', targetWeight:'weight.target', graphCloseBtn:'button.close', helpCloseBtn:'button.close'};
+  Object.entries(labels).forEach(([id,key]) => document.getElementById(id)?.setAttribute('aria-label',t(key)));
+  document.getElementById('langToggle')?.setAttribute('aria-label', currentLang === 'ja' ? 'Switch to English' : '日本語に切り替え');
+  document.getElementById('dirtyIndicator')?.setAttribute('title',t('msg.unsaved'));
 
   // Update language toggle button label (show target language, not current)
   const langLabel = document.getElementById('langLabel');
