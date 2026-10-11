@@ -78,15 +78,15 @@ You can use the tool directly in your browser. The button at the top right switc
 
 >![Pentester equipment](assets/en/screenshot.png)
 >
->*Pentester equipment*
+>*The Pentester list, with the JSON import and review controls visible.*
 
->![Bushcraft Minimal equipment](assets/en/screenshot2.png)
+>![Items below their recommended quantity](assets/en/screenshot2.png)
 >
->*Bushcraft Minimal, with every item checked as an input example.*
+>*A Bushcraft Minimal input example. The fire steel and paracord have quantity 0, and the bottle is unchecked. The “Below recommended” filter shows 2 items. Checked totals for the whole list are 850 g and 1000 cm³.*
 
->![Equipment weight graph](assets/en/screenshot3.png)
+>![JSON backup import preview](assets/en/screenshot3.png)
 >
->*Weights of checked equipment, grouped by category.*
+>*Import preview of JSON exported from the state above: 5 items, 4 checked (including 2 with quantity 0), 850 g, and 1000 cm³.*
 
 ---
 
@@ -153,14 +153,14 @@ The tool is intended for individuals and organizations such as the following:
 - Multiple saved checklists: Load or delete entries from the saved-checklist list
 - Overwrite/save as new: Choose whether to overwrite an existing checklist or save a separate copy
 - Item operations: Add, edit, delete, and view details
-- Search and filters: Search item names and filter for dual-use items or hazards
+- Search and filters: Search item names and purposes in the display language, combined with dual-use, hazard, and review conditions
 
 When a save is rejected, the tool retains unsaved edits and does not report success. It does not automatically overwrite corrupted saved data. Comparisons immediately before saving detect updates from another tab, but do not guarantee complete protection against concurrent editing.
 
 ### 3. Packing Features
 
 - Quantity management: Edit integers from 0 to 999 directly in a row; zero remains zero
-- Recommended quantity: Record `recommended_quantity` as a reference value, without automatic shortage detection
+- Recommended quantity: Record `recommended_quantity` as a reference value and identify rows with a smaller current quantity; this does not determine actual needs or whether supplies are sufficient
 - Repack frequency: Record daily / weekly / monthly / never, without notifications or replacement-date calculations
 - Checkboxes: Mark items as packed
 - Automatic totals: Multiply each checked item's per-unit weight and volume by its quantity, then sum the results; unchecked items are excluded
@@ -175,9 +175,11 @@ When a save is rejected, the tool retains unsaved edits and does not report succ
 
 - PDF: Render the list, including Japanese text, as an image with checked states, quantities, tags, and totals; the text is not searchable or selectable
 - CSV: Export every item in 12 fixed columns, with a UTF-8 BOM, CRLF line endings, quoted cells, and protection for leading characters commonly interpreted as formulas
-- JSON: Export the current checklist data; there is no import or automatic-restore interface
+- JSON: Export the current checklist name, export timestamp, and every item; use “Import JSON” to preview and restore the file
 
 The CSV column order is `id,name,category,weight_g,volume_cm3,purpose_short,dual_use,hazard_flag,legality_notes,quantity,recommended_quantity,checked`. Formula protection does not guarantee safety in every spreadsheet application. When importing data from outside sources, also check settings that treat cells as text.
+
+JSON, CSV, and PDF include every item regardless of filters. On-screen totals and graphs also use checked quantities from the whole list. Only browser printing prints the displayed rows, accompanied by the displayed count, filter conditions, and a note that totals are calculated from the whole list. To print every row, select “Clear item search and filters.”
 
 ### 6. Graph Views
 
@@ -210,6 +212,67 @@ These are targets for the progress display, not the actual weights of presets or
 - On-demand loading: Fetch preset JSON when selected over HTTP(S)
 - Cache management: Keep loaded presets in memory
 - Local-file support: Load the generated `presets-bundle.js` under `file://`; fetching the PDF libraries requires a network connection
+
+### 10. Restoring a JSON Backup
+
+1. Export the current list with “JSON” and check that the file was saved.
+2. Select the file with “Import JSON” and review the name, total item count, checked-item count, weight, and volume in the preview.
+3. Select “Open as a new unsaved list.” If there are unsaved edits, replacement occurs only after you confirm that they can be discarded.
+4. Review the contents and select “Save.” The list is added with a new saved ID; an existing saved list with the same name is not automatically overwritten.
+
+Importing alone does not write to localStorage. Cancellation or an invalid file preserves the current list and saved data. If an edit or another load occurs while a file is being read, the stale result is not applied. If saving fails, the imported contents remain available as unsaved edits.
+
+The accepted format is a single JSON object with `checklistName` and `items`, matching OpsLoadout's export. This format example includes zero quantity, an unchecked state, translations, and additional metadata.
+
+```json
+{
+  "checklistName": "Restore example",
+  "createdAt": "2026-10-12T00:00:00.000Z",
+  "items": [
+    {
+      "id": "restore_sample",
+      "name_ja": "見本",
+      "name_en": "Sample",
+      "weight_g": 50,
+      "volume_cm3": 20,
+      "quantity": 0,
+      "recommended_quantity": 2,
+      "checked": false,
+      "packed_by_default": true,
+      "custom_meta": {"note": "keep"}
+    }
+  ]
+}
+```
+
+Explicit zero and false values, unchanged translations, and additional item metadata are retained. Missing fields receive the defaults described in the data model. `createdAt` is an optional string and is not carried over as the new saved timestamp. Additional root-level information is inspected but is not added to the saved list. Raw preset JSON, arrays of saved lists, CSV, and JSON from other Day tools cannot be imported directly.
+
+| Validation target | Limit |
+|---|---:|
+| UTF-8 file size in bytes | 5 MiB (5,242,880 bytes) |
+| JSON depth (root at 0) | 32 |
+| JSON nodes (root and each object, array, or value) | 250,000 |
+| Item count | 10,000 |
+
+One leading UTF-8 BOM is allowed and counts toward file size. Invalid UTF-8, syntax, types, numeric ranges, and duplicate IDs are rejected, as are `__proto__`, `constructor`, and `prototype` keys and non-finite values anywhere in the JSON. Depth includes primitive leaf values, and unused additional information is also subject to the depth and node limits. Staying within these limits does not guarantee storage capacity or comfortable performance.
+
+### 11. Reviewing Unchecked Items and Quantities Below the Recommendation
+
+“Review” offers “All,” “Unchecked,” “Below recommended,” and “Either condition.” “Either condition” includes rows that are unchecked or below their recommended quantity. These conditions are combined with search, dual-use, and hazard filters using AND. “Clear item search and filters” clears these conditions but does not change the preset category above them.
+
+Unchecked means `checked === false`; below recommended means `quantity < recommended_quantity`. An unchecked item is not treated as having zero quantity. The difference is `max(0, recommended_quantity - quantity)`. In the examples below, true means a condition matches and false means it does not.
+
+| ID | checked | quantity | recommended_quantity | Unchecked | Below recommended | Difference | Either |
+|---|---|---:|---:|---|---|---:|---|
+| A | false | 0 | 0 | true | false | 0 | true |
+| B | true | 0 | 2 | false | true | 2 | true |
+| C | false | 1 | 3 | true | true | 2 | true |
+| D | true | 3 | 3 | false | false | 0 | false |
+| E | false | 4 | 3 | true | false | 0 | true |
+
+These 5 rows contain 3 unchecked items, 2 below their recommended quantity, and 4 matching either condition. C matches both but is not counted twice under “Either.” The displayed condition counts cover the whole list; the count shown after filtering is reported separately. Rows show the unchecked state or the current quantity, recommended quantity, and difference, and are updated after edits or a language change.
+
+The ☑ and ☐ bulk controls check or uncheck the whole list, including hidden rows. Review filters compare the entered reference values; they do not determine safety, legality, or whether required supplies are sufficient.
 
 ---
 
@@ -303,7 +366,7 @@ OpsLoadout workflow:
 3. Periodic reviews (Monthly):
    - Distribute a PDF to each site manager at the beginning of the month
    - Have guards check the actual equipment
-   - Export all items as CSV, review `checked` and quantities in a spreadsheet, identify needed items, and send them to purchasing; the tool does not automatically extract shortages
+   - Select “Either condition” under “Review” to identify unchecked rows or those below their recommended quantity, then check the actual items and required quantities. CSV includes every item, so also check `checked` and quantities in a spreadsheet when selecting items to send to purchasing
 
 4. New-employee training:
    - Give new guards the “Company A Standard Security Equipment v1.0” PDF
@@ -617,6 +680,7 @@ Purpose: Equipment to carry during emergency evacuation
   - Legal notes and dual-use flags
   - Automatic weight and volume calculations
   - PDF/CSV/JSON exports
+  - JSON backup restoration and filters for unchecked items or quantities below the recommendation
 - Storage locations: Places where kits can be picked up quickly, such as the entrance, a vehicle, under an office desk, or beside a bed
 - Weight constraints: Compare totals with an entered weight target; it does not determine an individual's suitable carrying weight
 
@@ -651,7 +715,7 @@ The table illustrates how to divide the records. Whether to share the physical i
 
 #### 3. Possibilities for Data Coordination
 
-Neither tool provides automatic synchronization. RollingStock Planner can export and import JSON, while OpsLoadout exports JSON and CSV, but their formats differ. The following are examples of manual coordination using the interfaces and exported files:
+Neither tool provides automatic synchronization. Both can export and import their own JSON format, but the formats differ and cannot be imported directly into each other. OpsLoadout also exports CSV. The following are examples of manual coordination using the interfaces and exported files:
 
 Pattern 1: Select carried equipment from stored supplies
 
@@ -676,7 +740,7 @@ Pattern 3: A periodic inventory-review cycle
 
 - Spring (April): Check dates and storage conditions in RollingStock, replenish as needed, and review the effect on OpsLoadout
 - Summer (July): Check OpsLoadout kits against the actual items; if items are moved, manually update the original inventory too
-- Autumn (October): Save external JSON copies from both tools, noting that OpsLoadout has no restore interface
+- Autumn (October): Save external JSON copies from both tools and check import in the corresponding tool. In OpsLoadout, review the separate unsaved list before saving it
 - Winter (January): Conduct an annual review and consider equipment updates
 
 #### 4. Suggested Workflow
@@ -780,7 +844,7 @@ The tool is hosted on GitHub Pages and implements the following security measure
 - 🔒 No cookies: The application itself does not set cookies
 - ⚠️ Network activity: Fetching the public page and CDN scripts involves network requests; opening source links or sharing exported files or clipboard contents are separate activities
 
-Saved data and exported files are not encrypted. People using the same device and browser, or scripts on the same origin, may be able to read them. Do not enter personal information, confidential information, or real operational information. Clearing browser data can erase saved records. JSON can be saved externally, but the tool has no interface for importing it back.
+Saved data and exported files are not encrypted. People using the same device and browser, or scripts on the same origin, may be able to read them. Do not enter personal information, confidential information, or real operational information. Clearing browser data can erase saved records. Save an external JSON copy and use “Import JSON” to preview and restore it. Import processing stays on the device and does not automatically overwrite saved lists.
 
 See [docs/SECURITY.md](docs/SECURITY.md) for details.
 
@@ -796,7 +860,7 @@ ops-loadout/            # Project root
 ├── index.html          # Main HTML: UI structure and meta CSP
 ├── app.js              # Application logic with lazy loading
 ├── i18n.js             # Japanese/English language support
-├── loadout-core.js     # Data validation, editing, totals, and CSV
+├── loadout-core.js     # Validation, JSON restore, review, edits, totals, CSV
 ├── loadout-store.js    # Storage reads/writes and conflict checks
 ├── presets-bundle.js   # Generated presets for file://
 ├── css/                # Modular stylesheets
@@ -850,6 +914,8 @@ ops-loadout/            # Project root
 ├── test/               # Node regression tests
 │   ├── core.test.js    # Validation, edits, totals, and storage
 │   ├── i18n.test.js    # Dictionary keys and their references
+│   ├── import.test.js  # JSON restoration validation and boundaries
+│   ├── review.test.js  # Unchecked and below-recommended conditions
 │   ├── output.test.js  # CSV and total outputs
 │   ├── ui.test.js      # Local assets, dialogs, and printing
 │   └── readme.test.js  # Bilingual headings, numbers, links, images
@@ -858,12 +924,12 @@ ops-loadout/            # Project root
 │   └── SECURITY.md     # Security policy
 ├── assets/             # Image resources
 │   ├── screenshot.png # Japanese: Pentester
-│   ├── screenshot2.png # Japanese: Minimal, all checked
-│   ├── screenshot3.png # Japanese: weight graph
+│   ├── screenshot2.png # Japanese: Minimal review
+│   ├── screenshot3.png # Japanese: JSON import preview
 │   └── en/            # English screenshots
 │       ├── screenshot.png # Pentester
-│       ├── screenshot2.png # Minimal, all checked
-│       └── screenshot3.png # Weight graph
+│       ├── screenshot2.png # Minimal review
+│       └── screenshot3.png # JSON import preview
 ├── package.json        # Dependency-free test command
 ├── README.md           # Japanese project documentation
 ├── README.en.md        # English documentation (this file)
@@ -890,6 +956,8 @@ Topics include:
 - State management
 - Reusing saved checklists
 - Checklist saving logic: overwrite and save as new
+- JSON import validation and application to an unsaved list
+- Review conditions and the scope of displayed rows and whole-list totals
 - PDF export implementation with html2canvas and jsPDF
 - Security measures, including XSS protection and localStorage validation
 - Category filtering

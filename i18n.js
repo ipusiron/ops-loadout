@@ -210,7 +210,11 @@ const I18N = {
     "help.graphView": "Graph View",
     "help.graphViewDesc": "The Graph button shows pie chart, radar chart, and top items views. Download or copy images.",
     "help.savingExporting": "Save & Export",
-    "help.savingExportingDesc": "'Save' stores to local storage. Export to JSON/CSV/PDF is also available.",
+    "help.savingExportingDesc": "'Save' stores to local storage. JSON/CSV/PDF exports and Check All/Uncheck All cover the whole list, including hidden rows. Totals and graphs use checked quantities across the whole list. Browser printing includes only displayed rows and states the filter conditions.",
+    "help.importJSON": "Restore a JSON backup",
+    "help.importJSONDesc": "Choose JSON exported by this tool, check the preview, then open it as a separate unsaved checklist. Save it explicitly to keep it in this browser. Existing saved lists are not overwritten. Cancel or invalid input leaves your list unchanged. CSV, preset files, and JSON from other tools are not supported.",
+    "help.review": "Review unchecked and below-recommended items",
+    "help.reviewDesc": "Choose Unchecked, Below recommended, or Either condition. Search and the dual-use/hazard filters also apply. Rows show the reason and quantity difference; summary categories overlap. Unchecked does not mean zero quantity. Recommended quantities are reference values, not a judgment of safety or sufficient supplies. Clear item search and filters to see the whole list.",
     "help.language": "Language Switch",
     "help.languageDesc": "Use the language button (JA/EN) at top-right to switch between Japanese and English. Settings are saved.",
     "help.badges": "About Badges",
@@ -424,7 +428,11 @@ const I18N = {
     "help.graphView": "グラフ表示",
     "help.graphViewDesc": "グラフボタンで円グラフ・レーダーチャート・主要アイテム一覧を切り替え表示。画像のダウンロードやコピーも可能です。",
     "help.savingExporting": "保存とエクスポート",
-    "help.savingExportingDesc": "「保存」でローカルストレージに保存されます。JSON/CSV/PDF形式でエクスポートも可能です。",
+    "help.savingExportingDesc": "「保存」でローカルストレージに保存します。JSON/CSV/PDF出力と全チェック・全解除は、非表示行を含むリスト全体が対象です。合計とグラフはリスト全体のチェック済み数量を使います。ブラウザー印刷は表示行だけが対象で、絞り込み条件も記載します。",
+    "help.importJSON": "JSONバックアップの読み戻し",
+    "help.importJSONDesc": "本ツールで出力したJSONを選び、プレビューを確認してから未保存の別リストとして開きます。このブラウザーに残すには「保存」を押してください。保存済みリストは上書きしません。取消や不正な入力では現在のリストは変わりません。CSV、プリセット本体、他ツールのJSONは対象外です。",
+    "help.review": "未チェックと推奨数未満の見直し",
+    "help.reviewDesc": "「未チェック」「推奨数未満」「いずれか」を選びます。検索と軍民両用・危険物の条件も組み合わせて適用します。各行には理由と数量差を示し、件数の分類は重複します。未チェックは数量0を意味しません。推奨数は参考値であり、安全性や実際の物資の充足を判定するものではありません。全体を見るには「一覧の検索・絞り込みを解除」を押してください。",
     "help.language": "言語切り替え",
     "help.languageDesc": "右上の言語ボタン（JA/EN）で日本語と英語を切り替えられます。設定は保存されます。",
     "help.badges": "バッジについて",
@@ -484,6 +492,77 @@ Object.assign(I18N.ja, {
   'msg.preference': '設定を保存できませんでした。このページ内だけに反映します。',
 });
 
+Object.assign(I18N.en, {
+  'import.button': 'Import JSON',
+  'button.checkAll': 'Check the whole list (including hidden rows)',
+  'button.uncheckAll': 'Uncheck the whole list (including hidden rows)',
+  'review.label': 'Review',
+  'review.all': 'All',
+  'review.unchecked': 'Unchecked',
+  'review.below': 'Below recommended',
+  'review.either': 'Either condition',
+  'review.none': 'None',
+  'review.reset': 'Clear item search and filters',
+  'review.notice': 'Recommended quantities are reference values in the data. These filters do not assess safety or whether actual supplies are sufficient. Unchecked does not mean a quantity of zero.',
+  'review.summary': 'Whole list: {unchecked} unchecked / {below} below recommended / {either} either (categories overlap). Showing {shown} / {total} rows.',
+  'review.difference': 'Quantity {quantity} / recommended {recommended}; difference {shortfall}',
+  'review.scope': 'Totals, graphs and JSON/CSV/PDF use the whole list, regardless of filters. Totals include only checked quantities. Bulk check/uncheck affects hidden rows too. Browser printing uses the visible rows and states the scope of the whole-list totals.',
+  'review.printScope': 'Visible rows: {shown} / Total: {total}. Filters: {filters}. Totals above apply to the whole list.',
+  'import.title': 'Preview JSON import',
+  'import.name': 'Checklist name',
+  'import.apply': 'Open as a new unsaved list',
+  'import.notice': 'This opens a separate unsaved checklist. Existing saved lists are not overwritten. Search and filters will be cleared. Use Save afterwards to keep it in this browser.',
+  'import.limits': 'OpsLoadout single-list JSON only. UTF-8 (BOM allowed), up to 5 MiB, 10,000 items, depth 32 and 250,000 JSON values. CSV, presets and other tools’ formats are not supported.',
+  'import.stats': '{count} rows; {checked} checked. Checked totals: {weight} g / {volume} cm³.',
+  'import.reading': 'Reading and validating JSON…',
+  'import.ready': 'Validation complete. Review the preview before applying.',
+  'import.applied': 'Opened as a new unsaved list. No saved lists were changed. Use Save to keep this list.',
+  'import.cancelled': 'Import cancelled. Your checklist has not changed.',
+  'import.stale': 'Import stopped because another operation occurred. Select the file again if needed.',
+  'import.tooLarge': 'The file exceeds 5 MiB (5,242,880 bytes). Your checklist has not changed.',
+  'import.encoding': 'The file is not valid UTF-8. Your checklist has not changed.',
+  'import.syntax': 'The file is not valid JSON. Your checklist has not changed.',
+  'import.format': 'Select single-list JSON exported by OpsLoadout, with checklistName and items. Your checklist has not changed.',
+  'import.complex': 'The file exceeds depth 32 or 250,000 JSON values. Your checklist has not changed.',
+  'import.unsafe': 'The file contains a reserved key (__proto__, constructor or prototype). Your checklist has not changed.',
+  'import.invalid': 'The file could not be read or contains invalid item data (types, ranges or duplicate IDs). Your checklist has not changed.',
+});
+Object.assign(I18N.ja, {
+  'import.button': 'JSONを読み込む',
+  'button.checkAll': 'リスト全体をチェック（非表示の行を含む）',
+  'button.uncheckAll': 'リスト全体のチェックを解除（非表示の行を含む）',
+  'review.label': '見直し',
+  'review.all': 'すべて',
+  'review.unchecked': '未チェック',
+  'review.below': '推奨数未満',
+  'review.either': 'いずれか',
+  'review.none': 'なし',
+  'review.reset': '一覧の検索・絞り込みを解除',
+  'review.notice': '推奨数はデータに登録された参考値です。安全性や実際の物資の充足は判定しません。未チェックを数量0として扱うこともありません。',
+  'review.summary': 'リスト全体：未チェック{unchecked}行／推奨数未満{below}行／いずれか{either}行（分類は重複します）。表示{shown}／全体{total}行。',
+  'review.difference': '数量{quantity}／推奨{recommended}・差{shortfall}',
+  'review.scope': '絞り込みにかかわらず、合計・グラフ・JSON/CSV/PDFはリスト全体が対象です。合計にはチェック済みの数量だけを含みます。一括チェック・解除は非表示の行にも適用します。ブラウザー印刷は表示行を印刷し、全体合計の対象も明記します。',
+  'review.printScope': '表示行: {shown} / 全体: {total}。絞り込み: {filters}。上の合計はリスト全体が対象です。',
+  'import.title': 'JSONの読み込みを確認',
+  'import.name': 'リスト名',
+  'import.apply': '未保存の別リストとして開く',
+  'import.notice': '未保存の別リストとして開きます。保存済みリストは上書きしません。検索と絞り込みは解除します。このブラウザーに残すには、読み込み後に「保存」を押してください。',
+  'import.limits': 'OpsLoadoutが出力した単一リストのJSONが対象です。UTF-8（BOM可）、5 MiB・10,000項目・深さ32・JSON値250,000個まで。CSV・プリセット・他ツールの形式は対象外です。',
+  'import.stats': '{count}行、チェック済み{checked}行。チェック済みの合計：{weight} g / {volume} cm³。',
+  'import.reading': 'JSONを読み取り、検査しています…',
+  'import.ready': '検査が完了しました。プレビューを確認してから適用してください。',
+  'import.applied': '未保存の別リストとして開きました。保存済みリストは変更していません。残すには「保存」を押してください。',
+  'import.cancelled': '読み込みを取り消しました。現在のリストは変更していません。',
+  'import.stale': '別の操作があったため、読み込みを中止しました。必要ならファイルを選び直してください。',
+  'import.tooLarge': 'ファイルが5 MiB（5,242,880バイト）を超えています。現在のリストは変更していません。',
+  'import.encoding': 'ファイルが正しいUTF-8ではありません。現在のリストは変更していません。',
+  'import.syntax': 'ファイルが正しいJSONではありません。現在のリストは変更していません。',
+  'import.format': 'OpsLoadoutが出力した、checklistNameとitemsを含む単一リストのJSONを選んでください。現在のリストは変更していません。',
+  'import.complex': '深さ32またはJSON値250,000個の上限を超えています。現在のリストは変更していません。',
+  'import.unsafe': '予約されたキー（__proto__・constructor・prototype）が含まれています。現在のリストは変更していません。',
+  'import.invalid': 'ファイルを読み取れないか、項目の型・範囲・IDなどが不正です。現在のリストは変更していません。',
+});
+
 function readPreference(key) {
   try { return localStorage.getItem(key); } catch { return null; }
 }
@@ -504,7 +583,7 @@ function t(key, params = {}) {
 
   // Parameter interpolation: {name} -> value
   Object.keys(params).forEach(param => {
-    text = text.replace(new RegExp(`\\{${param}\\}`, 'g'), params[param]);
+    text = text.replace(new RegExp(`\\{${param}\\}`, 'g'), () => String(params[param]));
   });
 
   return text;

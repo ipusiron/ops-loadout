@@ -12,6 +12,19 @@ input[type=checkbox] { width: 1.25rem; height: 1.25rem; accent-color: #2563eb; }
 .header-btn, .rename-btn, .action-btn-icon { outline-offset: -3px; }
 .control-group, .checklist-title, .modal-content, .col-name, .col-category { min-width: 0; overflow-wrap: anywhere; }
 .checklist-header { gap: 1rem; flex-wrap: wrap; }
+.checklist-actions { flex-wrap: wrap; }
+.import-status { margin: .75rem 0; color: #334155; overflow-wrap: anywhere; }
+.import-status:empty { margin: 0; }
+.import-preview p { margin: .75rem 0; overflow-wrap: anywhere; }
+.import-preview-name { font-weight: 600; white-space: pre-wrap; }
+.import-limits { color: #475569; font-size: .875rem; }
+.review-controls { display: flex; flex-wrap: wrap; align-items: flex-end; gap: .75rem; }
+.review-controls .control-group { flex: 1 1 12rem; }
+.review-controls select { width: 100%; }
+.scope-note, .review-summary { margin: .75rem 0; color: #475569; font-size: .875rem; line-height: 1.6; }
+.col-name-cell { min-width: 0; overflow-wrap: anywhere; }
+.review-reason { margin: .25rem 0 0 2.25rem; color: #854d0e; font-size: .8125rem; line-height: 1.5; }
+.review-reason:empty { display: none; }
 .item-table-row { position: relative; }
 .item-table-row .col-name { margin-left: 2.25rem; }
 .item-table-row .col-weight::before { content: attr(data-label); margin-right: .5rem; }
@@ -38,6 +51,7 @@ input[type=checkbox] { width: 1.25rem; height: 1.25rem; accent-color: #2563eb; }
   .header-actions { grid-column: 3; }
   .item-table-header, .item-table-row { grid-template-columns: 2rem minmax(0,1fr) 7rem 5rem 5rem 7rem 9rem; }
   .item-table-row .col-name { margin-left: 0; }
+  .review-reason { margin-left: 0; }
   .item-table-row .col-weight::before, .qty-label span { display: none; }
 }
 @media (min-width: 768px) and (max-width: 999px) {

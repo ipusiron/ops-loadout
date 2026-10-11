@@ -4,10 +4,13 @@
  */
 
 @media print {
+  #printScope { overflow-wrap: anywhere; }
   /* Hide UI controls */
   .app-header,
   .controls-section,
   .table-toolbar,
+  .checklist-actions,
+  .import-status,
   .footer-bar,
   .modal-backdrop,
   .item-detail-accordion,

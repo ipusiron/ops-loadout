@@ -36,7 +36,7 @@ This is a vanilla JavaScript single-page application. The application requires n
 
 - index.html: Main UI structure, local styles, CSP meta policy, and pinned PDF scripts
 - app.js: Core application logic with lazy-loaded presets (vanilla JS, no frameworks)
-- loadout-core.js: DOM-independent validation, localization-aware edits, totals, URLs, colors, and CSV
+- loadout-core.js: DOM-independent validation, JSON restoration, review conditions, localization-aware edits, totals, URLs, colors, and CSV
 - loadout-store.js: Validated checklist reads and writes with conflict checks
 - i18n.js: Internationalization module (Japanese/English)
 - css/: Modular CSS files (main.css as entry point)
@@ -111,8 +111,8 @@ The app.js file is organized into these main sections:
 - Event listeners: User interactions, i18n updates
 
 Rendering Pipeline:
-- `renderAll()`: Master render function that updates all UI sections
-- `renderList()`: Renders filtered item table with search/filter application
+- `renderAll(updateSource)`: Updates derived UI; row changes can preserve existing controls and defer layout until a native pointer gesture completes
+- `renderList(updateSource)`: Renders filtered rows, reasons, and whole-list review counts, preserving natural focus where possible
 - `renderDetail(id)`: Shows detailed item view in accordion panel
 - `renderTotals()`: Calculates weight/volume for checked items × quantity
 
@@ -125,10 +125,30 @@ Preset Loading:
 Data Management:
 - `saveCurrentChecklist()`: Persists state to localStorage
 - `loadFromPreset(key)`: Loads predefined preset (lazy-load if needed)
-- `filteredItems()`: Applies search query and dual_use/hazard filters
+- `filteredItems()`: AND-combines localized name/purpose search, dual_use/hazard filters, and the review mode
 - `readChecklists()` / `saveAllChecklists()`: Checked access through LoadoutStore
 - `loadChecklist(id)` / `deleteChecklist(id)`: Saved-checklist operations
 - `LoadoutCore.editItem()`: Applies form fields without discarding hidden metadata
+- `LoadoutCore.parseChecklistJSON(text)`: Validates a single exported checklist and returns `{ name, items }`
+- `LoadoutCore.itemReview(item)` / `matchesReview(item, mode)`: Pure unchecked and below-recommended conditions
+
+JSON Restoration:
+- Accept UTF-8 files up to 5 MiB (5,242,880 bytes, including BOM), allowing one leading BOM; reject invalid UTF-8
+- Inspect the whole parsed JSON, including unused metadata: maximum depth 32 (root 0, including primitive leaves) and 250,000 nodes (root and each object, array, or value)
+- Reject non-finite values and `__proto__`, `constructor`, or `prototype` keys at every depth; validate at most 10,000 items with normal field and duplicate-ID checks
+- Require a single object with `checklistName` and `items`; optional `createdAt` is a string and is not used as the new save timestamp
+- Preserve explicit zero/false, translations, and additional item metadata; do not import a saved ID or unused root fields
+- Preview without changing working data or storage, then apply as a separate unsaved list after any required discard confirmation
+- A later save creates a new ID; do not automatically overwrite an existing list, including one with the same name
+- Ignore stale reads after edits or another load, and keep working data on validation/cancellation/save failures
+
+Review Semantics:
+- Modes are `all`, `unchecked`, `below`, and `either`
+- Unchecked is `checked === false`; below recommended is `quantity < recommended_quantity`; difference is `max(0, recommended_quantity - quantity)`
+- Do not reinterpret unchecked as zero quantity; quantity 0 and recommendation 0 are not below recommended
+- Count an item matching both conditions once in `either`; summary counts describe the whole list and separately show filtered rows
+- Reasons and counts update after every relevant mutation and language change; filters do not certify sufficiency, safety, or legality
+- Bulk check/uncheck acts on all items, including hidden ones; clearing item filters does not change the preset category
 
 Modal System:
 - `openItemModal(mode, item)`: Opens add/edit modal
@@ -145,11 +165,11 @@ Graph Visualization:
 Graphs include checked rows with a positive quantity. Each radar axis averages the available values by row, not by quantity; missing values are excluded, with 0 displayed if none exist. Regulatory caution is not inverted, and higher is not better. Keep the limitations visible on the dialog and PNG.
 
 Export Functions:
-- `exportJSON()`: Checklist name, export timestamp, and full item objects; no import interface
+- `exportJSON()`: Checklist name, export timestamp, and full item objects; its format can be previewed and imported as a new unsaved list
 - `exportCSV()`: All item rows in 12 columns, UTF-8 BOM, CRLF, quoted cells, and formula-prefix protection
 - `exportPDF()`: Dedicated HTML rendered by html2canvas 1.4.1 and jsPDF 4.2.1; image-based PDF, not selectable text
 
-CSV columns are `id,name,category,weight_g,volume_cm3,purpose_short,dual_use,hazard_flag,legality_notes,quantity,recommended_quantity,checked`. Weight and volume are per unit. Totals in the UI, graphs, PDF, and print output use the shared core calculation. CSV protections can be removed by spreadsheet editing/re-saving, so do not promise safe execution in every spreadsheet.
+CSV columns are `id,name,category,weight_g,volume_cm3,purpose_short,dual_use,hazard_flag,legality_notes,quantity,recommended_quantity,checked`. Weight and volume are per unit. JSON/CSV/PDF include every item regardless of filters. Totals in the UI, graphs, PDF, and print use checked quantities from the whole list. Browser print alone prints displayed rows and labels its displayed count, filters, and whole-list total scope. Flush pending pointer-driven rendering before printing. CSV protections can be removed by spreadsheet editing/re-saving, so do not promise safe execution in every spreadsheet.
 
 ## Development Workflow
 
@@ -181,6 +201,9 @@ The Test workflow runs `npm test` on Node.js 22 for pushes and pull requests. Te
 4. Test denied/corrupt/full storage and concurrent edits; preserve the unsaved state on failure.
 5. Inspect CSV, JSON, actual PDF downloads, graph images, and print output.
 6. Verify mobile layouts, dialog keyboard/focus behavior, source URL handling, and limitations in both languages.
+7. Test JSON preview/apply/cancel, invalid UTF-8 and structural boundaries, metadata/zero/false preservation, stale reads, and saving as a distinct list.
+8. Test all review modes with AND filters, overlapping counts, every mutation/language update, whole-list exports/bulk operations, and displayed-row printing.
+9. Commit inline quantity edits using actual Tab, Shift+Tab, Enter, mouse/touch clicks, long holds, and cancelled pointers. Immediate state updates must not move the click target mid-gesture or steal focus from dialogs.
 
 ### Deployment
 GitHub Pages serves the repository root at https://ipusiron.github.io/ops-loadout/. Use a reviewed branch and pull request rather than a direct push to main:
@@ -272,7 +295,7 @@ The following are not implemented and require a separate agreed scope:
 
 - Workflow states and approvals
 - Audit logs or version history
-- JSON/CSV import and restore validation
+- CSV import or conversion between tools' JSON formats
 - Cross-device synchronization or atomic concurrent editing
 - IndexedDB storage or a service-worker offline cache
 

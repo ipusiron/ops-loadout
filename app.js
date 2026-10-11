@@ -84,6 +84,7 @@
   const globalSearch = document.getElementById('globalSearch');
   const filterDual = document.getElementById('filterDual');
   const filterHazard = document.getElementById('filterHazard');
+  const reviewFilter = document.getElementById('reviewFilter');
   const newChecklistBtn = document.getElementById('newChecklist');
   const saveConfirmModal = document.getElementById('saveConfirmModal');
   const saveConfirmOk = document.getElementById('saveConfirmOk');
@@ -105,6 +106,10 @@
   const helpModal = document.getElementById('helpModal');
   const helpCloseBtn = document.getElementById('helpCloseBtn');
   const helpOkBtn = document.getElementById('helpOkBtn');
+  const importJsonBtn = document.getElementById('importJson');
+  const importFile = document.getElementById('importFile');
+  const importModal = document.getElementById('importModal');
+  const importStatus = document.getElementById('importStatus');
 
   const dialogOpeners = new WeakMap();
   function updateDialogBackground() {
@@ -113,6 +118,7 @@
   }
   function openDialog(dialog) {
     loadRequest++; // Opening an editor/save dialog cancels pending preset replacement.
+    if (dialog !== importModal) importCandidate = null;
     renderPresetOptions(currentCategory);
     dialogOpeners.set(dialog, document.activeElement);
     dialog.classList.add('active');
@@ -128,6 +134,11 @@
     (dialog.querySelector('input:not([type=checkbox]), button') || dialog).focus();
   }
   function closeDialog(dialog) {
+    if (dialog === importModal) {
+      importCandidate = null;
+      importSequence++;
+      setImportStatus('import.cancelled');
+    }
     dialog.classList.remove('active');
     updateDialogBackground();
     const opener = dialogOpeners.get(dialog);
@@ -215,6 +226,156 @@
   let loadRequest = 0;
   let formDirty = false;
   let storageWarningShown = false;
+  let importSequence = 0;
+  let importCandidate = null;
+  let importBaseline = 0;
+  let importStatusKey = '';
+  const quantityTabDirections = new WeakMap();
+  let renderPointer = null;
+  let pendingRenderSource = null;
+  let pointerRenderTimer = null;
+
+  // A quantity change can be committed by pointer-driven blur. Keep layout
+  // stable until the native click (including its default action) has finished.
+  // Data is committed immediately; only the derived UI waits for the gesture.
+  function finishPointerRender() {
+    renderPointer = null;
+    clearTimeout(pointerRenderTimer);
+    pointerRenderTimer = null;
+    const source = pendingRenderSource;
+    pendingRenderSource = null;
+    if (source) renderAll(source);
+  }
+
+  function schedulePointerRender() {
+    clearTimeout(pointerRenderTimer);
+    pointerRenderTimer = setTimeout(finishPointerRender, 0);
+  }
+
+  document.addEventListener('pointerdown', event => {
+    if (!event.isPrimary || event.button !== 0) return;
+    finishPointerRender();
+    renderPointer = event.pointerId;
+  }, true);
+  document.addEventListener('pointerup', event => {
+    if (event.pointerId === renderPointer) schedulePointerRender();
+  }, true);
+  document.addEventListener('pointercancel', event => {
+    if (event.pointerId === renderPointer) schedulePointerRender();
+  }, true);
+  document.addEventListener('click', schedulePointerRender, true);
+  // Keyboard input may arrive before the zero-delay terminal task. It belongs
+  // to a new interaction, not to the preceding pointer gesture.
+  document.addEventListener('keydown', finishPointerRender, true);
+  document.addEventListener('pointermove', event => {
+    if (renderPointer !== null && event.buttons === 0) finishPointerRender();
+  }, true);
+  window.addEventListener('blur', schedulePointerRender);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) schedulePointerRender();
+  });
+
+  function setImportStatus(key) {
+    importStatusKey = key;
+    importStatus.textContent = key ? t(key) : '';
+  }
+
+  function renderImportPreview() {
+    if (!importCandidate) return;
+    document.getElementById('importPreviewName').textContent = importCandidate.name;
+    const sum = LoadoutCore.totals(importCandidate.items);
+    document.getElementById('importPreviewStats').textContent = t('import.stats', {
+      count: importCandidate.items.length, checked: sum.rows, weight: sum.weight, volume: sum.volume
+    });
+  }
+
+  async function readImportFile(file) {
+    const sequence = ++importSequence;
+    const request = ++loadRequest;
+    importCandidate = null;
+    if (!file) { setImportStatus('import.cancelled'); return; }
+    setImportStatus('import.reading');
+    const stale = () => {
+      if (sequence !== importSequence) return true;
+      if (request === loadRequest) return false;
+      setImportStatus('import.stale');
+      return true;
+    };
+    try {
+      if (file.size > LoadoutCore.IMPORT_LIMITS.maxBytes) throw new TypeError('importTooLarge');
+      const buffer = await file.arrayBuffer();
+      if (stale()) return;
+      let text;
+      try { text = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(buffer); }
+      catch { throw new TypeError('importEncoding'); }
+      const parsed = LoadoutCore.parseChecklistJSON(text);
+      if (stale()) return;
+      importCandidate = parsed;
+      renderImportPreview();
+      setImportStatus('import.ready');
+      openDialog(importModal);
+      dialogOpeners.set(importModal, importJsonBtn);
+      importBaseline = loadRequest;
+    } catch (error) {
+      if (stale()) return;
+      const messages = {
+        importTooLarge: 'import.tooLarge', importEncoding: 'import.encoding',
+        importSyntax: 'import.syntax', importFormat: 'import.format',
+        importTooDeep: 'import.complex', importTooComplex: 'import.complex',
+        importUnsafeKey: 'import.unsafe', importNonFinite: 'import.invalid'
+      };
+      setImportStatus(Object.hasOwn(messages, error.message) ? messages[error.message] : 'import.invalid');
+    }
+  }
+
+  importJsonBtn.addEventListener('click', () => {
+    importSequence++;
+    loadRequest++;
+    importCandidate = null;
+    renderPresetOptions(currentCategory);
+    setImportStatus('');
+    importFile.value = '';
+    importFile.click();
+  });
+  importFile.addEventListener('change', () => {
+    const file = importFile.files?.[0];
+    importFile.value = ''; // Allow selecting the same file after an error or cancellation.
+    readImportFile(file);
+  });
+  importFile.addEventListener('cancel', () => setImportStatus('import.cancelled'));
+  document.getElementById('importCancel').addEventListener('click', () => closeDialog(importModal));
+  importModal.addEventListener('click', event => { if (event.target === importModal) closeDialog(importModal); });
+  document.getElementById('importApply').addEventListener('click', () => {
+    if (!importCandidate || importBaseline !== loadRequest) {
+      closeDialog(importModal);
+      setImportStatus('import.stale');
+      return;
+    }
+    if ((state.isDirty || formDirty) && !confirm(t('msg.discard'))) return;
+    const restored = importCandidate;
+    closeDialog(importModal);
+    currentChecklistId = null;
+    currentSavedSnapshot = null;
+    currentPresetKey = '';
+    state.checklistName = restored.name;
+    state.items = restored.items;
+    state.selectedItemId = null;
+    globalSearch.value = '';
+    filterDual.checked = false;
+    filterHazard.checked = false;
+    reviewFilter.value = 'all';
+    markDirty();
+    renderAll();
+    renderPresetOptions(currentCategory);
+    setImportStatus('import.applied');
+  });
+  // Typing a quantity invalidates a pending file read before the change event commits it.
+  itemTable.addEventListener('input', event => { if (event.target.matches('.qty-input')) loadRequest++; });
+  itemTable.addEventListener('keydown', event => {
+    if (!event.target.matches('.qty-input')) return;
+    if (event.key === 'Tab') quantityTabDirections.set(event.target, event.shiftKey ? -1 : 1);
+    else quantityTabDirections.delete(event.target);
+  });
 
   function readChecklists() {
     let result;
@@ -395,7 +556,7 @@
     loadRequest++;
     if (!state.isDirty) {
       state.isDirty = true;
-      updateDirtyIndicator();
+      if (renderPointer === null) updateDirtyIndicator();
     }
   }
 
@@ -409,10 +570,17 @@
     }
   }
 
-  function renderAll() {
+  function renderAll(updateSource = null) {
+    if (updateSource && renderPointer !== null) {
+      pendingRenderSource = updateSource;
+      return;
+    }
+    // A completed action (for example clearing filters) renders the latest
+    // state itself and supersedes a queued quantity-only redraw.
+    pendingRenderSource = null;
     currentChecklistName.textContent = state.checklistName;
     updateDirtyIndicator();
-    renderList();
+    renderList(updateSource);
     renderDetail(state.selectedItemId);
     renderTotals();
   }
@@ -422,6 +590,7 @@
     return state.items.filter(it=>{
       if (filterDual.checked && !it.dual_use) return false;
       if (filterHazard.checked && !it.hazard_flag) return false;
+      if (!LoadoutCore.matchesReview(it, reviewFilter.value)) return false;
       if (!q) return true;
       const name = getL(it, 'name').toLowerCase();
       const purpose = getL(it, 'purpose_short').toLowerCase();
@@ -429,10 +598,57 @@
     });
   }
 
-  function renderList() {
+  function reviewReasons(item) {
+    const review = LoadoutCore.itemReview(item);
+    const reasons = [];
+    if (review.unchecked) reasons.push(t('review.unchecked'));
+    if (review.belowRecommended) reasons.push(t('review.difference', {
+      quantity: item.quantity, recommended: item.recommended_quantity, shortfall: review.shortfall
+    }));
+    return reasons.join(' / ');
+  }
+
+  function renderList(updateSource = null) {
+    // Native change-on-blur can run while activeElement is body. Keep the source
+    // as a fallback, but leave surviving controls in place for natural Tab/click.
+    const focused = document.activeElement === document.body && updateSource ? updateSource : document.activeElement;
+    const direction = quantityTabDirections.get(updateSource) || 1;
+    if (updateSource) quantityTabDirections.delete(updateSource);
+    const focusClass = ['item-check', 'qty-input', 'detailBtn', 'editBtn', 'delBtn'].find(cls => focused?.classList.contains(cls));
+    const focusedId = itemTable.contains(focused) && focusClass ? focused.dataset.id : null;
+    const previousIds = [...itemTable.querySelectorAll('.item-check')].map(el => el.dataset.id);
     const list = filteredItems();
     const totalItems = state.items.length;
     const itemCountDisplay = document.getElementById('itemCountDisplay');
+    const reviewCounts = state.items.reduce((counts, item) => {
+      const review = LoadoutCore.itemReview(item);
+      counts.unchecked += Number(review.unchecked);
+      counts.below += Number(review.belowRecommended);
+      counts.either += Number(review.needsReview);
+      return counts;
+    }, { unchecked: 0, below: 0, either: 0 });
+    document.getElementById('reviewSummary').textContent = t('review.summary', { ...reviewCounts, shown: list.length, total: totalItems });
+    if (state.selectedItemId && !list.some(item => item.id === state.selectedItemId)) {
+      state.selectedItemId = null;
+      renderDetail(null);
+    }
+    function restoreRowFocus() {
+      if (!focusedId) return;
+      const controls = [...itemTable.querySelectorAll('.' + focusClass)];
+      const same = controls.find(el => el.dataset.id === focusedId);
+      const oldIndex = previousIds.indexOf(focusedId);
+      const next = direction < 0
+        ? controls.filter(el => previousIds.indexOf(el.dataset.id) < oldIndex).at(-1)
+        : controls.find(el => previousIds.indexOf(el.dataset.id) > oldIndex);
+      const target = same || next || reviewFilter;
+      if (updateSource && !updateSource.isConnected) {
+        // Let a native Tab or pointer-driven blur finish first. Focusing here
+        // synchronously would steal a click intended for a surviving control.
+        requestAnimationFrame(() => {
+          if (document.activeElement === document.body && target.isConnected) target.focus();
+        });
+      } else target.focus();
+    }
 
     // Update item count display
     if (itemCountDisplay) {
@@ -445,6 +661,22 @@
       }
     }
 
+    const existingRows = new Map([...itemTable.querySelectorAll('.item-table-row')]
+      .map(row => [row.querySelector('.item-check').dataset.id, row]));
+    if (updateSource && list.length && list.every(item => existingRows.has(item.id))) {
+      const visibleIds = new Set(list.map(item => item.id));
+      for (const [id, row] of existingRows) if (!visibleIds.has(id)) row.remove();
+      for (const item of list) {
+        const row = existingRows.get(item.id);
+        row.querySelector('.item-check').checked = item.checked;
+        row.querySelector('.qty-input').value = item.quantity;
+        row.querySelector('.col-qty').dataset.quantity = item.quantity;
+        row.querySelector('.review-reason').textContent = reviewReasons(item);
+      }
+      if (focusedId && !focused.isConnected) restoreRowFocus();
+      return;
+    }
+
     itemTable.className = 'item-table';
     itemTable.innerHTML = '';
 
@@ -455,6 +687,7 @@
         </svg>
         <p class="text-sm text-gray-500">${totalItems === 0 ? t('msg.noItems') : t('msg.noMatchingItems')}</p>
       </div>`;
+      restoreRowFocus();
       return;
     }
 
@@ -489,7 +722,7 @@
         <div class="col-check">
           <input type="checkbox" data-id="${escapeHtml(it.id)}" aria-label="${escapeHtml(t('item.check', {name: getL(it, 'name')}))}" ${it.checked ? 'checked' : ''} class="item-check cursor-pointer focus:ring-2 focus:ring-blue-500"/>
         </div>
-        <div class="col-name">${escapeHtml(getL(it, 'name'))}</div>
+        <div class="col-name-cell"><div class="col-name">${escapeHtml(getL(it, 'name'))}</div><p class="review-reason">${escapeHtml(reviewReasons(it))}</p></div>
         <div class="col-category">${escapeHtml(getL(it, 'category'))}</div>
         <div class="col-weight" data-label="${escapeHtml(t('th.weight'))}"><span class="weight-badge weight-${getWeightClass(it.weight_g || 0)}">${it.weight_g ?? 0}</span></div>
         <div class="col-qty" data-quantity="${it.quantity ?? 1}">
@@ -523,7 +756,7 @@
       cb.addEventListener('change', e=>{
         const id = e.target.dataset.id;
         const it = state.items.find(x=>x.id===id);
-        if (it) { it.checked = e.target.checked; markDirty(); renderTotals(); }
+        if (it) { it.checked = e.target.checked; markDirty(); renderAll(e.target); }
       });
     });
     itemTable.querySelectorAll('.qty-input').forEach(input=>{
@@ -541,8 +774,7 @@
           e.target.closest('.col-qty').dataset.quantity = newQty;
           e.target.value = newQty;
           markDirty();
-          renderTotals();
-          renderDetail(state.selectedItemId);
+          renderAll(e.target);
         }
       });
     });
@@ -569,6 +801,7 @@
         }
       });
     });
+    restoreRowFocus();
   }
 
   function renderDetail(id) {
@@ -817,7 +1050,7 @@
     renderAll();
     closeModal();
     const savedButton = [...itemTable.querySelectorAll('.editBtn')].find(button => button.dataset.id === payload.id);
-    if (editingId && savedButton) savedButton.focus();
+    if (editingId) (savedButton || reviewFilter).focus();
   });
 
   addItemBtn.addEventListener('click', ()=> openItemModal('add'));
@@ -1769,6 +2002,23 @@
   globalSearch.addEventListener('input', ()=> renderList());
   filterDual.addEventListener('change', ()=> renderList());
   filterHazard.addEventListener('change', ()=> renderList());
+  reviewFilter.addEventListener('change', () => renderList());
+  document.getElementById('resetFilters').addEventListener('click', () => {
+    globalSearch.value = '';
+    filterDual.checked = false;
+    filterHazard.checked = false;
+    reviewFilter.value = 'all';
+    renderList();
+  });
+
+  function filterDescription() {
+    const filters = [];
+    if (globalSearch.value.trim()) filters.push(t('label.search') + '=' + globalSearch.value.trim());
+    if (filterDual.checked) filters.push(t('filter.dualUseOnly'));
+    if (filterHazard.checked) filters.push(t('filter.hazardOnly'));
+    if (reviewFilter.value !== 'all') filters.push(t('review.label') + '=' + reviewFilter.selectedOptions[0].textContent);
+    return filters.join('; ') || t('review.none');
+  }
 
   // Category filter functionality
   let currentCategory = 'all';
@@ -1935,6 +2185,8 @@
   document.addEventListener('langchange', () => {
     renderAll();
     renderPresetOptions(currentCategory);
+    renderImportPreview();
+    setImportStatus(importStatusKey);
     if (graphModal.classList.contains('active')) drawGraphImage();
   });
   window.addEventListener('beforeunload', event => {
@@ -1948,6 +2200,7 @@
   // ============================================================
   // 印刷前にヘッダーとサマリーを更新
   window.addEventListener('beforeprint', () => {
+    finishPointerRender();
     const printTitle = document.getElementById('printTitle');
     const printDate = document.getElementById('printDate');
     const printSummary = document.getElementById('printSummary');
@@ -1968,10 +2221,13 @@
       const totalWeight = totals.weight;
       const totalVolume = totals.volume;
       const summaryText = currentLang === 'ja'
-        ? `合計: ${state.items.length}アイテム | チェック済み: ${checkedItems.length}アイテム | 重量: ${totalWeight}g | 体積: ${totalVolume}cm³`
-        : `Total: ${state.items.length} items | Checked: ${checkedItems.length} items | Weight: ${totalWeight}g | Volume: ${totalVolume}cm³`;
+        ? `リスト全体: ${state.items.length}アイテム | チェック済み: ${checkedItems.length}アイテム | 重量: ${totalWeight}g | 体積: ${totalVolume}cm³`
+        : `Whole list: ${state.items.length} items | Checked: ${checkedItems.length} items | Weight: ${totalWeight}g | Volume: ${totalVolume}cm³`;
       printSummary.textContent = summaryText;
     }
+    document.getElementById('printScope').textContent = t('review.printScope', {
+      shown: filteredItems().length, total: state.items.length, filters: filterDescription()
+    });
   });
 
   // アプリケーション起動
