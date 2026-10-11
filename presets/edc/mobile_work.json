@@ -1,0 +1,274 @@
+{
+  "category": "edc",
+  "name_ja": "外出先でのPC作業",
+  "name_en": "Working on a Laptop Away from Home",
+  "description_ja": "外出先でノートPCを使う作業の例です。接続先の端子、電源、机の広さを確認し、使わない周辺機器を外してください。重量と容積は実測していない計算用の例です。数量と推奨数も出発点となる例で、必要量や準備の完了を示しません。実際に持参する品の測定値と予定に合わせて調整してください。",
+  "description_en": "An example list for working on a laptop away from home. Check the available connectors, power, and desk space, and remove peripherals you will not use. Weights and volumes are unmeasured calculation examples. Quantities and recommended quantities are starting examples, not a statement of required amounts or completed preparation. Adjust them to measurements of your actual items and your plans.",
+  "measurement_basis": "illustrative",
+  "items": [
+    {
+      "id": "daily_phone",
+      "name_ja": "スマートフォン",
+      "name_en": "Smartphone",
+      "category_ja": "電子機器",
+      "category_en": "Electronics",
+      "weight_g": 200,
+      "volume_cm3": 100,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": true,
+      "purpose_short_ja": "連絡、地図、予定の確認",
+      "purpose_short_en": "Communication, maps, and schedules",
+      "description_ja": "連絡先や予定を確認する携帯端末の例です。充電状態や利用するサービスを出発前に確認してください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example mobile device for checking contacts and schedules. Check its charge and the services you plan to use before departure. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "work_laptop",
+      "name_ja": "ノートPC",
+      "name_en": "Laptop",
+      "category_ja": "電子機器",
+      "category_en": "Electronics",
+      "weight_g": 1300,
+      "volume_cm3": 1100,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": true,
+      "purpose_short_ja": "文書作成、資料表示、作業環境の持参",
+      "purpose_short_en": "Writing documents, showing materials, and carrying a work environment",
+      "description_ja": "ノートPC本体だけの例です。充電器やスリーブは含まず、別の項目で数えます。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "This example covers the laptop alone. The charger and sleeve are excluded and counted separately. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "work_laptop_charger",
+      "name_ja": "PC用充電器（電源コード込み）",
+      "name_en": "Laptop charger with power cord",
+      "category_ja": "電子機器",
+      "category_en": "Electronics",
+      "weight_g": 230,
+      "volume_cm3": 240,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "使用するノートPCへの給電",
+      "purpose_short_en": "Powering the laptop you use",
+      "description_ja": "PC用充電器と付属電源コードを合わせた例です。使用するPCとの対応を確認してください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example laptop charger together with its power cord. Check that it is compatible with your laptop. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "daily_usb_c_cable",
+      "name_ja": "USB-Cケーブル",
+      "name_en": "USB-C cable",
+      "category_ja": "電子機器",
+      "category_en": "Electronics",
+      "weight_g": 40,
+      "volume_cm3": 45,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "対応する機器の充電や接続",
+      "purpose_short_en": "Charging or connecting compatible devices",
+      "description_ja": "ケーブル1本の例です。端子だけでなく、使用する機器と用途への対応も確認してください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example of one cable. Check compatibility with the devices and intended task, not just the connector shape. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "work_wired_mouse",
+      "name_ja": "有線マウス",
+      "name_en": "Wired mouse",
+      "category_ja": "電子機器",
+      "category_en": "Electronics",
+      "weight_g": 85,
+      "volume_cm3": 140,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "机上でのポインター操作",
+      "purpose_short_en": "Pointer control at a desk",
+      "description_ja": "接続ケーブルを含む有線マウスの例です。使用するPCに接続できることを確認してください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example wired mouse including its cable. Check that it can connect to the laptop you use. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "work_wired_headset",
+      "name_ja": "有線ヘッドセット",
+      "name_en": "Wired headset",
+      "category_ja": "電子機器",
+      "category_en": "Electronics",
+      "weight_g": 150,
+      "volume_cm3": 500,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "通話やオンライン会議での音声入出力",
+      "purpose_short_en": "Audio input and output for calls and online meetings",
+      "description_ja": "接続ケーブルを含むヘッドセットの例です。使用するPCでマイクと音声出力を確認してください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example headset including its cable. Test its microphone and audio output with the laptop you use. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "daily_notebook",
+      "name_ja": "小型ノート",
+      "name_en": "Small notebook",
+      "category_ja": "文具",
+      "category_en": "Stationery",
+      "weight_g": 120,
+      "volume_cm3": 160,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "予定、作業メモ、聞き取った内容の記録",
+      "purpose_short_en": "Recording plans, work notes, and discussion points",
+      "description_ja": "持ち運ぶノート1冊の例です。紙の大きさやページ数は用途に合わせて選んでください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example of one notebook to carry. Choose the page size and page count for your task. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "daily_pen",
+      "name_ja": "ボールペン",
+      "name_en": "Ballpoint pen",
+      "category_ja": "文具",
+      "category_en": "Stationery",
+      "weight_g": 15,
+      "volume_cm3": 15,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "紙への記入やメモ",
+      "purpose_short_en": "Writing on paper and taking notes",
+      "description_ja": "ボールペン1本の例です。出発前に書けることを確認してください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example of one ballpoint pen. Check that it writes before departure. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "work_cable_pouch",
+      "name_ja": "ケーブル用ポーチ（空）",
+      "name_en": "Cable pouch (empty)",
+      "category_ja": "収納",
+      "category_en": "Storage",
+      "weight_g": 70,
+      "volume_cm3": 150,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "小型の接続用品をまとめる",
+      "purpose_short_en": "Organizing small connection accessories",
+      "description_ja": "空のポーチだけを数える例です。中のケーブルや充電器は別の項目で数え、重複して加算しないでください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "This example counts only the empty pouch. Count cables and chargers separately to avoid adding them twice. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "work_laptop_sleeve",
+      "name_ja": "ノートPC用スリーブ（空）",
+      "name_en": "Laptop sleeve (empty)",
+      "category_ja": "収納",
+      "category_en": "Storage",
+      "weight_g": 180,
+      "volume_cm3": 450,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "ノートPCをほかの荷物と分ける",
+      "purpose_short_en": "Separating the laptop from other packed items",
+      "description_ja": "空のスリーブだけの例です。PC本体は別の項目で数えます。PCの大きさに合うものを選んでください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "This example covers only an empty sleeve. Count the laptop separately and choose a sleeve that fits it. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "daily_document_folder",
+      "name_ja": "書類入り薄型フォルダー",
+      "name_en": "Slim folder with documents",
+      "category_ja": "書類",
+      "category_en": "Documents",
+      "weight_g": 150,
+      "volume_cm3": 300,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "必要な紙の資料をまとめて持ち運ぶ",
+      "purpose_short_en": "Keeping required paper documents together",
+      "description_ja": "薄型フォルダーと少量の書類を合わせた例です。利用する資料だけを入れ、内容が変わったら量り直してください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example slim folder with a small set of documents. Include only the papers you need and remeasure when the contents change. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    }
+  ]
+}

@@ -68,28 +68,28 @@
       <div class="controls-row">
         <div class="control-group">
           <label class="control-label" data-i18n="label.category">カテゴリー</label>
-          <div class="category-buttons">
-            <button class="category-filter-btn active" data-category="all" data-i18n="cat.all">All</button>
-            <button class="category-filter-btn" data-category="evasion" data-i18n="cat.evasion">脱出</button>
-            <button class="category-filter-btn" data-category="edc" data-i18n="cat.edc">日常</button>
-            <button class="category-filter-btn" data-category="rescue" data-i18n="cat.rescue">救助</button>
-            <button class="category-filter-btn" data-category="security" data-i18n="cat.security">警備</button>
-            <button class="category-filter-btn" data-category="disaster" data-i18n="cat.disaster">災害</button>
-            <button class="category-filter-btn" data-category="hacker" data-i18n="cat.hacker">IT</button>
-            <button class="category-filter-btn" data-category="cyber_ninja" data-i18n="cat.cyber_ninja">忍者</button>
-          </div>
+          <div id="presetCategories" class="category-buttons"></div>
         </div>
       </div>
 
       <div class="controls-row">
         <div class="control-group">
+          <label for="presetSearch" class="control-label" data-i18n="catalog.search">プリセットを探す</label>
+          <input id="presetSearch" type="search" class="form-input" data-i18n-placeholder="catalog.placeholder" aria-describedby="presetMatches" />
+          <p id="presetMatches" class="scope-note" role="status" aria-live="polite"></p>
+        </div>
+        <div class="control-group">
           <label for="presetSelect" class="control-label" data-i18n="label.preset">プリセット</label>
-          <div class="flex gap-2 items-center">
-            <select id="presetSelect" class="form-select text-sm flex-1"></select>
+          <div class="preset-selection">
+            <select id="presetSelect" class="form-select text-sm flex-1" aria-describedby="presetPreview"></select>
+            <button id="loadPresetBtn" class="btn btn-primary" data-i18n="catalog.load" disabled>選択した構成を読み込む</button>
             <button id="renamePresetBtn" class="btn btn-secondary btn-sm hidden" data-i18n-title="preset.rename.title" title="選択中のカスタムプリセットの名前を変更">✏️</button>
             <button id="deletePresetBtn" class="btn btn-secondary btn-sm hidden" data-i18n-title="preset.delete.title" title="選択中のカスタムプリセットを削除">🗑️</button>
           </div>
+          <p id="presetPreview" class="preset-preview"></p>
         </div>
+      </div>
+      <div class="controls-row">
         <div class="control-group">
           <label for="globalSearch" class="control-label" data-i18n="label.search">検索</label>
           <input id="globalSearch" type="search" placeholder="アイテムを検索..." data-i18n-placeholder="placeholder.search" class="form-input text-sm" />
@@ -505,6 +505,7 @@
   </footer>
 
   <script src="loadout-core.js"></script>
+  <script src="loadout-catalog.js"></script>
   <script src="loadout-store.js"></script>
   <script src="i18n.js"></script>
   <script src="app.js"></script>

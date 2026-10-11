@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-OpsLoadout is a browser-based packing checklist tool for planning examples across SERE, embassy, organizational, disaster-preparedness, and everyday-carry scenarios. It includes 22 presets with 334 item entries. It supports defensive education and lawful preparation, but does not determine whether equipment is safe, sufficient, or legal.
+OpsLoadout is a browser-based packing checklist tool for planning examples across SERE, embassy, organizational, disaster-preparedness, and everyday-carry scenarios. It includes 28 presets with 398 item entries. It supports defensive education and lawful preparation, but does not determine whether equipment is safe, sufficient, or legal.
 
 Expanded Packing Features:
 - Quantity Management: Track current and recommended quantities as integers from 0 to 999; preserve zero
@@ -22,7 +22,7 @@ Preset source titles refer to materials such as the following. A source title al
 - Japanese disaster preparedness guidelines (内閣府防災情報)
 
 Design Principles:
-- Source transparency: all 334 bundled entries include source titles; 327 have no URL-bearing source. Do not invent URLs or label all data as verified.
+- Source transparency: all 398 bundled entries include source titles; 391 have no URL-bearing source. Do not invent URLs or label all data as verified.
 - Educational use: support checklist preparation and equipment review, not certification or operational instructions.
 - Legal caution: `dual_use` and `hazard_flag` provide prompts for review. Absence of a flag does not imply unrestricted use.
 - Numeric limits: weights and volumes are estimates. Radar values are unvalidated sample ratings, not survival, readiness, or legality measurements.

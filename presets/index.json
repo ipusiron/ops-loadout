@@ -28,6 +28,14 @@
     "cyber_ninja": {
       "ja": "サイバー忍者",
       "en": "Cyber Ninja"
+    },
+    "travel": {
+      "ja": "旅行・出張",
+      "en": "Travel / Business Trips"
+    },
+    "event": {
+      "ja": "イベント・運営",
+      "en": "Events / Organizing"
     }
   },
   "presets": {
@@ -36,154 +44,258 @@
       "name_ja": "大使館脱出型",
       "name_en": "Embassy Evacuation",
       "item_count": 20,
-      "file": "evasion/embassy.json"
+      "file": "evasion/embassy.json",
+      "description_ja": "在外滞在からの移動準備を整理する例。状況や当局の案内に合わせて確認します。",
+      "description_en": "Example for organizing departure preparations while abroad. Review it against the situation and official guidance."
     },
     "sere": {
       "category": "evasion",
       "name_ja": "SERE航空兵型",
       "name_en": "SERE Aircrew",
       "item_count": 10,
-      "file": "evasion/sere.json"
+      "file": "evasion/sere.json",
+      "description_ja": "航空兵向け装備の参考例を確認する学習用構成。実務手順や訓練の代替ではありません。",
+      "description_en": "Educational list based on aircrew equipment examples; not a substitute for procedures or training."
     },
     "urban": {
       "category": "edc",
       "name_ja": "都市潜入型",
       "name_en": "Urban Evasion",
       "item_count": 10,
-      "file": "edc/urban.json"
+      "file": "edc/urban.json",
+      "description_ja": "都市で持ち歩く道具の参考例。携行や使用の条件は利用者が確認します。",
+      "description_en": "Examples of tools carried in urban settings. Users must check conditions for carrying and using them."
     },
     "firefighter": {
       "category": "rescue",
       "name_ja": "消防隊員型",
       "name_en": "Firefighter",
       "item_count": 10,
-      "file": "rescue/firefighter.json"
+      "file": "rescue/firefighter.json",
+      "description_ja": "消防活動に関連する装備の整理例。所属組織の装備基準を置き換えません。",
+      "description_en": "Example for organizing firefighting-related equipment; not a replacement for organizational requirements."
     },
     "sar": {
       "category": "rescue",
       "name_ja": "山岳救助隊型",
       "name_en": "Search and Rescue",
       "item_count": 10,
-      "file": "rescue/sar.json"
+      "file": "rescue/sar.json",
+      "description_ja": "山岳捜索・救助に関連する装備の整理例。実地の判断や訓練を代替しません。",
+      "description_en": "Example for organizing mountain search-and-rescue equipment; not a substitute for field judgment or training."
     },
     "security_guard": {
       "category": "security",
       "name_ja": "警備員型",
       "name_en": "Security Guard",
       "item_count": 10,
-      "file": "security/security_guard.json"
+      "file": "security/security_guard.json",
+      "description_ja": "警備業務で扱う品の確認例。担当業務と組織の規則に合わせて調整します。",
+      "description_en": "Example checklist for security work. Adjust it to assigned duties and organizational rules."
     },
     "disaster": {
       "category": "disaster",
       "name_ja": "災害対応型",
       "name_en": "Disaster Preparedness",
       "item_count": 20,
-      "file": "disaster/disaster.json"
+      "file": "disaster/disaster.json",
+      "description_ja": "災害時に持ち出す品を整理する例。人数・移動条件・個人事情に合わせて調整します。",
+      "description_en": "Example for organizing items to carry during a disaster. Adjust for people, travel conditions, and individual needs."
     },
     "hacker": {
       "category": "hacker",
       "name_ja": "ハッカー型",
       "name_en": "Hacker/IT",
       "item_count": 15,
-      "file": "hacker/hacker.json"
+      "file": "hacker/hacker.json",
+      "description_ja": "IT作業用の機器・ケーブル・記録用品を整理する例。許可された作業に使用します。",
+      "description_en": "Example for organizing devices, cables, and notes for authorized IT work."
     },
     "pentest": {
       "category": "hacker",
       "name_ja": "ペネトレーションテスター型",
       "name_en": "Penetration Tester",
       "item_count": 15,
-      "file": "hacker/pentest.json"
+      "file": "hacker/pentest.json",
+      "description_ja": "許可されたセキュリティ診断に使う道具の確認例。作業範囲は別途合意が必要です。",
+      "description_en": "Example equipment checklist for authorized security testing. The scope of work must be agreed separately."
     },
     "locksmith": {
       "category": "security",
       "name_ja": "錠前師型",
       "name_en": "Locksmith",
       "item_count": 27,
-      "file": "security/locksmith.json"
+      "file": "security/locksmith.json",
+      "description_ja": "錠前業務に関係する道具の整理例。所有・携行・作業の権限を確認します。",
+      "description_en": "Example for organizing locksmith tools. Check possession, carrying conditions, and authorization for the work."
     },
     "neteng": {
       "category": "hacker",
       "name_ja": "ネットワークエンジニア型",
       "name_en": "Network Engineer",
       "item_count": 15,
-      "file": "hacker/neteng.json"
+      "file": "hacker/neteng.json",
+      "description_ja": "ネットワークの接続確認・保守に使う機器や配線用品を整理する例。",
+      "description_en": "Example for organizing devices and cabling supplies for network checks and maintenance."
     },
     "forensic": {
       "category": "hacker",
       "name_ja": "フォレンジック調査員型",
       "name_en": "Forensic Investigator",
       "item_count": 15,
-      "file": "hacker/forensic.json"
+      "file": "hacker/forensic.json",
+      "description_ja": "許可された調査で使う記録・保管・接続用品を整理する例。証拠保全手順の代替ではありません。",
+      "description_en": "Example for organizing recording, storage, and connection supplies for authorized investigations; not a substitute for evidence-handling procedures."
     },
     "hwdev": {
       "category": "hacker",
       "name_ja": "ハードウェア開発者型",
       "name_en": "Hardware Developer",
       "item_count": 15,
-      "file": "hacker/hwdev.json"
+      "file": "hacker/hwdev.json",
+      "description_ja": "電子工作・ハードウェア開発に持参する測定器や部品を整理する例。",
+      "description_en": "Example for organizing instruments and components for electronics and hardware development."
     },
     "sysadmin": {
       "category": "hacker",
       "name_ja": "システム管理者型",
       "name_en": "System Administrator",
       "item_count": 15,
-      "file": "hacker/sysadmin.json"
+      "file": "hacker/sysadmin.json",
+      "description_ja": "システム保守に持参する機器・接続用品・記録用品を確認する例。",
+      "description_en": "Example checklist for devices, adapters, and notes used in system maintenance."
     },
     "datarecovery": {
       "category": "hacker",
       "name_ja": "データ復旧技術者型",
       "name_en": "Data Recovery Technician",
       "item_count": 15,
-      "file": "hacker/datarecovery.json"
+      "file": "hacker/datarecovery.json",
+      "description_ja": "許可されたデータ復旧作業で使う接続・保管用品を整理する例。復旧成功を保証しません。",
+      "description_en": "Example for organizing connection and storage supplies for authorized data recovery; does not guarantee successful recovery."
     },
     "rftech": {
       "category": "hacker",
       "name_ja": "RF技術者型",
       "name_en": "RF Technician",
       "item_count": 15,
-      "file": "hacker/rftech.json"
+      "file": "hacker/rftech.json",
+      "description_ja": "無線・RF作業に使う測定器や接続用品を整理する例。利用条件は別途確認します。",
+      "description_en": "Example for organizing instruments and adapters for radio and RF work. Check applicable operating conditions separately."
     },
     "prepper": {
       "category": "disaster",
       "name_ja": "プレッパー型",
       "name_en": "Prepper/Survivalist",
       "item_count": 20,
-      "file": "disaster/prepper.json"
+      "file": "disaster/prepper.json",
+      "description_ja": "備えに使う品を持ち出し構成として整理する例。必要量や対応可能期間は判定しません。",
+      "description_en": "Example for organizing preparedness items into a carrying list; does not determine required quantities or duration of support."
     },
     "bushcraft_minimal": {
       "category": "disaster",
       "name_ja": "ブッシュクラフト型（ミニマル）",
       "name_en": "Bushcraft Minimal",
       "item_count": 5,
-      "file": "disaster/bushcraft_minimal.json"
+      "file": "disaster/bushcraft_minimal.json",
+      "description_ja": "ブッシュクラフトの5品の参考構成。軽量な例として数量と携行重量を確認します。",
+      "description_en": "Five-item bushcraft example for reviewing quantities and carried weight in a small list."
     },
     "bushcraft_standard": {
       "category": "disaster",
       "name_ja": "ブッシュクラフト型（スタンダード）",
       "name_en": "Bushcraft Standard",
       "item_count": 15,
-      "file": "disaster/bushcraft_standard.json"
+      "file": "disaster/bushcraft_standard.json",
+      "description_ja": "ブッシュクラフトの15品の参考構成。共通IDの品をミニマル構成と比較できます。",
+      "description_en": "Fifteen-item bushcraft example with shared item IDs for comparison with the minimal list."
     },
     "bushcraft_extended": {
       "category": "disaster",
       "name_ja": "ブッシュクラフト型（拡張）",
       "name_en": "Bushcraft Extended",
       "item_count": 27,
-      "file": "disaster/bushcraft_extended.json"
+      "file": "disaster/bushcraft_extended.json",
+      "description_ja": "ブッシュクラフトの27品の参考構成。品目を増やしたときの重量や体積を確認します。",
+      "description_en": "Twenty-seven-item bushcraft example for reviewing weight and volume as more items are included."
     },
     "matagi": {
       "category": "disaster",
       "name_ja": "マタギ型（七つ道具）",
       "name_en": "Matagi Style (Seven Tools)",
       "item_count": 7,
-      "file": "disaster/matagi.json"
+      "file": "disaster/matagi.json",
+      "description_ja": "マタギの七つ道具に関する学習用の参考構成。取得・携行・使用の許可を示すものではありません。",
+      "description_en": "Educational example of seven Matagi tools; does not grant permission to obtain, carry, or use them."
     },
     "mijinko": {
       "category": "cyber_ninja",
       "name_ja": "ミジンコ流",
       "name_en": "Daphnia Style",
       "item_count": 23,
-      "file": "cyber_ninja/mijinko.json"
+      "file": "cyber_ninja/mijinko.json",
+      "description_ja": "ミジンコ流の道具を題材に構成と数量を整理する学習用の例。",
+      "description_en": "Educational list for organizing quantities and equipment using Daphnia-style tools as examples."
+    },
+    "commute": {
+      "category": "edc",
+      "name_ja": "通勤通学",
+      "name_en": "Commuting to Work or School",
+      "description_ja": "日帰りの通勤や通学で持ち歩く品の例です。授業や仕事で使う品を追加し、移動手段や天気に合わせて調整してください。",
+      "description_en": "An example list for a daily journey to work or school. Add the items needed for classes or work and adjust it for your transport and the weather.",
+      "item_count": 10,
+      "file": "edc/commute.json",
+      "measurement_basis": "illustrative"
+    },
+    "mobile_work": {
+      "category": "edc",
+      "name_ja": "外出先でのPC作業",
+      "name_en": "Working on a Laptop Away from Home",
+      "description_ja": "外出先でノートPCを使う作業の例です。接続先の端子、電源、机の広さを確認し、使わない周辺機器を外してください。",
+      "description_en": "An example list for working on a laptop away from home. Check the available connectors, power, and desk space, and remove peripherals you will not use.",
+      "item_count": 11,
+      "file": "edc/mobile_work.json",
+      "measurement_basis": "illustrative"
+    },
+    "business_overnight": {
+      "category": "travel",
+      "name_ja": "一泊出張",
+      "name_en": "Overnight Business Trip",
+      "description_ja": "一泊の出張で仕事道具と着替えをまとめる例です。訪問先の予定と宿泊先の備品に合わせて内容を変えてください。",
+      "description_en": "An example list combining work equipment and a change of clothing for an overnight business trip. Adjust it to your appointments and the supplies provided by your accommodation.",
+      "item_count": 12,
+      "file": "travel/business_overnight.json",
+      "measurement_basis": "illustrative"
+    },
+    "travel_short": {
+      "category": "travel",
+      "name_ja": "2〜3泊の旅行",
+      "name_en": "Two- to Three-Night Trip",
+      "description_ja": "2〜3泊の旅行で衣類と身の回り品を整理する例です。衣類の数量は例であり、日程、季節、洗濯の予定に合わせて変えてください。",
+      "description_en": "An example list of clothing and personal items for a two- to three-night trip. Clothing quantities are examples; adjust them for your schedule, the season, and laundry plans.",
+      "item_count": 12,
+      "file": "travel/travel_short.json",
+      "measurement_basis": "illustrative"
+    },
+    "presentation": {
+      "category": "event",
+      "name_ja": "登壇とワークショップ",
+      "name_en": "Presentations and Workshops",
+      "description_ja": "登壇やワークショップで説明者が使う品の例です。会場が用意する機材や参加人数を確認し、配布資料や実習用品は別途追加してください。",
+      "description_en": "An example list for a presenter or workshop facilitator. Check the equipment provided by the venue and the attendee count, and add handouts or activity supplies separately.",
+      "item_count": 10,
+      "file": "event/presentation.json",
+      "measurement_basis": "illustrative"
+    },
+    "exhibition": {
+      "category": "event",
+      "name_ja": "展示と出展",
+      "name_en": "Exhibitions and Booths",
+      "description_ja": "卓上での展示や出展を準備する例です。展示内容、来場者数、主催者の設営案内に合わせて品目と数量を変えてください。",
+      "description_en": "An example list for preparing a tabletop exhibit or booth. Adjust the items and quantities for your display, expected visitor count, and the organizer's setup guidance.",
+      "item_count": 9,
+      "file": "event/exhibition.json",
+      "measurement_basis": "illustrative"
     }
   }
 }

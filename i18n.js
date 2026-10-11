@@ -7,6 +7,15 @@
 
 const I18N = {
   en: {
+    "catalog.search": "Find a preset",
+    "catalog.placeholder": "Search names and purposes (Japanese / English)",
+    "catalog.load": "Load selected list",
+    "catalog.choose": "Choose a list to preview",
+    "catalog.matches": "Matching presets: {presets}; saved lists: {saved}",
+    "catalog.preview": "{count} items. {description}",
+    "catalog.saved": "Saved checklist. Loading replaces the working list after any required confirmation.",
+    "catalog.noSelection": "Selecting a candidate does not replace the working list. Use the load button after checking its description.",
+    "catalog.illustrative": "Weights and volumes are calculation examples, not measurements. Replace them with measurements of your own items. Quantities are adjustable examples; this list does not establish safety or sufficiency.",
     // Header
     "app.subtitle": "Mission-ready checklist tool for planning, editing, and exporting equipment loadouts",
 
@@ -225,6 +234,15 @@ const I18N = {
   },
 
   ja: {
+    "catalog.search": "プリセットを探す",
+    "catalog.placeholder": "名前・用途を検索（日英どちらでも）",
+    "catalog.load": "選択した構成を読み込む",
+    "catalog.choose": "確認する構成を選択",
+    "catalog.matches": "候補: プリセット {presets}件・保存リスト {saved}件",
+    "catalog.preview": "{count}アイテム。{description}",
+    "catalog.saved": "保存済みチェックリストです。読み込み時は必要な確認を経て、作業中のリストを置き換えます。",
+    "catalog.noSelection": "候補を選ぶだけでは作業中のリストは変わりません。説明を確認してから読み込みボタンを押してください。",
+    "catalog.illustrative": "重量・体積は計算用の例示値で、実測値ではありません。実用品の測定値に置き換えてください。数量も調整するための例で、安全性や物資の充足を示すリストではありません。",
     // Header
     "app.subtitle": "装備構成を計画・編集・エクスポートする任務対応型チェックリストツール",
 

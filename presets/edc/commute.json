@@ -1,0 +1,250 @@
+{
+  "category": "edc",
+  "name_ja": "通勤通学",
+  "name_en": "Commuting to Work or School",
+  "description_ja": "日帰りの通勤や通学で持ち歩く品の例です。授業や仕事で使う品を追加し、移動手段や天気に合わせて調整してください。重量と容積は実測していない計算用の例です。数量と推奨数も出発点となる例で、必要量や準備の完了を示しません。実際に持参する品の測定値と予定に合わせて調整してください。",
+  "description_en": "An example list for a daily journey to work or school. Add the items needed for classes or work and adjust it for your transport and the weather. Weights and volumes are unmeasured calculation examples. Quantities and recommended quantities are starting examples, not a statement of required amounts or completed preparation. Adjust them to measurements of your actual items and your plans.",
+  "measurement_basis": "illustrative",
+  "items": [
+    {
+      "id": "daily_phone",
+      "name_ja": "スマートフォン",
+      "name_en": "Smartphone",
+      "category_ja": "電子機器",
+      "category_en": "Electronics",
+      "weight_g": 200,
+      "volume_cm3": 100,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": true,
+      "purpose_short_ja": "連絡、地図、予定の確認",
+      "purpose_short_en": "Communication, maps, and schedules",
+      "description_ja": "連絡先や予定を確認する携帯端末の例です。充電状態や利用するサービスを出発前に確認してください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example mobile device for checking contacts and schedules. Check its charge and the services you plan to use before departure. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "daily_card_wallet",
+      "name_ja": "カード入り財布",
+      "name_en": "Wallet with cards",
+      "category_ja": "身の回り品",
+      "category_en": "Personal items",
+      "weight_g": 120,
+      "volume_cm3": 160,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "支払いや移動に使うカードの整理",
+      "purpose_short_en": "Organizing cards for payments and transport",
+      "description_ja": "財布と中に入れるカードを合わせた1点の例です。現金やカードの枚数を変える場合は、まとめて量り直してください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "One example unit includes a wallet and its cards. Remeasure the combined contents if you change the cash or cards. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "daily_keyring",
+      "name_ja": "鍵付きキーリング",
+      "name_en": "Key ring with keys",
+      "category_ja": "身の回り品",
+      "category_en": "Personal items",
+      "weight_g": 60,
+      "volume_cm3": 40,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "自宅や利用先の鍵をまとめる",
+      "purpose_short_en": "Keeping keys for home and other locations together",
+      "description_ja": "キーリングと普段使う鍵を合わせた例です。持ち歩く鍵の組み合わせに合わせて内容を変えてください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example key ring with everyday keys. Adjust its contents to the keys you carry. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "daily_notebook",
+      "name_ja": "小型ノート",
+      "name_en": "Small notebook",
+      "category_ja": "文具",
+      "category_en": "Stationery",
+      "weight_g": 120,
+      "volume_cm3": 160,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "予定、作業メモ、聞き取った内容の記録",
+      "purpose_short_en": "Recording plans, work notes, and discussion points",
+      "description_ja": "持ち運ぶノート1冊の例です。紙の大きさやページ数は用途に合わせて選んでください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example of one notebook to carry. Choose the page size and page count for your task. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "daily_pen",
+      "name_ja": "ボールペン",
+      "name_en": "Ballpoint pen",
+      "category_ja": "文具",
+      "category_en": "Stationery",
+      "weight_g": 15,
+      "volume_cm3": 15,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "紙への記入やメモ",
+      "purpose_short_en": "Writing on paper and taking notes",
+      "description_ja": "ボールペン1本の例です。出発前に書けることを確認してください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example of one ballpoint pen. Check that it writes before departure. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "daily_umbrella",
+      "name_ja": "折りたたみ傘",
+      "name_en": "Folding umbrella",
+      "category_ja": "身の回り品",
+      "category_en": "Personal items",
+      "weight_g": 250,
+      "volume_cm3": 400,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "移動時の雨への対応",
+      "purpose_short_en": "Use during rainy journeys",
+      "description_ja": "収納袋に入れた折りたたみ傘の例です。天気や移動手段に合わせて持参するか決めてください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example folding umbrella in its cover. Decide whether to carry it based on the weather and your transport. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "daily_handkerchief",
+      "name_ja": "ハンカチ",
+      "name_en": "Handkerchief",
+      "category_ja": "身の回り品",
+      "category_en": "Personal items",
+      "weight_g": 30,
+      "volume_cm3": 60,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "手を洗った後の水分を拭く",
+      "purpose_short_en": "Drying hands after washing",
+      "description_ja": "折りたたんだハンカチ1枚の例です。帰宅後に取り替える品を整理する項目としても使えます。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example of one folded handkerchief. This entry can also help organize items to replace after returning home. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "daily_filled_bottle",
+      "name_ja": "飲み物入りボトル",
+      "name_en": "Bottle with a drink",
+      "category_ja": "飲食物",
+      "category_en": "Food and drink",
+      "weight_g": 600,
+      "volume_cm3": 700,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "移動中に飲むものを持ち歩く",
+      "purpose_short_en": "Carrying a drink for the journey",
+      "description_ja": "容器と中身を合わせた例です。ボトルの公称容量を容積欄へ写すのではなく、持ち運ぶ状態で量り直してください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "This example includes both the bottle and its contents. Measure it as packed rather than copying the bottle's advertised capacity into the volume field. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "daily_tissues",
+      "name_ja": "ポケットティッシュ",
+      "name_en": "Pocket tissues",
+      "category_ja": "身の回り品",
+      "category_en": "Personal items",
+      "weight_g": 20,
+      "volume_cm3": 50,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "身の回りの汚れや水分を拭く",
+      "purpose_short_en": "Wiping small spills and everyday messes",
+      "description_ja": "ポケットティッシュ1袋の例です。未使用の予備を数える単位として1袋を使っています。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example of one packet of pocket tissues. One packet is the counting unit for unused spares. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "daily_document_folder",
+      "name_ja": "書類入り薄型フォルダー",
+      "name_en": "Slim folder with documents",
+      "category_ja": "書類",
+      "category_en": "Documents",
+      "weight_g": 150,
+      "volume_cm3": 300,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "必要な紙の資料をまとめて持ち運ぶ",
+      "purpose_short_en": "Keeping required paper documents together",
+      "description_ja": "薄型フォルダーと少量の書類を合わせた例です。利用する資料だけを入れ、内容が変わったら量り直してください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example slim folder with a small set of documents. Include only the papers you need and remeasure when the contents change. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    }
+  ]
+}

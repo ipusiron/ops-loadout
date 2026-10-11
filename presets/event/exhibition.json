@@ -1,0 +1,226 @@
+{
+  "category": "event",
+  "name_ja": "展示と出展",
+  "name_en": "Exhibitions and Booths",
+  "description_ja": "卓上での展示や出展を準備する例です。展示内容、来場者数、主催者の設営案内に合わせて品目と数量を変えてください。重量と容積は実測していない計算用の例です。数量と推奨数も出発点となる例で、必要量や準備の完了を示しません。実際に持参する品の測定値と予定に合わせて調整してください。",
+  "description_en": "An example list for preparing a tabletop exhibit or booth. Adjust the items and quantities for your display, expected visitor count, and the organizer's setup guidance. Weights and volumes are unmeasured calculation examples. Quantities and recommended quantities are starting examples, not a statement of required amounts or completed preparation. Adjust them to measurements of your actual items and your plans.",
+  "measurement_basis": "illustrative",
+  "items": [
+    {
+      "id": "event_tabletop_stand",
+      "name_ja": "卓上展示スタンド",
+      "name_en": "Tabletop display stand",
+      "category_ja": "展示用品",
+      "category_en": "Display supplies",
+      "weight_g": 300,
+      "volume_cm3": 650,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "展示物を卓上に置く",
+      "purpose_short_en": "Positioning an exhibit on a table",
+      "description_ja": "卓上スタンド1台の例です。展示物の形や会場の机に合わせて選んでください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example of one tabletop stand. Choose it for the exhibit's shape and the venue's table. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "event_leaflet",
+      "name_ja": "配布用リーフレット（1枚）",
+      "name_en": "Handout leaflet (one sheet)",
+      "category_ja": "書類",
+      "category_en": "Documents",
+      "weight_g": 10,
+      "volume_cm3": 15,
+      "quantity": 30,
+      "recommended_quantity": 30,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "製品や活動の説明を来場者へ渡す",
+      "purpose_short_en": "Giving visitors information about a product or activity",
+      "description_ja": "リーフレット1枚の例です。数量は配る予定の枚数で、束全体の重量を1枚分として入力しないでください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example of one leaflet. Set the quantity to the planned number of sheets; do not enter a whole stack's weight as the per-sheet value. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "event_demo_model",
+      "name_ja": "展示用の模型",
+      "name_en": "Display model",
+      "category_ja": "展示用品",
+      "category_en": "Display supplies",
+      "weight_g": 500,
+      "volume_cm3": 1200,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "説明する形や構成を示す",
+      "purpose_short_en": "Showing the shape or arrangement being explained",
+      "description_ja": "通電しない展示用模型1点の例です。実物の展示品に置き換えるときは、付属品も確認して量り直してください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example of one non-powered display model. When replacing it with your exhibit, check its accessories and remeasure. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "event_sign_holder",
+      "name_ja": "案内カード用スタンド",
+      "name_en": "Information card holder",
+      "category_ja": "展示用品",
+      "category_en": "Display supplies",
+      "weight_g": 80,
+      "volume_cm3": 120,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "説明カードを卓上に置く",
+      "purpose_short_en": "Holding an information card on the table",
+      "description_ja": "案内カード1枚を入れたスタンド1個の例です。展示する内容に合わせてカードを用意してください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example of one holder with one information card. Prepare the card for what you will display. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "event_paper_tape",
+      "name_ja": "紙テープ",
+      "name_en": "Paper tape",
+      "category_ja": "設営用品",
+      "category_en": "Setup supplies",
+      "weight_g": 90,
+      "volume_cm3": 150,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "許可された場所で表示物を留める",
+      "purpose_short_en": "Attaching signs where the venue permits it",
+      "description_ja": "紙テープ1巻の例です。貼り付ける場所や撤去方法は会場の案内を確認してください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example of one roll of paper tape. Check the venue's guidance on attachment locations and removal. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "event_cable_tie",
+      "name_ja": "再利用できる結束バンド",
+      "name_en": "Reusable cable tie",
+      "category_ja": "設営用品",
+      "category_en": "Setup supplies",
+      "weight_g": 5,
+      "volume_cm3": 8,
+      "quantity": 6,
+      "recommended_quantity": 6,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "小物やケーブルをまとめる",
+      "purpose_short_en": "Bundling small accessories or cables",
+      "description_ja": "結束バンド1本の例です。数量は本数で数え、束全体の値を1本分として入力しないでください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example of one reusable cable tie. Count individual ties and do not use the whole bundle's measurements as the per-tie values. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "event_tablecloth",
+      "name_ja": "卓上用クロス",
+      "name_en": "Table covering",
+      "category_ja": "展示用品",
+      "category_en": "Display supplies",
+      "weight_g": 350,
+      "volume_cm3": 1000,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "展示台の表面を覆う",
+      "purpose_short_en": "Covering the display table",
+      "description_ja": "たたんだ卓上用クロス1枚の例です。会場の机の寸法や設営の案内に合わせて選んでください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example of one folded table covering. Choose it for the table dimensions and the venue's setup guidance. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "event_transport_box",
+      "name_ja": "展示用品の運搬箱（空）",
+      "name_en": "Exhibit transport box (empty)",
+      "category_ja": "収納",
+      "category_en": "Storage",
+      "weight_g": 700,
+      "volume_cm3": 8000,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "展示用品をまとめて運ぶ",
+      "purpose_short_en": "Transporting display supplies together",
+      "description_ja": "空の運搬箱の例です。容積は外側の占有容積の例で、中の展示用品は別々に数えます。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example empty transport box. The volume represents illustrative external occupied space; count the display items inside separately. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "event_inventory_sheet",
+      "name_ja": "搬入と撤収の確認表",
+      "name_en": "Setup and teardown checklist",
+      "category_ja": "書類",
+      "category_en": "Documents",
+      "weight_g": 20,
+      "volume_cm3": 25,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "持参品と返却品を確認する",
+      "purpose_short_en": "Checking items brought in and taken out",
+      "description_ja": "紙の確認表1組の例です。借用品や会場に残す品を区別して記入してください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example set of paper checklists. Distinguish borrowed items from items that will remain at the venue. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    }
+  ]
+}

@@ -29,17 +29,17 @@ test('README metadata is shared and preserves series identifiers', () => {
 test('README preset totals and source coverage match every bundled item', () => {
   const allItems = Object.values(presets).flatMap(preset => preset.items);
   const urlCount = allItems.filter(item => item.sources.some(source => C.safeUrl(source.url))).length;
-  assert.equal(Object.keys(presets).length, 22);
-  assert.equal(allItems.length, 334);
+  assert.equal(Object.keys(presets).length, 28);
+  assert.equal(allItems.length, 398);
   assert.ok(allItems.every(item => item.sources.length > 0));
   assert.equal(urlCount, 7);
-  assert.equal(allItems.length - urlCount, 327);
-  assert.match(texts[0], /22プリセット・334アイテム/);
-  assert.match(texts[0], /URL付きは7件、URLなしは327件/);
+  assert.equal(allItems.length - urlCount, 391);
+  assert.match(texts[0], /28プリセット・398アイテム/);
+  assert.match(texts[0], /URL付きは7件、URLなしは391件/);
   // Numbers alone are not enough: require them in the source-coverage paragraph.
-  const coverage = texts[1].split('\n').find(line => /334/.test(line) && /327/.test(line));
+  const coverage = texts[1].split('\n').find(line => /398/.test(line) && /391/.test(line));
   assert.ok(coverage, 'English source coverage paragraph');
-  for (const value of [22, 334, 7, 327]) assert.match(coverage, new RegExp('\\b' + value + '\\b'));
+  for (const value of [28, 398, 7, 391]) assert.match(coverage, new RegExp('\\b' + value + '\\b'));
 });
 
 test('both README tables use actual core weight, volume and quantity totals', () => {

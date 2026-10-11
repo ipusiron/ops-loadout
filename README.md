@@ -8,8 +8,8 @@ title: "OpsLoadout"
 subtitle_ja: "緊急脱出キットのチェックリストツール"
 subtitle_en: "Operations Packing Checklist Tool"
 
-description_ja: "装備構成（Loadout）を計画・編集・確認・出力するチェックリストツール。数量とチェック状態から重量・体積を集計し、軍民両用・危険物フラグ、出典、国別の注意を記録します。22種類のプリセットを収録。安全性・合法性や必要物資の充足は判定しません。"
-description_en: "A checklist tool for planning, editing, reviewing, and exporting equipment loadouts. Calculates weight and volume from quantities and checked items, and records dual-use/hazard flags, sources, and country-specific notes. Includes 22 presets. Does not determine safety, legality, or whether supplies are sufficient."
+description_ja: "装備構成（Loadout）を計画・編集・確認・出力するチェックリストツール。数量とチェック状態から重量・体積を集計し、軍民両用・危険物フラグ、出典、国別の注意を記録します。28種類のプリセットを収録。安全性・合法性や必要物資の充足は判定しません。"
+description_en: "A checklist tool for planning, editing, reviewing, and exporting equipment loadouts. Calculates weight and volume from quantities and checked items, and records dual-use/hazard flags, sources, and country-specific notes. Includes 28 presets. Does not determine safety, legality, or whether supplies are sufficient."
 
 category_ja:
   - 物理的セキュリティ
@@ -95,7 +95,7 @@ OpsLoadoutは、任務（Operations）に合わせた装備構成（Loadout）�
 - 出典を記録：プリセット内の書名・資料名・URLを表示。ただし、記載内容と出典本文の一致や情報の新しさは保証しない
 - 教育・準備の補助：持ち物の確認に用い、危険な手順や違法行為の実行手順は扱わない
 - 注意事項を区別：`dual_use`（軍民両用）と`hazard_flag`（危険物）に応じた表示と、入力された国別のメモを参照
-- 出典情報の限界を明示：22プリセット・334アイテムに出典名を収録。URL付きは7件、URLなしは327件で、全件を出典本文と照合したものではない
+- 出典情報の限界を明示：28プリセット・398アイテムに出典名を収録。URL付きは7件、URLなしは391件で、全件を出典本文と照合したものではない
 
 ---
 
@@ -135,7 +135,7 @@ OpsLoadoutは、任務（Operations）に合わせた装備構成（Loadout）�
 
 ### 1. プリセット管理
 
-- ビルトインプリセット：22種類のシナリオ別プリセット
+- ビルトインプリセット：28種類のシナリオ別プリセット
   - 脱出・回避系：大使館脱出、SERE
   - 日常携行系：都市個人型
   - 救助・消防系：消防隊携行型、SAR（捜索救助）
@@ -146,7 +146,7 @@ OpsLoadoutは、任務（Operations）に合わせた装備構成（Loadout）�
 - 保存済みチェックリスト：作成したリストをブラウザー内に保存して再利用（localStorage）
   - 名前変更：選択中の保存済みリストの名前を編集
   - 削除：不要な保存済みリストを確認して削除
-- カテゴリフィルター：脱出/日常/救助/警備/災害/IT/サイバー忍者の7カテゴリでプリセットを絞り込み
+- カテゴリフィルター：脱出/日常/救助/警備/災害/IT/サイバー忍者/旅行・出張/イベント・運営の9カテゴリでプリセットを絞り込み
 
 ### 2. チェックリスト管理
 

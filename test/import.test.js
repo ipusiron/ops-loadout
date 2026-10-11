@@ -197,11 +197,11 @@ test('item count accepts 10000 unique entries and rejects 10001', () => {
 
 const presetRoot = path.join(__dirname, '../presets');
 const presets = JSON.parse(fs.readFileSync(path.join(presetRoot, 'index.json'), 'utf8')).presets;
-test('round-trip coverage includes all 22 presets and 334 item entries', () => {
-  assert.equal(Object.keys(presets).length, 22);
+test('round-trip coverage includes all 28 presets and 398 item entries', () => {
+  assert.equal(Object.keys(presets).length, 28);
   assert.equal(Object.values(presets).reduce((count, entry) => {
     return count + JSON.parse(fs.readFileSync(path.join(presetRoot, entry.file), 'utf8')).items.length;
-  }, 0), 334);
+  }, 0), 398);
 });
 for (const [key, entry] of Object.entries(presets)) test('export/import/export preserves preset data: ' + key, () => {
   const data = JSON.parse(fs.readFileSync(path.join(presetRoot, entry.file), 'utf8'));

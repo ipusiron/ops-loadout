@@ -25,6 +25,16 @@
   margin-bottom: 0;
 }
 
+.preset-selection { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+.controls-row > .control-group { flex: 1 1 100%; }
+.preset-selection select { min-width: 0; width: 100%; flex-basis: 100%; }
+.preset-preview { font-size: 0.875rem; line-height: 1.6; margin-top: 0.5rem; white-space: pre-line; overflow-wrap: anywhere; }
+#presetMatches { margin-bottom: 0; }
+@media (min-width: 768px) {
+  .controls-row > .control-group { flex-basis: 0; }
+  .preset-selection select { flex-basis: 16rem; }
+}
+
 .control-group {
   flex: 1;
   min-width: 200px;

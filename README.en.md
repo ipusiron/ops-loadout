@@ -8,8 +8,8 @@ title: "OpsLoadout"
 subtitle_ja: "緊急脱出キットのチェックリストツール"
 subtitle_en: "Operations Packing Checklist Tool"
 
-description_ja: "装備構成（Loadout）を計画・編集・確認・出力するチェックリストツール。数量とチェック状態から重量・体積を集計し、軍民両用・危険物フラグ、出典、国別の注意を記録します。22種類のプリセットを収録。安全性・合法性や必要物資の充足は判定しません。"
-description_en: "A checklist tool for planning, editing, reviewing, and exporting equipment loadouts. Calculates weight and volume from quantities and checked items, and records dual-use/hazard flags, sources, and country-specific notes. Includes 22 presets. Does not determine safety, legality, or whether supplies are sufficient."
+description_ja: "装備構成（Loadout）を計画・編集・確認・出力するチェックリストツール。数量とチェック状態から重量・体積を集計し、軍民両用・危険物フラグ、出典、国別の注意を記録します。28種類のプリセットを収録。安全性・合法性や必要物資の充足は判定しません。"
+description_en: "A checklist tool for planning, editing, reviewing, and exporting equipment loadouts. Calculates weight and volume from quantities and checked items, and records dual-use/hazard flags, sources, and country-specific notes. Includes 28 presets. Does not determine safety, legality, or whether supplies are sufficient."
 
 category_ja:
   - 物理的セキュリティ
@@ -95,7 +95,7 @@ You can use the tool directly in your browser. The button at the top right switc
 - Record sources: Display book titles, document names, and URLs from the presets, without guaranteeing that the entries match the source text or that the information is current
 - Support education and preparation: Help review equipment lists, without providing procedures for dangerous activities or illegal acts
 - Distinguish cautions: Display indicators for `dual_use` and `hazard_flag` and refer to the country-specific notes entered in the data
-- State source limitations: The 22 presets contain 334 item entries with source titles; 7 have URL-bearing sources and 327 do not. The entries have not all been checked against their source texts
+- State source limitations: The 28 presets contain 398 item entries with source titles; 7 have URL-bearing sources and 391 do not. The entries have not all been checked against their source texts
 
 ---
 
@@ -135,7 +135,7 @@ The tool is intended for individuals and organizations such as the following:
 
 ### 1. Preset Management
 
-- Built-in presets: 22 scenario-based presets
+- Built-in presets: 28 scenario-based presets
   - Evasion/escape: Embassy Escape, SERE
   - Everyday carry: Urban Personal
   - Rescue/fire: Firefighter, SAR
@@ -146,7 +146,7 @@ The tool is intended for individuals and organizations such as the following:
 - Saved checklists: Store and reuse lists in the browser with localStorage
   - Rename: Edit the name of the selected saved checklist
   - Delete: Confirm and delete an unwanted saved checklist
-- Category filters: Narrow the preset choices by 7 categories: evasion, everyday carry, rescue, security, disaster, IT, and cyber ninja
+- Category filters: Narrow the preset choices by 9 categories: evasion, everyday carry, rescue, security, disaster, IT, cyber ninja, travel/business trips, and events/organizing
 
 ### 2. Checklist Management
 

@@ -1,0 +1,298 @@
+{
+  "category": "travel",
+  "name_ja": "2〜3泊の旅行",
+  "name_en": "Two- to Three-Night Trip",
+  "description_ja": "2〜3泊の旅行で衣類と身の回り品を整理する例です。衣類の数量は例であり、日程、季節、洗濯の予定に合わせて変えてください。重量と容積は実測していない計算用の例です。数量と推奨数も出発点となる例で、必要量や準備の完了を示しません。実際に持参する品の測定値と予定に合わせて調整してください。",
+  "description_en": "An example list of clothing and personal items for a two- to three-night trip. Clothing quantities are examples; adjust them for your schedule, the season, and laundry plans. Weights and volumes are unmeasured calculation examples. Quantities and recommended quantities are starting examples, not a statement of required amounts or completed preparation. Adjust them to measurements of your actual items and your plans.",
+  "measurement_basis": "illustrative",
+  "items": [
+    {
+      "id": "daily_phone",
+      "name_ja": "スマートフォン",
+      "name_en": "Smartphone",
+      "category_ja": "電子機器",
+      "category_en": "Electronics",
+      "weight_g": 200,
+      "volume_cm3": 100,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": true,
+      "purpose_short_ja": "連絡、地図、予定の確認",
+      "purpose_short_en": "Communication, maps, and schedules",
+      "description_ja": "連絡先や予定を確認する携帯端末の例です。充電状態や利用するサービスを出発前に確認してください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example mobile device for checking contacts and schedules. Check its charge and the services you plan to use before departure. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "daily_usb_charger",
+      "name_ja": "USB充電器",
+      "name_en": "USB charger",
+      "category_ja": "電子機器",
+      "category_en": "Electronics",
+      "weight_g": 100,
+      "volume_cm3": 100,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "対応する携帯機器への給電",
+      "purpose_short_en": "Powering compatible mobile devices",
+      "description_ja": "携帯機器用のUSB充電器1個の例です。使用する機器とケーブルへの対応を確認してください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example of one USB charger for mobile devices. Check compatibility with your devices and cables. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "daily_usb_c_cable",
+      "name_ja": "USB-Cケーブル",
+      "name_en": "USB-C cable",
+      "category_ja": "電子機器",
+      "category_en": "Electronics",
+      "weight_g": 40,
+      "volume_cm3": 45,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "対応する機器の充電や接続",
+      "purpose_short_en": "Charging or connecting compatible devices",
+      "description_ja": "ケーブル1本の例です。端子だけでなく、使用する機器と用途への対応も確認してください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example of one cable. Check compatibility with the devices and intended task, not just the connector shape. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "daily_card_wallet",
+      "name_ja": "カード入り財布",
+      "name_en": "Wallet with cards",
+      "category_ja": "身の回り品",
+      "category_en": "Personal items",
+      "weight_g": 120,
+      "volume_cm3": 160,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "支払いや移動に使うカードの整理",
+      "purpose_short_en": "Organizing cards for payments and transport",
+      "description_ja": "財布と中に入れるカードを合わせた1点の例です。現金やカードの枚数を変える場合は、まとめて量り直してください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "One example unit includes a wallet and its cards. Remeasure the combined contents if you change the cash or cards. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "travel_shirt",
+      "name_ja": "着替え用シャツ",
+      "name_en": "Spare shirt",
+      "category_ja": "衣類",
+      "category_en": "Clothing",
+      "weight_g": 180,
+      "volume_cm3": 800,
+      "quantity": 2,
+      "recommended_quantity": 2,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "滞在中の着替え",
+      "purpose_short_en": "A change of clothing during the stay",
+      "description_ja": "たたんだシャツ1枚の例です。季節、洗濯の予定、滞在日数に合わせて数量を変えてください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example of one folded shirt. Adjust the quantity for the season, laundry plans, and length of stay. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "travel_underwear",
+      "name_ja": "着替え用下着",
+      "name_en": "Spare underwear",
+      "category_ja": "衣類",
+      "category_en": "Clothing",
+      "weight_g": 60,
+      "volume_cm3": 200,
+      "quantity": 3,
+      "recommended_quantity": 3,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "滞在中の下着の交換",
+      "purpose_short_en": "Changing underwear during the stay",
+      "description_ja": "下着1枚の例です。日程と自分の着替え方に合わせて数量を変えてください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example of one piece of underwear. Adjust the quantity for your schedule and changing routine. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "travel_socks",
+      "name_ja": "着替え用靴下（1足）",
+      "name_en": "Spare socks (one pair)",
+      "category_ja": "衣類",
+      "category_en": "Clothing",
+      "weight_g": 50,
+      "volume_cm3": 180,
+      "quantity": 3,
+      "recommended_quantity": 3,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "滞在中の靴下の交換",
+      "purpose_short_en": "Changing socks during the stay",
+      "description_ja": "左右を合わせた靴下1足の例です。数量1を片方だけの意味で使わないでください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example of one pair of socks. A quantity of one means the pair, not a single sock. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "travel_toiletry_pouch",
+      "name_ja": "洗面用品入りポーチ",
+      "name_en": "Toiletry pouch with contents",
+      "category_ja": "洗面用品",
+      "category_en": "Toiletries",
+      "weight_g": 250,
+      "volume_cm3": 600,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "普段使う洗面用品をまとめる",
+      "purpose_short_en": "Keeping everyday toiletries together",
+      "description_ja": "ポーチと普段使う洗面用品を合わせた例です。滞在先で用意されるものを確認し、実際の中身に合わせて量り直してください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example pouch with everyday toiletries. Check what your accommodation provides and remeasure the contents you actually pack. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "travel_towel",
+      "name_ja": "小型タオル",
+      "name_en": "Small towel",
+      "category_ja": "身の回り品",
+      "category_en": "Personal items",
+      "weight_g": 100,
+      "volume_cm3": 350,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "滞在中に使うタオルの持参",
+      "purpose_short_en": "Carrying a towel for use during the stay",
+      "description_ja": "たたんだタオル1枚の例です。滞在先の備品や使い方に合わせて持参するか決めてください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example of one folded towel. Decide whether to pack it based on your accommodation's supplies and your plans. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "travel_laundry_bag",
+      "name_ja": "洗濯物用袋（空）",
+      "name_en": "Laundry bag (empty)",
+      "category_ja": "収納",
+      "category_en": "Storage",
+      "weight_g": 40,
+      "volume_cm3": 80,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "着用済みの衣類を分ける",
+      "purpose_short_en": "Separating worn clothing",
+      "description_ja": "空の洗濯物用袋1枚の例です。袋に移した衣類を別の品として追加すると二重計上になります。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example of one empty laundry bag. Adding clothing again when you move it into this bag would count it twice. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "travel_short_bag",
+      "name_ja": "旅行用バッグ（空）",
+      "name_en": "Travel bag (empty)",
+      "category_ja": "収納",
+      "category_en": "Storage",
+      "weight_g": 900,
+      "volume_cm3": 3000,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "数日分の荷物をまとめる",
+      "purpose_short_en": "Holding items for a short trip",
+      "description_ja": "空の旅行用バッグの例です。容積は収納容量ではなく、計算上の占有容積の例です。中の品は別々に数えてください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example empty travel bag. The volume is an illustrative occupied volume, not its storage capacity. Count its contents separately. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    },
+    {
+      "id": "daily_umbrella",
+      "name_ja": "折りたたみ傘",
+      "name_en": "Folding umbrella",
+      "category_ja": "身の回り品",
+      "category_en": "Personal items",
+      "weight_g": 250,
+      "volume_cm3": 400,
+      "quantity": 1,
+      "recommended_quantity": 1,
+      "checked": false,
+      "packed_by_default": false,
+      "dual_use": false,
+      "hazard_flag": false,
+      "purpose_short_ja": "移動時の雨への対応",
+      "purpose_short_en": "Use during rainy journeys",
+      "description_ja": "収納袋に入れた折りたたみ傘の例です。天気や移動手段に合わせて持参するか決めてください。重量と容積は計算用の例で、実測値ではありません。使用する品の実測値に置き換えてください。",
+      "description_en": "An example folding umbrella in its cover. Decide whether to carry it based on the weather and your transport. Weight and volume are illustrative calculation examples, not measured values. Replace them with measurements of your own item.",
+      "sources": [
+        {
+          "title": "OpsLoadout illustrative packing example (not measured)"
+        }
+      ]
+    }
+  ]
+}
