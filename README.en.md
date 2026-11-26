@@ -22,7 +22,7 @@ category_en:
   - Spy
   - Prepper
 
-difficulty: 3
+difficulty: 2
 
 tags:
   - ops
